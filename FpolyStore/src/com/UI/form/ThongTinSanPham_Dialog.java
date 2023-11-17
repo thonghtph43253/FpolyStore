@@ -3,6 +3,7 @@ package com.UI.form;
 import com.fstore.model.ChatLieu;
 import com.fstore.model.MauSac;
 import com.fstore.model.SanPham;
+import com.fstore.model.SanPhamChiTiet;
 import com.fstore.model.Size;
 import com.fstore.service.ChatLieu_Service;
 import com.fstore.service.MauSac_Service;
@@ -10,6 +11,7 @@ import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -73,7 +75,10 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
         btnThemSize.setVisible(false);
 
     }
-
+    public void fillTable(List<SanPhamChiTiet> list){
+        DefaultTableModel tblMD = (DefaultTableModel) this.tblSanPhamChiTiet.getModel();
+        
+    }
     public void fillCboSize() {
         DefaultComboBoxModel cboMD = (DefaultComboBoxModel) cboSize.getModel();
         cboMD.removeAllElements();
