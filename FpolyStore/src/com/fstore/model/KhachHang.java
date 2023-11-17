@@ -10,6 +10,4 @@ package com.fstore.model;
  */
 public class KhachHang {
     //tét
-    //thongtest
-    
 }
