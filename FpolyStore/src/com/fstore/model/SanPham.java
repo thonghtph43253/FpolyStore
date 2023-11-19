@@ -9,7 +9,7 @@ public class SanPham {
     private int ID_SanPham, trangThai;
     private String tenSP, moTa;
     private DanhMuc dm;
-
+//test
     public SanPham() {
     }
 
