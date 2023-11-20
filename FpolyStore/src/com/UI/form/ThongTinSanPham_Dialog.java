@@ -1,5 +1,6 @@
 package com.UI.form;
 
+import com.fsore.untils.MsgBox;
 import com.fstore.model.ChatLieu;
 import com.fstore.model.MauSac;
 import com.fstore.model.SanPham;
@@ -7,6 +8,7 @@ import com.fstore.model.SanPhamChiTiet;
 import com.fstore.model.Size;
 import com.fstore.service.ChatLieu_Service;
 import com.fstore.service.MauSac_Service;
+import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import java.util.List;
@@ -24,6 +26,7 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
     private Size_Service size_Sv = new Size_Service();
     private ChatLieu_Service chatLieu_Sv = new ChatLieu_Service();
     private MauSac_Service mauSac_Sv = new MauSac_Service();
+    private SanPhamChiTiet_Service spct_server = new SanPhamChiTiet_Service();
     private int id_sp;
 
     public ThongTinSanPham_Dialog(java.awt.Frame parent, boolean modal) {
@@ -40,6 +43,7 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         this.id_sp = id_sp;
         init();
+        this.fillTable(spct_server.selectAll());
 
     }
     List<Size> list_Size = size_Sv.selectAll();
@@ -77,7 +81,32 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
     }
     public void fillTable(List<SanPhamChiTiet> list){
         DefaultTableModel tblMD = (DefaultTableModel) this.tblSanPhamChiTiet.getModel();
-        
+        tblMD.setRowCount(0);
+        for (int i = 0; i < list.size(); i++) {
+            SanPhamChiTiet spct = list.get(i);
+           
+            tblMD.addRow(new Object[]{
+                spct.getId_SanPhamChiTiet(),
+                spct.getGia(),
+                mauSac_Sv.selectByID(spct.getId_Mau()).getTenMau(),
+                size_Sv.selectByID(spct.getId_Size()).getTenSize(),
+                chatLieu_Sv.selectByID(spct.getId_ChatLieu()).getTenChatLieu(),
+                spct.getTrangThai()
+            });
+        }
+    }
+    public boolean checkItem(){
+        List<SanPhamChiTiet> list = spct_server.selectAll();
+        SanPhamChiTiet spctN = getForm();
+        for (SanPhamChiTiet spct : list) {
+            if(spct.getId_SanPham() == id_sp && spct.getId_ChatLieu() == spctN.getId_ChatLieu()&&
+               spct.getId_Mau() == spctN.getId_Mau()
+               &&spct.getId_Size()== spctN.getId_Size()){
+                MsgBox.alert(this,"Chi tiết sản phẩm đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
     }
     public void fillCboSize() {
         DefaultComboBoxModel cboMD = (DefaultComboBoxModel) cboSize.getModel();
@@ -102,7 +131,97 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
             cboMD.addElement(ms);
         }
     }
-
+    public SanPhamChiTiet getForm(){
+        Size s = (Size) cboSize.getSelectedItem();
+        ChatLieu cl = (ChatLieu) cboChatLieu.getSelectedItem();
+        MauSac ms = (MauSac) cboMauSac.getSelectedItem();
+        String giaC = txtGiaSP.getText().trim();
+        int tt = 1;
+        if(rdoDB.isSelected()){
+            tt = 1;
+        }else if(rdoNB.isSelected()){
+            tt = 0;
+        }
+        double gia = 0;
+        if(giaC.isEmpty()){
+            MsgBox.alert(this, "Giá không được bỏ trống");
+            return null;
+        }else{
+            try {
+                gia = Double.parseDouble(giaC);
+                if(gia<0){
+                    MsgBox.alert(this, "Giá phải lớn hơn 0");
+                    return null;
+                }
+            } catch (Exception e) {
+                MsgBox.alert(this, "Giá phải là số");
+                return null;
+            }
+        }
+        return new SanPhamChiTiet(ms.getID_MauSac(), cl.getID_ChatLieu(), s.getID_Size(),
+                id_sp, 10, gia, "",tt );
+    }
+    public void themSPCT(){
+        SanPhamChiTiet spct = getForm();
+        if(spct == null){
+            return ;
+        }
+        if(checkItem()== true){
+        if(MsgBox.confirm(this, "Bạn có chăc chắn muốn thêm?")){
+            if(spct_server.insert(spct)!= 0){
+                MsgBox.alert(this, "Thành công!");
+                this.fillTable(spct_server.selectByID_SP(id_sp));
+            }else{
+                MsgBox.alert(this,"Thất bại!");
+        }
+       }
+       }
+    }
+    public void suaSPCT(){
+        SanPhamChiTiet spct = getForm();
+        int row = tblSanPhamChiTiet.getSelectedRow();
+        int id = Integer.parseInt(tblSanPhamChiTiet.getValueAt(row, 0).toString());
+        if(spct == null||row<0){
+            return ;
+        }
+        if (checkItem() == true) {
+            if (MsgBox.confirm(this, "Bạn có chăc chắn muốn sửa?")) {
+                if (spct_server.update(spct, id) != 0) {
+                    MsgBox.alert(this, "Thành công!");
+                    this.fillTable(spct_server.selectByID_SP(id_sp));
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        }
+    }
+    public void xoaSPCT(){
+        
+        int row = tblSanPhamChiTiet.getSelectedRow();
+        int id = Integer.parseInt(tblSanPhamChiTiet.getValueAt(row, 0).toString());
+        if(row<0){
+            return ;
+        }
+        if(MsgBox.confirm(this, "Bạn có chăc chắn muốn xóa?")){
+            if(spct_server.delete(id)!= 0){
+                MsgBox.alert(this, "Thành công!");
+                this.fillTable(spct_server.selectByID_SP(id_sp));
+            }else{
+                MsgBox.alert(this,"Thất bại!");
+        }
+       }
+    }
+    public void setForm(SanPhamChiTiet spct){
+        cboChatLieu.getModel().setSelectedItem(chatLieu_Sv.selectByID(spct.getId_ChatLieu()));
+        cboSize.getModel().setSelectedItem(size_Sv.selectByID(spct.getId_Size()));
+        cboMauSac.getModel().setSelectedItem(mauSac_Sv.selectByID(spct.getId_Mau()));
+        txtGiaSP.setText(String.valueOf(spct.getGia()));
+        if(spct.getTrangThai() == 1){
+            rdoDB.setSelected(true);
+        }else if(spct.getTrangThai()==0){
+            rdoNB.setSelected(true);
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,10 +292,25 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
         btnThem.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnThem.setForeground(new java.awt.Color(255, 255, 255));
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Tạo mới");
 
@@ -434,7 +568,7 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Tên sản phẩm", "Giá bán", "Màu sắc", "Size", "Chất liệu", "Trạng thái"
+                "ID_SPCT", "Giá bán", "Màu sắc", "Size", "Chất liệu", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -443,6 +577,11 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblSanPhamChiTiet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSanPhamChiTietMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblSanPhamChiTiet);
@@ -520,7 +659,7 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSuaMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaMauActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_btnSuaMauActionPerformed
 
     private void btnThemChatLieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemChatLieuActionPerformed
@@ -562,6 +701,25 @@ public class ThongTinSanPham_Dialog extends javax.swing.JDialog {
             btnSuaChatLieu.setVisible(true);
         }
     }//GEN-LAST:event_btnAddChatLieuActionPerformed
+
+    private void tblSanPhamChiTietMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamChiTietMouseClicked
+        int row = tblSanPhamChiTiet.getSelectedRow();
+        int id = Integer.parseInt(tblSanPhamChiTiet.getValueAt(row, 0).toString());
+        SanPhamChiTiet spct = spct_server.selectByID(id);
+        setForm(spct);
+    }//GEN-LAST:event_tblSanPhamChiTietMouseClicked
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        themSPCT();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+       suaSPCT();
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+       xoaSPCT();
+    }//GEN-LAST:event_btnXoaActionPerformed
 
     /**
      * @param args the command line arguments

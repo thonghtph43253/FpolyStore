@@ -109,6 +109,7 @@ public class ChatLieu_Service implements Inf_Service<ChatLieu, Integer>{
         try {
             conn = DBConnect.getConnection();
             ps= conn.prepareStatement(sql);
+            ps.setObject(1, id);
             rs = ps.executeQuery();
             while(rs.next()){
                  md = new ChatLieu();

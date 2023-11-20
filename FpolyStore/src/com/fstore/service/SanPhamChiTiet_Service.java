@@ -44,8 +44,9 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
     @Override
     public int update(SanPhamChiTiet model, Integer id) {
         sql = """
-             INSERT INTO SANPHAMCHITIET(SOLUONG, GIA, TRANGTHAI,ID_SANPHAM, ID_CHATLIEU, ID_SIZE, ID_MAU)
-             VALUES(?,?,?,?,?,?,?)
+             UPDATE SANPHAMCHITIET SET SOLUONG = ?, GIA = ? , TRANGTHAI = ?,
+             ID_SANPHAM= ?, ID_CHATLIEU = ?, ID_SIZE = ?, ID_MAU = ?
+             WHERE ID_SANPHAMCHITIET = ?
              """;
         try {
              conn = DBConnect.getConnection();
@@ -57,6 +58,7 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             ps.setObject(5, model.getId_ChatLieu());
             ps.setObject(6, model.getId_Size());
             ps.setObject(7, model.getId_Mau());
+            ps.setObject(8, id);
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,15 +68,26 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
 
     @Override
     public int delete(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        sql = """
+             DELETE FROM SANPHAMCHITIET
+             WHERE ID_SANPHAMCHITIET = ?
+             """;
+        try {
+             conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override
     public List<SanPhamChiTiet> selectAll() {
             sql ="""
                  SELECT ID_SANPHAMCHITIET, SOLUONG,GIA,SPCT.TRANGTHAI,ID_CHATLIEU,ID_SIZE,ID_MAU, SPCT.ID_SANPHAM
-                 FROM SANPHAMCHITIET AS SPCT JOIN SANPHAM AS SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM 
-                 
+                 FROM SANPHAMCHITIET AS SPCT JOIN SANPHAM AS SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM   
                  """;
             List<SanPhamChiTiet> list = new ArrayList<>();
             try {
@@ -90,7 +103,7 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
                 spct.setId_ChatLieu(rs.getInt(5));
                 spct.setId_Size(rs.getInt(6));
                 spct.setId_Mau(rs.getInt(7));
-                spct.setId_SanPhamChiTiet(rs.getInt(8));
+                spct.setId_SanPham(rs.getInt(8));
                 list.add(spct);
             }
             return list;
@@ -131,20 +144,20 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             return null;
         }
     }
-    public SanPhamChiTiet selectByID_SP(Integer id) {
+    public List<SanPhamChiTiet> selectByID_SP(Integer id) {
         sql ="""
                  SELECT ID_SANPHAMCHITIET, SOLUONG,GIA,SPCT.TRANGTHAI,ID_CHATLIEU,ID_SIZE,ID_MAU, SPCT.ID_SANPHAM
                  FROM SANPHAMCHITIET AS SPCT JOIN SANPHAM AS SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM 
                  WHERE SPCT.ID_SANPHAM = ?
                  """;
-            SanPhamChiTiet spct = null;
+           List<SanPhamChiTiet> list = new ArrayList<>();
             try {
             conn = DBConnect.getConnection();
             ps= conn.prepareStatement(sql);
             ps.setObject(1, id);
             rs = ps.executeQuery();
             while(rs.next()){
-                spct = new SanPhamChiTiet();
+                 SanPhamChiTiet spct = new SanPhamChiTiet();
                 spct.setId_SanPhamChiTiet(rs.getInt(1));
                 spct.setSoLuong(rs.getInt(2));
                 spct.setGia(rs.getDouble(3));
@@ -152,9 +165,10 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
                 spct.setId_ChatLieu(rs.getInt(5));
                 spct.setId_Size(rs.getInt(6));
                 spct.setId_Mau(rs.getInt(7));
-                spct.setId_SanPhamChiTiet(rs.getInt(8));
+                spct.setId_SanPham(rs.getInt(8));
+                list.add(spct);
             }
-            return spct;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

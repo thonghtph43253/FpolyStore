@@ -4,11 +4,16 @@ import com.UI.component.Header;
 import com.UI.component.Menu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
+import com.UI.form.BanHang_Panel;
 import com.UI.form.ChiTietSanPham_Panel;
 import com.UI.form.KhachHang_Panel;
 import com.UI.form.NhanVien_Panel;
+import com.UI.form.NhapHang_Panel;
 import com.UI.form.QLThuocTinhSanPham;
+import com.UI.form.Sale_Panel;
 import com.UI.form.SanPham_Panel;
+import com.UI.form.ThongKeDoanhSo_Panel;
+import com.UI.form.ThongKeDoanhThu_Panel;
 import com.ui.form.Form1;
 import com.ui.form.Form_Home;
 import com.ui.form.MainForm;
@@ -64,10 +69,33 @@ public class Main extends javax.swing.JFrame {
                     }else if(subMenuIndex == 1){
                         main.showForm(new ChiTietSanPham_Panel());
                     }
+                }else if(menuIndex == 2){
+                    if(subMenuIndex == 0){
+                        main.showForm(new BanHang_Panel());
+                    }else if(subMenuIndex == 1){
+                        main.showForm(new NhapHang_Panel());
+                    }
+                    
+                }else if(menuIndex == 3){
+                    if(subMenuIndex == 0){
+                        main.showForm(new ThongKeDoanhSo_Panel());
+                    }else if(subMenuIndex == 1){
+                        main.showForm(new ThongKeDoanhThu_Panel());
+                    }
+                }else if(menuIndex == 4){
+                    if(subMenuIndex == 0){
+                        main.showForm(new BanHang_Panel());
+                    }else if(subMenuIndex == 1){
+                        main.showForm(new NhapHang_Panel());
+                    }
                 }else if(menuIndex == 5){
                     main.showForm(new NhanVien_Panel());
                 }else if(menuIndex == 6){
                     main.showForm(new KhachHang_Panel());
+                }else if(menuIndex == 8){
+                    if(subMenuIndex == 0){
+                        main.showForm(new Sale_Panel());
+                    }
                 }
             }
         });
