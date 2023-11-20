@@ -174,4 +174,41 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             return null;
         }
     }
+     public List<SanPhamChiTiet> selectByFilter(String dau,  int tt, String sapXepTen, String sapXepGia ) {
+            sql ="""
+                SELECT ID_SANPHAMCHITIET, SOLUONG,GIA,SPCT.TRANGTHAI,ID_CHATLIEU,
+                ID_SIZE,ID_MAU, SPCT.ID_SANPHAM
+                FROM SANPHAMCHITIET SPCT JOIN SANPHAM SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM 
+                WHERE SOLUONG  ?  AND SPCT.TRANGTHAI = ? 
+                ORDER BY SP.TENSANPHAM ?, GIA ?
+                 """;
+           List<SanPhamChiTiet> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, dau);
+           
+            ps.setObject(2, tt);
+            ps.setObject(3, sapXepTen);
+            ps.setObject(4, sapXepGia);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                 SanPhamChiTiet spct = new SanPhamChiTiet();
+                spct.setId_SanPhamChiTiet(rs.getInt(1));
+                spct.setSoLuong(rs.getInt(2));
+                spct.setGia(rs.getDouble(3));
+                spct.setTrangThai(rs.getInt(4));
+                spct.setId_ChatLieu(rs.getInt(5));
+                spct.setId_Size(rs.getInt(6));
+                spct.setId_Mau(rs.getInt(7));
+                spct.setId_SanPham(rs.getInt(8));
+                
+                list.add(spct);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

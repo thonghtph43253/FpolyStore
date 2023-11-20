@@ -72,7 +72,7 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
         card4 = new com.UI.component.Card();
         jPanel2 = new javax.swing.JPanel();
         lblDongHo = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lblKinhChao = new javax.swing.JLabel();
 
         card1.setColorGradient(new java.awt.Color(211, 28, 215));
 
@@ -135,10 +135,10 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
         lblDongHo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDongHo.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 102, 204)));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel5.setText("FSTORE XIN KÍNH CHÀO QUÝ KHÁCH");
-        jLabel5.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 0, 255)));
+        lblKinhChao.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblKinhChao.setForeground(new java.awt.Color(0, 0, 102));
+        lblKinhChao.setText("FSTORE XIN KÍNH CHÀO QUÝ KHÁCH");
+        lblKinhChao.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 0, 255)));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -150,14 +150,14 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
+                .addComponent(lblKinhChao)
                 .addGap(30, 30, 30))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblKinhChao, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(92, 92, 92)
                 .addComponent(lblDongHo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(127, Short.MAX_VALUE))
@@ -216,10 +216,10 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDongHo;
+    private javax.swing.JLabel lblKinhChao;
     private com.ui.swing.noticeboard.NoticeBoard noticeBoard;
     // End of variables declaration//GEN-END:variables
 
@@ -242,6 +242,8 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
             lblDongHo.setText(format1.format(d));
             lblDongHo.setForeground(color[i]);
             lblDongHo.setBorder(new MatteBorder(10, 10, 10, 10, color[i]));
+            lblKinhChao.setForeground(color[i]);
+            lblKinhChao.setBorder(new MatteBorder(10, 10, 10, 10, color[i]));
         }
     }
 }
