@@ -4,35 +4,71 @@
  */
 package com.UI.form;
 
+import com.fstore.model.KhachHang;
+import com.fstore.service.KhachHang_Service;
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
  */
 public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
-
+    private KhachHang_Service khachHang_Service = new KhachHang_Service();
+    private BanHang_Panel banHang_Panel = new BanHang_Panel();
+    private  int id_KhachHang;
+    private  int row = -1;
+    private JLabel lblId_KH;
+    private JLabel lblTenKH;
    
-    public ThongTinKhachHang_Dialog(java.awt.Frame parent, boolean modal) {
+    public ThongTinKhachHang_Dialog(java.awt.Frame parent, boolean modal, JLabel lblid_Kh,JLabel lblTenKh) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        this.lblId_KH = lblid_Kh;
+        this.lblTenKH = lblTenKh;
         init();
     }
-    
-    public void init(){
-        hidenThongTinKH();
+     public void init(){
+         hidenThongTinKH();
+        loadTale(khachHang_Service.selectAll());
     }
+    public KhachHang getKhachHang( int row){
+        
+        id_KhachHang = Integer.parseInt(tblKhachHang.getValueAt(row, 0).toString());
+        KhachHang kh = khachHang_Service.selectByID(id_KhachHang);
+        return kh;
+    }
+    public void loadTale(List<KhachHang> list){
+        DefaultTableModel tblMd = (DefaultTableModel) this.tblKhachHang.getModel();
+        tblMd.setRowCount(0);
+        for (KhachHang md : list) {
+            tblMd.addRow(new Object[]{
+                md.getId_KhachHang(),
+                md.getTen(),
+                md.getsDT(),
+                md.getNgaySinh(),
+                md.getEmail(),
+                md.isGioiTinh() ?"Nam":"Nu", 
+                md.getTrangThai() == 1?"Hoạt động":"Không hoạt động"
+            });
+        }
+        
+    }
+   
     public void hidenThongTinKH(){
         pnlThongTinKH.setVisible(false);
+        btnChon.setEnabled(false);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         btnChon = new javax.swing.JButton();
         btnCapNhatKH = new javax.swing.JButton();
         pnlThongTinKH = new javax.swing.JPanel();
@@ -45,8 +81,6 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -56,6 +90,9 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         btnThem = new javax.swing.JButton();
         btnSua = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblKhachHang = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -63,20 +100,12 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         btnChon.setText("Chọn");
+        btnChon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChonActionPerformed(evt);
+            }
+        });
 
         btnCapNhatKH.setText("Cập nhật khách hàng");
         btnCapNhatKH.addActionListener(new java.awt.event.ActionListener() {
@@ -104,8 +133,6 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setText("Email");
-
         jLabel8.setText("Địa chỉ");
 
         jTextArea1.setColumns(20);
@@ -114,6 +141,8 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
 
         jLabel9.setText("Trạng thái");
 
+        buttonGroup1.add(jRadioButton3);
+        jRadioButton3.setSelected(true);
         jRadioButton3.setText("Đang hoạt động");
         jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,6 +150,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             }
         });
 
+        buttonGroup1.add(jRadioButton4);
         jRadioButton4.setText("Không hoạt động");
 
         btnThem.setText("Thêm");
@@ -158,13 +188,9 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                     .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                         .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlThongTinKHLayout.createSequentialGroup()
-                                .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8))
+                                .addComponent(jLabel8)
                                 .addGap(21, 21, 21)
-                                .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField4)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                                 .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
@@ -217,11 +243,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                             .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel6)
                                 .addComponent(jRadioButton1))
-                            .addComponent(jRadioButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jRadioButton2)))
                     .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                         .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -238,6 +260,50 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        tblKhachHang.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Mã", "Tên", "Số điện thoại", "Ngày sinh", "Giới tính", "Trạng thái"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblKhachHang.setSelectionBackground(new java.awt.Color(204, 255, 204));
+        tblKhachHang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKhachHangMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblKhachHang);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -245,21 +311,21 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(pnlThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnChon)
-                                .addGap(26, 26, 26)
-                                .addComponent(btnCapNhatKH))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                        .addComponent(btnChon)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnCapNhatKH))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -271,7 +337,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnChon)
@@ -304,6 +370,24 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnCapNhatKHActionPerformed
 
+    private void tblKhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhachHangMouseClicked
+      row = tblKhachHang.getSelectedRow();
+      if(row != -1){
+           
+           btnChon.setEnabled(true);
+      }else{
+          btnChon.setEnabled(false);
+      }
+       
+    }//GEN-LAST:event_tblKhachHangMouseClicked
+
+    private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
+        KhachHang kh = getKhachHang(row);
+        this.lblId_KH.setText(String.valueOf(kh.getId_KhachHang()));
+        this.lblTenKH.setText(kh.getTen());
+        this.setVisible(false);
+    }//GEN-LAST:event_btnChonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -334,7 +418,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ThongTinKhachHang_Dialog dialog = new ThongTinKhachHang_Dialog(new javax.swing.JFrame(), true);
+                ThongTinKhachHang_Dialog dialog = new ThongTinKhachHang_Dialog(new javax.swing.JFrame(), true,null, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -352,6 +436,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -359,21 +444,20 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JPanel pnlThongTinKH;
+    private javax.swing.JTable tblKhachHang;
     // End of variables declaration//GEN-END:variables
 }

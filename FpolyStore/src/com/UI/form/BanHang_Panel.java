@@ -10,6 +10,7 @@ import com.fstore.model.SanPhamChiTiet;
 import com.fstore.service.ChatLieu_Service;
 import com.fstore.service.HoaDonChiTiet_Service;
 import com.fstore.service.HoaDon_Service;
+import com.fstore.service.KhachHang_Service;
 import com.fstore.service.MauSac_Service;
 import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
@@ -31,7 +32,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     private HoaDon_Service hd_Service = new HoaDon_Service();
     private HoaDonChiTiet_Service hdct_Service = new HoaDonChiTiet_Service();
     private SanPham_Service sanPham_Service = new SanPham_Service();
-    
+    private KhachHang_Service khachHang_Service = new KhachHang_Service();
     private SanPhamChiTiet_Service spct_Service = new SanPhamChiTiet_Service();
     private ChatLieu_Service chatLieu_Service = new ChatLieu_Service();
     private MauSac_Service mauSac_Service = new MauSac_Service();
@@ -344,6 +345,13 @@ public class BanHang_Panel extends javax.swing.JPanel {
          DecimalFormat decimalFormat = new DecimalFormat("#,##0");
        
         lblTienThua.setText(decimalFormat.format(tienKDua - thanhToan));
+    }
+    
+    public void setKhachHang( int id_KH){
+        
+        KhachHang kh = khachHang_Service.selectByID(id_KH);
+        lblMaKH.setText(String.valueOf(kh.getId_KhachHang()));
+        lblTenKH.setText(kh.getTen());
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1014,7 +1022,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTenHDActionPerformed
 
     private void btnChonKHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonKHActionPerformed
-        new ThongTinKhachHang_Dialog(new Main(), true).setVisible(true);
+        new ThongTinKhachHang_Dialog(new Main(), true, lblMaKH, lblTenKH).setVisible(true);
+        
     }//GEN-LAST:event_btnChonKHActionPerformed
 
     private void cbApVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbApVoucherActionPerformed
