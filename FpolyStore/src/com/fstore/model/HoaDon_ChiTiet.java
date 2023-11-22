@@ -11,23 +11,26 @@ public class HoaDon_ChiTiet {
     private int Id_SanPhamChiTiet;
     private int soLuong;
     private double gia;
+    private int trangThai;
 
     public HoaDon_ChiTiet() {
     }
     
-     public HoaDon_ChiTiet( int Id_HoaDon, int Id_SanPhamChiTiet, int soLuong, double gia) {
+     public HoaDon_ChiTiet( int Id_HoaDon, int Id_SanPhamChiTiet, int soLuong, double gia,int trangThai) {
         this.Id_HoaDon = Id_HoaDon;
         this.Id_SanPhamChiTiet = Id_SanPhamChiTiet;
         this.soLuong = soLuong;
         this.gia = gia;
+        this.trangThai = trangThai;
     }
     
-    public HoaDon_ChiTiet(int Id_HoaDonCT, int Id_HoaDon, int Id_SanPhamChiTiet, int soLuong, double gia) {
+    public HoaDon_ChiTiet(int Id_HoaDonCT, int Id_HoaDon, int Id_SanPhamChiTiet, int soLuong, double gia , int trangThai) {
         this.Id_HoaDonCT = Id_HoaDonCT;
         this.Id_HoaDon = Id_HoaDon;
         this.Id_SanPhamChiTiet = Id_SanPhamChiTiet;
         this.soLuong = soLuong;
         this.gia = gia;
+        this.trangThai = trangThai;
     }
 
     public int getId_HoaDonCT() {
@@ -69,5 +72,14 @@ public class HoaDon_ChiTiet {
     public void setGia(double gia) {
         this.gia = gia;
     }
+
+    public int getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
+    }
+    
     
 }

@@ -147,7 +147,7 @@ public class HoaDon {
     public void setNgayTao(String ngayTao) {
         this.ngayTao = ngayTao;
     }
-    
-    
+
+
     
 }
