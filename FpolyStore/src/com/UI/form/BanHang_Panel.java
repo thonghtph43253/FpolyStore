@@ -287,7 +287,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     }
     public boolean thanhToan(){
         HoaDon hd = hd_Service.selectByID(Integer.parseInt(lblMaHD.getText()));
-        int ID_KH = Integer.parseInt(lblMaHD.getText());
+        int ID_KH = Integer.parseInt(lblMaKH.getText());
         if(ID_KH == 1){
             MsgBox.alert(this, "Vui lòng chọn khách hàng!");
             return false;
@@ -309,6 +309,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
         int hinhThucTT = cbbHTTT.getSelectedIndex();
         hd.setTongTien(tongTien);
         hd.setHinhThucThanhToan(hinhThucTT);
+        hd.setGhiChu(txtGhiChu.getText());
         hd.setTrangThai(1);
         return true;
     }
@@ -1076,7 +1077,9 @@ public class BanHang_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHuyHDActionPerformed
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
-        // TODO add your handling code here:
+       if(thanhToan()){
+           resetFormHD();
+       }
     }//GEN-LAST:event_btnThanhToanActionPerformed
 
     private void txtTenKDuaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTenKDuaKeyPressed

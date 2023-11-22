@@ -49,7 +49,7 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
         sql = """
                 UPDATE HOADON SET TENKHACHHANG = ?, NGAYTAO = ?, SDT = ?,
                                   TONGTIEN = ?,MAGIAMGIA = ?,HINHTHUCTHANHTOAN = ?,
-                                  TRANGTHAI = ?,ID_KHACHHANG = ?, MANV = ?,
+                                  TRANGTHAI = ?,ID_KHACHHANG = ?, MANV = ?
                               WHERE ID_HOADON = ?
             """;
         try {
