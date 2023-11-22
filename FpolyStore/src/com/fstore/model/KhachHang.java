@@ -16,7 +16,17 @@ public class KhachHang {
 
     public KhachHang() {
     }
-
+    
+     public KhachHang( String ten, String sDT, String ngaySinh, String diaChi, String email, boolean gioiTinh, int trangThai) {
+        this.ten = ten;
+        this.sDT = sDT;
+        this.ngaySinh = ngaySinh;
+        this.diaChi = diaChi;
+        this.email = email;
+        this.gioiTinh = gioiTinh;
+        this.trangThai = trangThai;
+    }
+    
     public KhachHang(int id_KhachHang, String ten, String sDT, String ngaySinh, String diaChi, String email, boolean gioiTinh, int trangThai) {
         this.id_KhachHang = id_KhachHang;
         this.ten = ten;

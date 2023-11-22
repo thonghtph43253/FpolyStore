@@ -27,19 +27,18 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
     @Override
     public int insert(KhachHang model) {
         sql = """
-              INSERT INTO KHACHHANG(ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI )
-              VALUES(?,?,?,?,?,?,?)
+              INSERT INTO KHACHHANG( TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI )
+              VALUES(?,?,?,?,?,?)
               """;
         try {
              conn = DBConnect.getConnection();
             ps= conn.prepareStatement(sql);
-            ps.setObject(1, model.getId_KhachHang());
-            ps.setObject(2, model.getTen());
-            ps.setObject(3, model.getsDT());
-            ps.setObject(4, model.getNgaySinh());
-            ps.setObject(5, model.isGioiTinh());
-            ps.setObject(6, model.getDiaChi());
-            ps.setObject(7, model.getTrangThai());
+            ps.setObject(1, model.getTen());
+            ps.setObject(2, model.getsDT());
+            ps.setObject(3, model.getNgaySinh());
+            ps.setObject(4, model.isGioiTinh());
+            ps.setObject(5, model.getDiaChi());
+            ps.setObject(6, model.getTrangThai());
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

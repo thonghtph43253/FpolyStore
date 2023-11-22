@@ -211,4 +211,43 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             return null;
         }
     }
+      public int getSoLuongSanPhamHDC( int tt, int spct ) {
+            sql ="""
+                    SELECT HDCT.SOLUONG FROM HOADON HD JOIN HOADON_CT HDCT ON HD.ID_HOADON = HDCT.ID_HOADON
+                    JOIN SANPHAMCHITIET SPCT ON HDCT.ID_SANPHAMCHITIET = SPCT.ID_SANPHAMCHITIET
+                    WHERE HD.TRANGTHAI = ? AND SPCT.ID_SANPHAMCHITIET = ?
+                 """;
+           int soLuong = 0;
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, tt);
+            ps.setObject(2, spct);
+           
+            rs = ps.executeQuery();
+            while(rs.next()){
+                soLuong = rs.getInt(1);
+            }
+            return soLuong;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+       public int updateSoLuong(int soLuong, Integer id) {
+        sql = """
+             UPDATE SANPHAMCHITIET SET SOLUONG = SOLUONG - ?
+             WHERE ID_SANPHAMCHITIET = ?
+             """;
+        try {
+             conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, soLuong);
+            ps.setObject(2, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }
