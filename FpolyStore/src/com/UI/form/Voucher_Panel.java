@@ -34,7 +34,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
     public void init() {
         setHidenBtn();
         fillTable(sale_Service.selectAll());
-        setBtn();
+        //setBtn();
     }
 
 //    public void show() {
@@ -69,7 +69,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
 
     public void setForm(Sale s) {
         Sale_ChiTiet sct = sale_CT_Service.selectByIDSale(s.getId_Sale()).get(0);
-        txtTenSale.setText(s.getTenChienDich());
+        txtTenVoucher.setText(s.getTenChienDich());
         lblMaSale.setText(String.valueOf(s.getId_Sale()));
         txtNgayBD.setText(XDate.toString(s.getThoiGianBD(), "dd-MM-yyyy"));
         txtThoiGianKT.setText(XDate.toString(s.getThoiGianKT(), "dd-MM-yyyy"));
@@ -91,7 +91,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
     }
 
     public void clearForm() {
-        txtTenSale.setText("");
+        txtTenVoucher.setText("");
         txtNgayBD.setText("");
         txtThoiGianKT.setText("");
         lblMaSale.setText("");
@@ -101,7 +101,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
 
     public Sale getSale() {
         Sale s = new Sale();
-        String tenSale = txtTenSale.getText();
+        String tenSale = txtTenVoucher.getText();
 
         String ngayBatDau = txtNgayBD.getText();
         String ngayKetThuc = txtThoiGianKT.getText();
@@ -307,7 +307,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         lblMaSale = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtTenSale = new javax.swing.JTextField();
+        txtTenVoucher = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtNgayBD = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -320,26 +320,27 @@ public class Voucher_Panel extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         rdoHD = new javax.swing.JRadioButton();
         rdoKHD = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
         btnThem = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtSoLuong = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách SALE", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách VOUCHER", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
         tblSale.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã sale", "Tên chương trình", "Hình thức giảm", "Mức giảm", "Thời gian BĐ", "Thời gian KT", "Trạng thái"
+                "Mã Voucher", "Tên chương trình", "Hình thức giảm", "Mức giảm", "Số lượng", "Thời gian BĐ", "Thời gian KT", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true, true
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -481,7 +482,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 .addGap(12, 12, 12))
         );
 
-        jLabel3.setText("Mã sale");
+        jLabel3.setText("Mã Voucher");
 
         jLabel5.setText("Tên chương trình");
 
@@ -519,13 +520,6 @@ public class Voucher_Panel extends javax.swing.JPanel {
         buttonGroup1.add(rdoKHD);
         rdoKHD.setText("Không hoạt động");
 
-        jButton1.setText("Sản phẩm áp dụng");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         btnReset.setText("Thêm mới");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -541,6 +535,8 @@ public class Voucher_Panel extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setText("Số lượng");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -551,9 +547,9 @@ public class Voucher_Panel extends javax.swing.JPanel {
                     .addComponent(jLabel5)
                     .addComponent(lblMaSale)
                     .addComponent(jLabel3)
-                    .addComponent(txtTenSale, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTenVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -562,24 +558,29 @@ public class Voucher_Panel extends javax.swing.JPanel {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel9)))
+                                .addComponent(jLabel6))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(cbbHTG, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jLabel9))
+                                    .addComponent(cbbHTG, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(txtThoiGianKT, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtGiaTriGiam, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblDonVi)))
+                        .addComponent(txtGiaTriGiam)))
+                .addGap(34, 34, 34)
+                .addComponent(lblDonVi)
                 .addGap(30, 30, 30)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(rdoKHD, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rdoHD)
                     .addComponent(jLabel11)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSoLuong)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -612,20 +613,29 @@ public class Voucher_Panel extends javax.swing.JPanel {
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel8)
-                                            .addComponent(jLabel9)))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addGap(2, 2, 2)
-                                        .addComponent(rdoKHD)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(rdoKHD))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel8))))
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtThoiGianKT)
-                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtGiaTriGiam, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                                        .addComponent(lblDonVi)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(17, 17, 17)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtThoiGianKT, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(txtTenVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(lblDonVi)
+                                                        .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel4)))
+                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtGiaTriGiam))))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -633,9 +643,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
                         .addComponent(lblMaSale)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTenSale, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)))
+                        .addGap(50, 50, 50)))
                 .addContainerGap())
         );
 
@@ -660,7 +668,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("SALE");
+        jLabel1.setText("VOUCHER");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -691,10 +699,6 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private void txtNgayBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNgayBDActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new DanhSachSanPhamSaleDialog(new Main(), true, list, btnThem).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         if (id_Sale == -1 || id_Sale == 0) {
@@ -739,7 +743,6 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbbHTG;
     private javax.swing.JComboBox<String> cboTkSanPham2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
@@ -753,6 +756,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -774,7 +778,8 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private javax.swing.JTable tblSale;
     private javax.swing.JTextField txtGiaTriGiam;
     private javax.swing.JTextField txtNgayBD;
-    private javax.swing.JTextField txtTenSale;
+    private javax.swing.JTextField txtSoLuong;
+    private javax.swing.JTextField txtTenVoucher;
     private javax.swing.JTextField txtThoiGianKT;
     private javax.swing.JTextField txtTimKiemSp2;
     // End of variables declaration//GEN-END:variables
