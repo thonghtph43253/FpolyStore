@@ -23,6 +23,7 @@ public class XDate {
             return sdf.parse(date);
         } catch (Exception e) {
             throw new RuntimeException(e);
+            
         }
     }
 

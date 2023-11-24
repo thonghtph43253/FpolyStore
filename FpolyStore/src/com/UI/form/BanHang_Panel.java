@@ -5,6 +5,7 @@ import com.fsore.untils.XDate;
 import com.fstore.model.HoaDon;
 import com.fstore.model.HoaDon_ChiTiet;
 import com.fstore.model.KhachHang;
+import com.fstore.model.Sale_ChiTiet;
 import com.fstore.model.SanPham;
 import com.fstore.model.SanPhamChiTiet;
 import com.fstore.service.ChatLieu_Service;
@@ -12,6 +13,7 @@ import com.fstore.service.HoaDonChiTiet_Service;
 import com.fstore.service.HoaDon_Service;
 import com.fstore.service.KhachHang_Service;
 import com.fstore.service.MauSac_Service;
+import com.fstore.service.Sale_CT_Service;
 import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
@@ -38,7 +40,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     private MauSac_Service mauSac_Service = new MauSac_Service();
     private Size_Service size_Service = new Size_Service();
     private List<HoaDon_ChiTiet> listGioHang = new ArrayList<>();
-
+    private Sale_CT_Service scT_Service = new Sale_CT_Service();
     public BanHang_Panel() {
         initComponents();
         init();
@@ -83,7 +85,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
                 spct.getId_SanPhamChiTiet(),
                 sanPham_Service.selectByID(spct.getId_SanPham()).getTenSP(),
                 spct.getGia(),
-                0,
+                getGiamGia(spct.getId_SanPhamChiTiet(), new Date()),
                 size_Service.selectByID(spct.getId_Size()).getTenSize(),
                 mauSac_Service.selectByID(spct.getId_Mau()).getTenMau(),
                 chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu(),
@@ -331,7 +333,21 @@ public class BanHang_Panel extends javax.swing.JPanel {
 
         lblTienThua.setText(decimalFormat.format(tienKDua - thanhToan));
     }
-
+    //Lấy ra số tiền giảm
+    public double getGiamGia(int id_SPCT , Date d){
+        Sale_ChiTiet sct = scT_Service.selectByID_SPCT(id_SPCT, d);
+        SanPhamChiTiet  spct = spct_Service.selectByID(id_SPCT);
+        double giaGiam = 0;
+        if(sct == null){
+            return 0;
+        }
+        if(sct.getHinhThucGiam()==0){
+            giaGiam = sct.getGiaTriGiam();
+        }else if(sct.getHinhThucGiam() == 1){
+            giaGiam = spct.getGia() *(sct.getGiaTriGiam()/100);
+        }
+        return giaGiam;
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

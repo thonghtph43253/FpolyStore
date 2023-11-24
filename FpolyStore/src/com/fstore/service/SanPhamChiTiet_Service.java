@@ -136,7 +136,7 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
                 spct.setId_ChatLieu(rs.getInt(5));
                 spct.setId_Size(rs.getInt(6));
                 spct.setId_Mau(rs.getInt(7));
-                spct.setId_SanPhamChiTiet(rs.getInt(8));
+                spct.setId_SanPham(rs.getInt(8));
             }
             return spct;
         } catch (Exception e) {
