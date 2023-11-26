@@ -4,22 +4,23 @@ import com.UI.component.Header;
 import com.UI.component.Menu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
-import com.UI.form.BanHang_Panel;
-import com.UI.form.ChiTietSanPham_Panel;
-import com.UI.form.HoaDonBanHang_Panel;
-import com.UI.form.HoaDonNhapHang_Panel;
-import com.UI.form.KhachHang_Panel;
-import com.UI.form.NhanVien_Panel;
-import com.UI.form.NhapHang_Panel;
-import com.UI.form.QLThuocTinhSanPham;
-import com.UI.form.Sale_Panel;
-import com.UI.form.SanPham_Panel;
-import com.UI.form.ThongKeDoanhSo_Panel;
-import com.UI.form.ThongKeDoanhThu_Panel;
-import com.UI.form.ThongTinCaNhan_Panel;
-import com.ui.form.Form1;
-import com.ui.form.Form_Home;
-import com.ui.form.MainForm;
+import com.raven.form.BanHang_Panel;
+import com.raven.form.ChiTietSanPham_Panel;
+import com.raven.form.HoaDonBanHang_Panel;
+import com.raven.form.HoaDonNhapHang_Panel;
+import com.raven.form.KhachHang_Panel;
+import com.raven.form.NhanVien_Panel;
+import com.raven.form.NhapHang_Panel;
+import com.raven.form.QLThuocTinhSanPham;
+import com.raven.form.Sale_Panel;
+import com.raven.form.SanPham_Panel;
+import com.raven.form.ThongKeDoanhSo_Panel;
+import com.raven.form.ThongKeDoanhThu_Panel;
+import com.raven.form.ThongTinCaNhan_Panel;
+import com.raven.form.Voucher_Panel;
+import com.raven.form.Form1;
+import com.raven.form.Form_Home;
+import com.raven.form.MainForm;
 import com.ui.swing.MenuItem;
 import com.ui.swing.PopupMenu;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
@@ -102,6 +103,8 @@ public class Main extends javax.swing.JFrame {
                 }else if(menuIndex == 8){
                     if(subMenuIndex == 0){
                         main.showForm(new Sale_Panel());
+                    }else if(subMenuIndex == 1){
+                        main.showForm(new Voucher_Panel());
                     }
                 }
             }

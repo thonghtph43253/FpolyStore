@@ -99,7 +99,7 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
                 hd.setNgayTao(rs.getString(3));
                 hd.setSdt(rs.getString(4));
                 hd.setTongTien(rs.getDouble(5));
-                hd.setVoucher(rs.getString(6));
+                hd.setVoucher(rs.getInt(6));
                 hd.setHinhThucThanhToan(rs.getInt(7));
                 hd.setTrangThai(rs.getInt(8));
                 hd.setId_KhachHang(rs.getInt(9));
@@ -137,7 +137,7 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
                 hd.setNgayTao(rs.getString(3));
                 hd.setSdt(rs.getString(4));
                 hd.setTongTien(rs.getDouble(5));
-                hd.setVoucher(rs.getString(6));
+                hd.setVoucher(rs.getInt(6));
                 hd.setHinhThucThanhToan(rs.getInt(7));
                 hd.setTrangThai(rs.getInt(8));
                 hd.setId_KhachHang(rs.getInt(9));
@@ -173,7 +173,7 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
                 hd.setNgayTao(rs.getString(3));
                 hd.setSdt(rs.getString(4));
                 hd.setTongTien(rs.getDouble(5));
-                hd.setVoucher(rs.getString(6));
+                hd.setVoucher(rs.getInt(6));
                 hd.setHinhThucThanhToan(rs.getInt(7));
                 hd.setTrangThai(rs.getInt(8));
                 hd.setId_KhachHang(rs.getInt(9));

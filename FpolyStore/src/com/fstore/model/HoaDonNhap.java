@@ -7,15 +7,15 @@ package com.fstore.model;
  */
 public class HoaDonNhap {
     private int Id_HoaDonNhap;
-    private String ngayTao;
+    private String ngayTao, maNv;
     private String tenNhaCungCap, soDienThoai, ghiChu;
     private double tongTien;
-    private  int Id_NhaCungCap, Id_NhanVien,trangThai;
+    private  int Id_NhaCungCap,trangThai;
 
     public HoaDonNhap() {
     }
     
-    public HoaDonNhap( String ngayTao, String tenNhaCungCap, String soDienThoai, String ghiChu, double tongTien, int Id_NhaCungCap, int Id_NhanVien, int trangThai) {
+    public HoaDonNhap( String ngayTao, String tenNhaCungCap, String soDienThoai, String ghiChu, double tongTien, int Id_NhaCungCap, String maNv, int trangThai) {
         
         this.ngayTao = ngayTao;
         this.tenNhaCungCap = tenNhaCungCap;
@@ -23,11 +23,11 @@ public class HoaDonNhap {
         this.ghiChu = ghiChu;
         this.tongTien = tongTien;
         this.Id_NhaCungCap = Id_NhaCungCap;
-        this.Id_NhanVien = Id_NhanVien;
+        this.maNv = maNv;
         this.trangThai = trangThai;
     }
     
-    public HoaDonNhap(int Id_HoaDonNhap, String ngayTao, String tenNhaCungCap, String soDienThoai, String ghiChu, double tongTien, int Id_NhaCungCap, int Id_NhanVien, int trangThai) {
+    public HoaDonNhap(int Id_HoaDonNhap, String ngayTao, String tenNhaCungCap, String soDienThoai, String ghiChu, double tongTien, int Id_NhaCungCap, String maNv, int trangThai) {
         this.Id_HoaDonNhap = Id_HoaDonNhap;
         this.ngayTao = ngayTao;
         this.tenNhaCungCap = tenNhaCungCap;
@@ -35,7 +35,7 @@ public class HoaDonNhap {
         this.ghiChu = ghiChu;
         this.tongTien = tongTien;
         this.Id_NhaCungCap = Id_NhaCungCap;
-        this.Id_NhanVien = Id_NhanVien;
+        this.maNv = maNv;
         this.trangThai = trangThai;
     }
 
@@ -95,13 +95,15 @@ public class HoaDonNhap {
         this.Id_NhaCungCap = Id_NhaCungCap;
     }
 
-    public int getId_NhanVien() {
-        return Id_NhanVien;
+    public String getMaNv() {
+        return maNv;
     }
 
-    public void setId_NhanVien(int Id_NhanVien) {
-        this.Id_NhanVien = Id_NhanVien;
+    public void setMaNv(String maNv) {
+        this.maNv = maNv;
     }
+
+   
 
     public int getTrangThai() {
         return trangThai;

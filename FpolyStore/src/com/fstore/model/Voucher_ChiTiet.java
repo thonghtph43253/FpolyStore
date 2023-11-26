@@ -11,24 +11,30 @@ public class Voucher_ChiTiet {
     private int id_Voucher;
     private int id_HoaDon;
     private int id_KhachHang;
+    private int trangThai;
 
     public Voucher_ChiTiet() {
     }
 
-    public Voucher_ChiTiet(int id_Voucher_CT, double soTienGiam, int id_Voucher, int id_HoaDon, int id_KhachHang) {
+    public Voucher_ChiTiet(int id_Voucher_CT, double soTienGiam, int id_Voucher, int id_HoaDon, int id_KhachHang, int trangThai) {
         this.id_Voucher_CT = id_Voucher_CT;
         this.soTienGiam = soTienGiam;
         this.id_Voucher = id_Voucher;
         this.id_HoaDon = id_HoaDon;
         this.id_KhachHang = id_KhachHang;
+        this.trangThai = trangThai;
     }
 
-    public Voucher_ChiTiet(double soTienGiam, int id_Voucher, int id_HoaDon, int id_KhachHang) {
+    public Voucher_ChiTiet(double soTienGiam, int id_Voucher, int id_HoaDon, int id_KhachHang, int trangThai) {
         this.soTienGiam = soTienGiam;
         this.id_Voucher = id_Voucher;
         this.id_HoaDon = id_HoaDon;
         this.id_KhachHang = id_KhachHang;
+        this.trangThai = trangThai;
     }
+
+   
+     
 
     public int getId_Voucher_CT() {
         return id_Voucher_CT;
@@ -69,5 +75,13 @@ public class Voucher_ChiTiet {
     public void setId_KhachHang(int id_KhachHang) {
         this.id_KhachHang = id_KhachHang;
     }
-    
+
+    public int getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
+    }
+     
 }

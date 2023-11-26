@@ -16,6 +16,14 @@ public class HoaDonNhap_ChiTiet {
     public HoaDonNhap_ChiTiet() {
     }
 
+    public HoaDonNhap_ChiTiet(int Id_SanPhamChiTiet, int soLuong, double giaNhap) {
+        this.Id_SanPhamChiTiet = Id_SanPhamChiTiet;
+        this.soLuong = soLuong;
+        this.giaNhap = giaNhap;
+    }
+    
+    
+    
     public HoaDonNhap_ChiTiet( int Id_HoaDonNhap, int Id_SanPhamChiTiet, int soLuong, double giaNhap, int trangThai) {
         
         this.Id_HoaDonNhap = Id_HoaDonNhap;

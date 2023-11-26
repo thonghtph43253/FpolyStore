@@ -250,4 +250,21 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             return 0;
         }
     }
+    public int updateSoLuongSauKhiNhap(int soLuong, Integer id) {
+        sql = """
+             UPDATE SANPHAMCHITIET SET SOLUONG = SOLUONG +?
+             WHERE ID_SANPHAMCHITIET = ?
+             """;
+        try {
+             conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, soLuong);
+            ps.setObject(2, id);
+           
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

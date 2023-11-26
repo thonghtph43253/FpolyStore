@@ -12,7 +12,7 @@ public class HoaDon {
     private String tenKH;
     private String sdt;
     private double tongTien;
-    private String voucher;
+    private int voucher;
     private String ghiChu;
     private int hinhThucThanhToan;
     private int trangThai;
@@ -31,7 +31,7 @@ public class HoaDon {
         this.ngayTao = ngayTao;
     }
     
-    public HoaDon( String tenKH, String sdt, double tongTien, String voucher, String ghiChu, int hinhThucThanhToan, int trangThai, int Id_KhachHang, String Id_NhanVien, String ngayTao) {
+    public HoaDon( String tenKH, String sdt, double tongTien, int voucher, String ghiChu, int hinhThucThanhToan, int trangThai, int Id_KhachHang, String Id_NhanVien, String ngayTao) {
         this.tenKH = tenKH;
         this.sdt = sdt;
         this.tongTien = tongTien;
@@ -44,7 +44,7 @@ public class HoaDon {
         this.ngayTao = ngayTao;
     }
     
-    public HoaDon(int Id_HoaDon, String tenKH, String sdt, double tongTien, String voucher, String ghiChu, int hinhThucThanhToan, int trangThai, int Id_KhachHang, String Id_NhanVien, String ngayTao) {
+    public HoaDon(int Id_HoaDon, String tenKH, String sdt, double tongTien, int voucher, String ghiChu, int hinhThucThanhToan, int trangThai, int Id_KhachHang, String Id_NhanVien, String ngayTao) {
         this.Id_HoaDon = Id_HoaDon;
         this.tenKH = tenKH;
         this.sdt = sdt;
@@ -90,13 +90,15 @@ public class HoaDon {
         this.tongTien = tongTien;
     }
 
-    public String getVoucher() {
+    public int getVoucher() {
         return voucher;
     }
 
-    public void setVoucher(String voucher) {
+    public void setVoucher(int voucher) {
         this.voucher = voucher;
     }
+
+   
 
     public String getGhiChu() {
         return ghiChu;
