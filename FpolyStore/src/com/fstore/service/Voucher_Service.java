@@ -178,4 +178,19 @@ public class Voucher_Service implements Inf_Service<Voucher, Integer>{
             return null;
         }
     }
+    public int updateSoLuong(Integer id) {
+         sql = """
+                UPDATE  VOUCHERS SET SOLUONG= SOLUONG - 1
+                WHERE ID_VOUCHER = ?
+                """;
+        try {
+             conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, id);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

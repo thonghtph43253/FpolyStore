@@ -4,9 +4,12 @@
  */
 package com.raven.form;
 
+import com.fsore.untils.MsgBox;
 import com.fsore.untils.XDate;
+import static com.fsore.untils.convertKey.removeAccent;
 import com.fstore.model.HoaDon;
 import com.fstore.model.HoaDon_ChiTiet;
+import com.fstore.model.SanPham;
 import com.fstore.model.SanPhamChiTiet;
 import com.fstore.model.Voucher_ChiTiet;
 import com.fstore.service.ChatLieu_Service;
@@ -17,9 +20,32 @@ import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import com.fstore.service.Voucher_CT_Service;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.color.Color;
+import com.itextpdf.kernel.color.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
 
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.border.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.VerticalAlignment;
+import com.itextpdf.text.BadElementException;
+import com.lowagie.text.Image;
+import java.io.IOException;
+import java.awt.Toolkit;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Admin
@@ -35,6 +61,8 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
     private ChatLieu_Service chatLieu_Service = new ChatLieu_Service();
     private MauSac_Service mauSac_Service = new MauSac_Service();
     private Voucher_CT_Service voucher_CT_Service = new Voucher_CT_Service();
+    
+    private List<HoaDon_ChiTiet> list;
 
     public ChiTietHoaDon_Jdialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -44,6 +72,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
 
     public ChiTietHoaDon_Jdialog(java.awt.Frame parent, boolean modal, int id_HoaDon) {
         super(parent, modal);
+        
         initComponents();
         this.setLocationRelativeTo(null);
         this.id_HoaDon = id_HoaDon;
@@ -67,6 +96,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
 
         lblThanhToan.setText(hd.getTongTien() + " VND");
         lblThoiGian.setText(hd.getNgayTao());
+        list = hdct_Service.selectByID_HoaDon(id_HoaDon);
     }
 
     public void fillTable(List<HoaDon_ChiTiet> list) {
@@ -98,7 +128,126 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         }
         return tongTien;
     }
+    public void xuatHoaDon() throws IOException, BadElementException{
+//        String pathName = XDate.toString(new Date(), "hh-mm-ss aa dd-MM-yyyy");
+//        pathName = pathName.replaceAll(" ", "+");
+ //     String path = "J:\\Code_PRO_1041\\HoaDon"+pathName+".pdf";
+//        PdfWriter
+        HoaDon hd1 = hoaDon_Service.selectByID(id_HoaDon);
+        DecimalFormat nf = new DecimalFormat("#,##0");
+       String pathnn = XDate.toString(new Date(), " hh-mm-ss aa dd-MM-yyyy");
+        pathnn = pathnn.replaceAll(" ", "_");
+        System.out.println(pathnn);
+        String path = "J:\\Code_PRO_1041\\HoaDon\\"+pathnn+".pdf";
+        com.itextpdf.kernel.pdf.PdfWriter pdfWriter = new com.itextpdf.kernel.pdf.PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdfDocument);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+        Document doc = new Document(pdfDocument);
+        float col = 280f;
+        float columnWidth[] = {col, col};
+        com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(columnWidth);
+        table.setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE);
+        String file = "J:\\Code_PRO_1041\\FpolyStore\\FpolyStore\\src\\com\\raven\\icon\\logo_FStore 1 (1).png";
+        ImageData date = ImageDataFactory.create(file);
+        com.itextpdf.layout.element.Image image = new com.itextpdf.layout.element.Image(date);
+//        doc.add(image);
+        table.addCell(new Cell().add(image).setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add("FSTORE").setFontSize(30f).setBorder(Border.NO_BORDER));
 
+        table.addCell(new Cell().add("Kieu Mai \n SDT:0333002864")
+                .setTextAlignment(TextAlignment.RIGHT).setMarginTop(30f).setMarginBottom(30f).setBorder(Border.NO_BORDER).setMarginRight(10f)
+        );
+
+        float colWidth[] = {80, 250, 80, 150};
+
+        com.itextpdf.layout.element.Table customerInfor = new com.itextpdf.layout.element.Table(colWidth);
+        customerInfor.addCell(new Cell(0, 4).add("Phieu Thanh Toan").setBold().setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+
+        customerInfor.addCell(new Cell(0, 4).add("Thong tin").setBold().setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("Khach Hang: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getTenKH())).setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("Ma Hoa Don: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(id_HoaDon+"").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("SDT: ").setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getSdt())).setBorder(Border.NO_BORDER)); //
+
+        customerInfor.addCell(new Cell().add("Thu Ngan: ").setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getId_NhanVien())).setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add("Date: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(hd1.getNgayTao()).setBorder(Border.NO_BORDER));
+
+        float iteamInforColWidth[] = {140,140, 140, 140, 140};
+        com.itextpdf.layout.element.Table itemInforTable = new com.itextpdf.layout.element.Table(iteamInforColWidth);
+        itemInforTable.addCell(new Cell().add("ID_SPCT").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("San Pham").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("So luong").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("Gia").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT));
+        itemInforTable.addCell(new Cell().add("Thanh Tien").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT));
+
+        int total = 0;
+        int quantitySum = 0;
+        for (HoaDon_ChiTiet hdct : list) {
+            SanPhamChiTiet spct = spct_Service.selectByID(hdct.getId_SanPhamChiTiet());
+            SanPham sp = sp_Service.selectByID(spct.getId_SanPham());
+            HoaDon hd = hoaDon_Service.selectByID(hdct.getId_HoaDon());
+            int id = hdct.getId_HoaDonCT();
+            int id_spct = hdct.getId_SanPhamChiTiet();
+            String nameProduct = sp.getTenSP();
+            String nameCustomer = hd.getTenKH();
+            String Size = size_Service.selectByID(spct.getId_Size()).getTenSize();
+            String Color = mauSac_Service.selectByID(spct.getId_Mau()).getTenMau();
+            String Material = chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu();
+            int quantity = (int)hdct.getSoLuong();
+            double price = (double) hdct.getGia();
+            itemInforTable.addCell(new Cell().add(id_spct+""));
+            itemInforTable.addCell(new Cell().add(removeAccent(nameProduct)));
+            itemInforTable.addCell(new Cell().add(quantity + ""));
+            itemInforTable.addCell(new Cell().add(nf.format(price) + " VND").setTextAlignment(TextAlignment.RIGHT));
+            itemInforTable.addCell(new Cell().add(nf.format(price * quantity) + " VND").setTextAlignment(TextAlignment.RIGHT));
+            total += price * quantity;
+            quantitySum += quantity;
+        }
+
+        itemInforTable.addCell(new Cell().add("Tong So Luong").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add( "").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add(quantitySum + "").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add("Tong Tien").setTextAlignment(TextAlignment.RIGHT).setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add(nf.format(total) + " VND").setTextAlignment(TextAlignment.RIGHT).setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER).setFontColor(Color.WHITE));
+
+        float colWidthNote[] = {560};
+        Voucher_CT_Service voucher_CT_Service = new Voucher_CT_Service();
+        HoaDon hd = hoaDon_Service.selectByID(id_HoaDon);
+        Voucher_ChiTiet vct = voucher_CT_Service.selectByIDHD(hd.getId_HoaDon());
+        com.itextpdf.layout.element.Table customerInforNote = new com.itextpdf.layout.element.Table(colWidthNote);
+        
+        if (vct != null) {
+            customerInforNote.addCell(new Cell().add("Tong tien: " + nf.format((hd.getTongTien()+vct.getSoTienGiam())) + " VND").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+            customerInforNote.addCell(new Cell().add("Giam gia: " + nf.format((vct.getSoTienGiam())) + " VND").
+                    setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+        }else{
+             customerInforNote.addCell(new Cell().add("Tong tien: " + nf.format((hd.getTongTien())) + " VND").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+            customerInforNote.addCell(new Cell().add("Giam gia: " + nf.format((0)) + " VND").
+                    setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+        }
+        customerInforNote.addCell(new Cell().add("Thanh toan: " + nf.format((hd.getTongTien())) + " VND").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+        customerInforNote.addCell(new Cell().add("Luu y: Quy khach vui long kiem tra san pham truoc khi roi khoi shop!").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setItalic().setFontColor(Color.RED));
+        customerInforNote.addCell(new Cell().add("Xin cam on\nVa hen gap lai quý khach").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setItalic().setFontColor(Color.BLACK));
+        document.add(table);
+        document.add(new Paragraph("\n"));
+        document.add(customerInfor);
+        document.add(new Paragraph("\n"));
+        document.add(itemInforTable);
+        document.add(new Paragraph("\n"));
+        document.add(customerInforNote);
+        document.close();
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -160,6 +309,11 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         lblThanhToan.setText("0.0");
 
         jButton1.setText("Xuất hóa đơn");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Hủy");
 
@@ -278,6 +432,17 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            xuatHoaDon();
+            MsgBox.alert(this, "Xuất hóa đơn thành công!");
+        }  catch (IOException ex) {
+            Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadElementException ex) {
+            Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

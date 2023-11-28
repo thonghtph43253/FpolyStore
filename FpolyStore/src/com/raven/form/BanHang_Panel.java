@@ -69,7 +69,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
         lblSoTienGiam.setVisible(false);
         lblTitleSoTienGiam.setVisible(false);
         lblErTienKhach.setVisible(false);
-
+        btnThemGH.setEnabled(false);
+        btnXoaGH.setEnabled(false);
     }
 
     public void fillTableHoaDonCho(List<HoaDon> list) {
@@ -270,6 +271,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     public void fillCbbVoucher() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cbbVoucher.getModel();
         model.removeAllElements();
+        model.addElement(null);
         List<Voucher> list = voucher_Service.selectByDate(new Date());
         for (Voucher v : list) {
             model.addElement(v);
@@ -316,6 +318,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
             vct.setTrangThai(1);
             vct.setSoTienGiam(Double.parseDouble(lblSoTienGiam.getText()));
             voucher_CT_Service.insert(vct);
+            voucher_Service.updateSoLuong(v.getId_Voucher());
         }
 
         int hinhThucTT = cbbHTTT.getSelectedIndex();
@@ -912,6 +915,11 @@ public class BanHang_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblGioHang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblGioHangMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblGioHang);
 
         btnXoaGH.setText("Xóa khỏi danh sách");
@@ -1014,6 +1022,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
             tblSanPham.clearSelection();
             lblTongTien.setText(String.valueOf(tongTien()));
             lblTienThanhToan.setText(String.valueOf(getTienThanhToan()));
+            btnThemGH.setEnabled(false);
         } else {
             MsgBox.alert(this, "Vui lòng tạo hóa đơn trước!");
         }
@@ -1043,6 +1052,10 @@ public class BanHang_Panel extends javax.swing.JPanel {
             lblSoTienGiam.setVisible(true);
             lblTitleSoTienGiam.setVisible(true);
         }
+        if(!cbApVoucher.isSelected()){
+            lblSoTienGiam.setText("0");
+            lblTienThanhToan.setText(getTienThanhToan()+"");
+        }
     }//GEN-LAST:event_cbApVoucherActionPerformed
 
     private void cbbVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbVoucherActionPerformed
@@ -1068,6 +1081,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
         int row = tblSanPham.getSelectedRow();
         lblTenSanPham.setText(tblSanPham.getValueAt(row, 1).toString());
+        btnThemGH.setEnabled(true);
     }//GEN-LAST:event_tblSanPhamMouseClicked
 
     private void btnXoaGHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaGHActionPerformed
@@ -1075,6 +1089,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
         fillTableGioHang(listGioHang);
         lblTongTien.setText(String.valueOf(tongTien()) + "  VNĐ");
         lblTienThanhToan.setText(String.valueOf(tongTienTT()));
+        btnXoaGH.setEnabled(false);
     }//GEN-LAST:event_btnXoaGHActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -1137,8 +1152,14 @@ public class BanHang_Panel extends javax.swing.JPanel {
                     lblTienThanhToan.setText(String.valueOf(getTienThanhToan()));
                 }
             }
+        }else{
+            lblSoTienGiam.setText("0");
         }
     }//GEN-LAST:event_cbbVoucherItemStateChanged
+
+    private void tblGioHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGioHangMouseClicked
+        btnXoaGH.setEnabled(true);
+    }//GEN-LAST:event_tblGioHangMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
