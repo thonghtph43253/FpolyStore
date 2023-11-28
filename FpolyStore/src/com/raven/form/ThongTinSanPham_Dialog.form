@@ -146,11 +146,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jLabel19" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblHanhAnh" alignment="0" pref="136" max="32767" attributes="0"/>
                               <Component id="btnSua" alignment="0" max="32767" attributes="0"/>
                               <Component id="btnXoa" alignment="0" max="32767" attributes="0"/>
                               <Component id="btnReset" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnThem" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnThem" alignment="0" pref="136" max="32767" attributes="0"/>
+                              <Component id="lblHinhAnh" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
@@ -175,7 +175,7 @@
                       <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="lblHanhAnh" min="-2" pref="148" max="-2" attributes="0"/>
+                              <Component id="lblHinhAnh" min="-2" pref="148" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -216,12 +216,20 @@
                 <Property name="text" type="java.lang.String" value="H&#xec;nh &#x1ea3;nh"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblHanhAnh">
+            <Component class="javax.swing.JLabel" name="lblHinhAnh">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/raven/icon/addimage.png"/>
                 </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
+                    <BevelBorder/>
+                  </Border>
+                </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblHinhAnhMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnThem">
               <Properties>

@@ -20,29 +20,29 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class SanPham_Panel extends javax.swing.JPanel {
+
     private SanPham_Service sps = new SanPham_Service();
     private DanhMuc_Service dms = new DanhMuc_Service();
     private int search = 0;
-    private int id_sp = -1 ;
+    private int id_sp = -1;
+
     public SanPham_Panel() {
         initComponents();
         this.setHidden();
         this.loadTable(sps.selectAll());
         this.fillCboDanhMuc();
     }
-    
 
-   
-    
-    
-    public void setHidden(){
+    public void setHidden() {
         this.txtTenLoaiSP.setVisible(false);
+        lblTenLoaiSP.setVisible(false);
         this.lblEr.setVisible(false);
         this.btnThemL.setVisible(false);
         this.btnSuaL.setVisible(false);
-        this.btnXoaL.setVisible(false);
+
     }
-    public void loadTable(List<SanPham> list){
+
+    public void loadTable(List<SanPham> list) {
         DefaultTableModel tblMD = (DefaultTableModel) tblSanPham.getModel();
         tblMD.setRowCount(0);
         for (SanPham sp : list) {
@@ -51,89 +51,164 @@ public class SanPham_Panel extends javax.swing.JPanel {
                 sp.getTenSP(),
                 sp.getDm().getTenDanhMuc(),
                 sp.getMoTa(),
-                sp.getTrangThai()==1?"Đang bán":"Ngừng bán",
-                
-            });
+                sp.getTrangThai() == 1 ? "Đang bán" : "Ngừng bán",});
         }
     }
-    public SanPham getForm(){
+
+    public SanPham getForm() {
         DanhMuc dm = (DanhMuc) cboDanhMuc.getSelectedItem();
         String tenSP = txtTenSP.getText().trim();
         String moTa = txtMoTa.getText().trim();
         StringBuffer er = new StringBuffer();
         int tt = 1;
-        if(rdoHD.isSelected()){
-            tt = 1; 
-        }else if(rdoKHD.isSelected()){
+        if (rdoHD.isSelected()) {
+            tt = 1;
+        } else if (rdoKHD.isSelected()) {
             tt = 0;
         }
-        
-        if(tenSP.isEmpty()){
+
+        if (tenSP.isEmpty()) {
             er.append("Tên sản phẩm không được bỏ trống!\n");
         }
-        if(moTa.isEmpty()){
+        if (moTa.isEmpty()) {
             er.append("Mô tả khồng được bỏ trống!\n");
         }
-        if(er.length()>0){
+        if (er.length() > 0) {
             MsgBox.alert(this, er.toString());
             return null;
         }
         return new SanPham(tt, tenSP, moTa, dm);
     }
-    public void addSanPham(){
+
+    public void addSanPham() {
         SanPham sp = this.getForm();
-        if(sp == null){
+        if (sp == null) {
             return;
         }
-        if(MsgBox.confirm(this, "Bạn có chắc chắn muốn thêm?")){
-            if(sps.insert(sp)!= 0){
-                MsgBox.alert(this,"Thêm thành cồng!");
+        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn thêm?")) {
+            if (sps.insert(sp) != 0) {
+                MsgBox.alert(this, "Thêm thành cồng!");
                 this.loadTable(sps.selectAll());
-            }else{
-                MsgBox.alert(this,"Thêm không thành cồng!");
+            } else {
+                MsgBox.alert(this, "Thêm không thành cồng!");
             }
         }
     }
-     public void updateSanPham(){
+
+    public DanhMuc getDanhMuc() {
+        DanhMuc dm = new DanhMuc();
+        dm.setTenDanhMuc(txtTenLoaiSP.getText());
+        dm.setTrangThai(1);
+        if (txtTenLoaiSP.getText().isEmpty()) {
+            MsgBox.alert(this, "Vui lòng điền danh mục!");
+            return null;
+        }
+        return dm;
+    }
+
+    public void setFormDanhMuc() {
+        DanhMuc dm = (DanhMuc) cboDanhMuc.getSelectedItem();
+        if (dm == null) {
+            return;
+        }
+        txtTenLoaiSP.setText(dm.getTenDanhMuc());
+    }
+
+    public void insertDanhMuc() {
+        DanhMuc dm = getDanhMuc();
+        if (dm == null) {
+            return;
+        }
+        List<DanhMuc> list = dms.selectAll();
+        for (DanhMuc danhMuc : list) {
+            if (danhMuc.getTenDanhMuc().equalsIgnoreCase(dm.getTenDanhMuc())) {
+                MsgBox.alert(this, "Danh mục đã tồn tại");
+                txtTenLoaiSP.setText("");
+                return;
+            }
+        }
+        if (dms.insert(dm) != 0) {
+            MsgBox.alert(this, "Thêm thành công!");
+            txtTenLoaiSP.setText("");
+        } else {
+            return;
+        }
+        txtTenLoaiSP.setVisible(false);
+        lblTenLoaiSP.setVisible(false);
+        //lblEr.setVisible(false);
+        btnSuaL.setVisible(false);
+        btnThemL.setVisible(false);
+
+        fillCboDanhMuc();
+
+    }
+
+    public void updateDanhMuc() {
+        DanhMuc dmu = getDanhMuc();
+        DanhMuc dm = (DanhMuc) cboDanhMuc.getSelectedItem();
+        if (dm == null) {
+            return;
+        }
+
+        if (dms.update(dmu, dm.getID_DanhMuc()) != 0) {
+            MsgBox.alert(this, "Sửa thành công!");
+            txtTenLoaiSP.setText("");
+        } else {
+            return;
+        }
+        txtTenLoaiSP.setVisible(false);
+        lblTenLoaiSP.setVisible(false);
+        //lblEr.setVisible(false);
+        btnSuaL.setVisible(false);
+        btnThemL.setVisible(false);
+
+        fillCboDanhMuc();
+    }
+
+    public void updateSanPham() {
         SanPham sp = this.getForm();
         int row = tblSanPham.getSelectedRow();
         sp.setID_SanPham(Integer.parseInt(tblSanPham.getValueAt(row, 0).toString()));
-        if(sp == null){
+        if (sp == null) {
             return;
         }
-        if(MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa?")){
-            if(sps.update(sp,sp.getID_SanPham())!= 0){
-                MsgBox.alert(this,"Cập nhật thành cồng!");
+        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa?")) {
+            if (sps.update(sp, sp.getID_SanPham()) != 0) {
+                MsgBox.alert(this, "Cập nhật thành cồng!");
                 this.loadTable(sps.selectAll());
-            }else{
-                MsgBox.alert(this,"Cập nhật không thành cồng!");
+            } else {
+                MsgBox.alert(this, "Cập nhật không thành cồng!");
             }
         }
     }
-     public void deleteSanPham(){
-       int row = tblSanPham.getSelectedRow();
-       int id = Integer.parseInt(tblSanPham.getValueAt(row, 0).toString());
-       if(MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa?")){
-            if(sps.delete(id)!= 0){
-                MsgBox.alert(this,"Xóa thành cồng!");
+
+    public void deleteSanPham() {
+        int row = tblSanPham.getSelectedRow();
+        int id = Integer.parseInt(tblSanPham.getValueAt(row, 0).toString());
+        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa?")) {
+            if (sps.delete(id) != 0) {
+                MsgBox.alert(this, "Xóa thành cồng!");
                 this.loadTable(sps.selectAll());
-            }else{
-                MsgBox.alert(this,"Xóa không thành cồng!");
+            } else {
+                MsgBox.alert(this, "Xóa không thành cồng!");
             }
         }
     }
-    public void fillCboDanhMuc(){
+
+    public void fillCboDanhMuc() {
         cboDanhMuc.removeAllItems();
         DefaultComboBoxModel cboMD = (DefaultComboBoxModel) cboDanhMuc.getModel();
         for (DanhMuc dm : dms.selectAll()) {
             cboMD.addElement(dm);
         }
     }
-    public void setForm(SanPham sp){
+
+    public void setForm(SanPham sp) {
         txtTenSP.setText(sp.getTenSP());
         txtMoTa.setText(sp.getMoTa());
         cboDanhMuc.getModel().setSelectedItem(sp.getDm());
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -148,7 +223,6 @@ public class SanPham_Panel extends javax.swing.JPanel {
         lblEr = new javax.swing.JLabel();
         btnThemL = new javax.swing.JButton();
         btnSuaL = new javax.swing.JButton();
-        btnXoaL = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         txtTenSP = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -192,6 +266,11 @@ public class SanPham_Panel extends javax.swing.JPanel {
         });
 
         cboDanhMuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboDanhMuc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboDanhMucItemStateChanged(evt);
+            }
+        });
 
         lblTenLoaiSP.setText("Tên loại sản phẩm");
 
@@ -199,10 +278,18 @@ public class SanPham_Panel extends javax.swing.JPanel {
         lblEr.setText("jLabel4");
 
         btnThemL.setText("Thêm");
+        btnThemL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemLActionPerformed(evt);
+            }
+        });
 
         btnSuaL.setText("Sửa");
-
-        btnXoaL.setText("Xóa");
+        btnSuaL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaLActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Tên sản phẩm");
 
@@ -258,9 +345,7 @@ public class SanPham_Panel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(btnThemL)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(btnSuaL)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnXoaL))
+                            .addComponent(btnSuaL))
                         .addComponent(jLabel5)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(cboDanhMuc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -303,8 +388,7 @@ public class SanPham_Panel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThemL)
-                    .addComponent(btnSuaL)
-                    .addComponent(btnXoaL))
+                    .addComponent(btnSuaL))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -489,21 +573,21 @@ public class SanPham_Panel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddLSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLSPActionPerformed
-       if(txtTenLoaiSP.isVisible()){
-           txtTenLoaiSP.setVisible(false);
-           lblTenLoaiSP.setVisible(false);
-           lblEr.setVisible(false);
-           btnSuaL.setVisible(false);
-           btnThemL.setVisible(false);
-           btnXoaL.setVisible(false);
-       }else{
-           txtTenLoaiSP.setVisible(true);
-           lblTenLoaiSP.setVisible(true);
-           lblEr.setVisible(true);
-           btnSuaL.setVisible(true);
-           btnThemL.setVisible(true);
-           btnXoaL.setVisible(true);
-       }
+        if (txtTenLoaiSP.isVisible()) {
+            txtTenLoaiSP.setVisible(false);
+            lblTenLoaiSP.setVisible(false);
+            //lblEr.setVisible(false);
+            btnSuaL.setVisible(false);
+            btnThemL.setVisible(false);
+
+        } else {
+            txtTenLoaiSP.setVisible(true);
+            lblTenLoaiSP.setVisible(true);
+            //lblEr.setVisible(true);
+            btnSuaL.setVisible(true);
+            btnThemL.setVisible(true);
+
+        }
     }//GEN-LAST:event_btnAddLSPActionPerformed
 
     private void cboSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSearchActionPerformed
@@ -511,20 +595,23 @@ public class SanPham_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_cboSearchActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        
-        if( search == 0){
+
+        if (search == 0) {
             List<SanPham> list = new ArrayList<>();
-            int id = Integer.parseInt(txtSearch.getText().trim());
-            list.add( sps.selectByID(id));
-            loadTable(list);
-        }else{
+            try {
+                int id = Integer.parseInt(txtSearch.getText().trim());
+                list.add(sps.selectByID(id));
+                loadTable(list);
+            } catch (NumberFormatException numberFormatException) {
+            }
+        } else {
             String ten = txtSearch.getText().trim();
             loadTable(sps.selectByName(ten));
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cboSearchItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboSearchItemStateChanged
-       search = cboSearch.getSelectedIndex();
+        search = cboSearch.getSelectedIndex();
     }//GEN-LAST:event_cboSearchItemStateChanged
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -532,26 +619,38 @@ public class SanPham_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-       updateSanPham();
+        updateSanPham();
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-       deleteSanPham();
+        deleteSanPham();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
         int row = tblSanPham.getSelectedRow();
         id_sp = Integer.parseInt(tblSanPham.getValueAt(row, 0).toString());
-         
+
         SanPham sp = sps.selectByID(id_sp);
         setForm(sp);
     }//GEN-LAST:event_tblSanPhamMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       if(id_sp!= -1){
-           new ThongTinSanPham_Dialog(new Main(), true, id_sp).setVisible(true);
-       }
+        if (id_sp != -1) {
+            new ThongTinSanPham_Dialog(new Main(), true, id_sp).setVisible(true);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnThemLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemLActionPerformed
+        insertDanhMuc();
+    }//GEN-LAST:event_btnThemLActionPerformed
+
+    private void cboDanhMucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboDanhMucItemStateChanged
+        setFormDanhMuc();
+    }//GEN-LAST:event_cboDanhMucItemStateChanged
+
+    private void btnSuaLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaLActionPerformed
+        updateDanhMuc();
+    }//GEN-LAST:event_btnSuaLActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -563,7 +662,6 @@ public class SanPham_Panel extends javax.swing.JPanel {
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnThemL;
     private javax.swing.JButton btnXoa;
-    private javax.swing.JButton btnXoaL;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cboDanhMuc;
     private javax.swing.JComboBox<String> cboSearch;

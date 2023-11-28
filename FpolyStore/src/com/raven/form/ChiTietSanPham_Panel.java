@@ -5,6 +5,7 @@
 package com.raven.form;
 
 import com.fsore.untils.MsgBox;
+import com.fsore.untils.XuatExcelFromTbl;
 import com.fstore.model.DanhMuc;
 import com.fstore.model.SanPhamChiTiet;
 import com.fstore.service.ChatLieu_Service;
@@ -14,7 +15,10 @@ import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import com.ui.main.Main;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -79,7 +83,7 @@ public class ChiTietSanPham_Panel extends javax.swing.JPanel {
                     MsgBox.alert(this, "Định mức phải là số!");
                     return;
                 }
-                 dau = "<" +soLuong;
+                 dau = "<";
             }
         } else if (rdoLonHon.isSelected()) {
            
@@ -93,13 +97,13 @@ public class ChiTietSanPham_Panel extends javax.swing.JPanel {
                     MsgBox.alert(this, "Định mức phải là số!");
                     return;
                 }
-                 dau = ">"+ soLuong;
+                 dau = ">";
             }
         } else if (rdoConHang.isSelected()) {
-            dau = "> 0";
+            dau = ">";
             soLuong = 0;
         } else if (rdoHetHang.isSelected()) {
-            dau = "< 0";
+            dau = "<";
             soLuong = 0;
         }
         if (rdoGiaCao.isSelected()) {
@@ -182,6 +186,11 @@ public class ChiTietSanPham_Panel extends javax.swing.JPanel {
 
         jButton2.setText("Xuất File");
         jButton2.setPreferredSize(new java.awt.Dimension(75, 30));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         cbbDanhMuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbbDanhMuc.addActionListener(new java.awt.event.ActionListener() {
@@ -460,14 +469,23 @@ public class ChiTietSanPham_Panel extends javax.swing.JPanel {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         filter();
-        if (spct_Service.selectByFilter(dau, tt, sapXepTen, sapXepGia) != null) {
-            fillTable(spct_Service.selectByFilter(dau, tt, sapXepTen, sapXepGia));
+        if (spct_Service.selectByFilter(dau,soLuong, tt, sapXepTen, sapXepGia) != null) {
+            fillTable(spct_Service.selectByFilter(dau,soLuong, tt, sapXepTen, sapXepGia));
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         fillTable(spct_Service.selectAll());
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        XuatExcelFromTbl excelFromTbl = new XuatExcelFromTbl();
+        try {
+            excelFromTbl.exportExcel((DefaultTableModel) tblSanPhamChiTiet.getModel());
+        } catch (IOException ex) {
+            Logger.getLogger(ChiTietSanPham_Panel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -73,7 +73,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         }
         if(rdoHD.isSelected()){
             tt = 1;
-        }else if(rdoHD.isSelected()){
+        }else if(rdoKHD.isSelected()){
             tt = 0;
         }
         if(ten.isEmpty()){

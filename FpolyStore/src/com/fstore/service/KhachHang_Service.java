@@ -19,11 +19,13 @@ import javax.swing.UIManager;
  *
  * @author hnc0801
  */
-public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
+public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
+
     private Connection conn = null;
     private PreparedStatement ps = null;
     private ResultSet rs = null;
     private String sql = null;
+
     @Override
     public int insert(KhachHang model) {
         sql = """
@@ -31,8 +33,8 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
               VALUES(?,?,?,?,?,?)
               """;
         try {
-             conn = DBConnect.getConnection();
-            ps= conn.prepareStatement(sql);
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
             ps.setObject(1, model.getTen());
             ps.setObject(2, model.getsDT());
             ps.setObject(3, model.getNgaySinh());
@@ -50,11 +52,11 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
     public int update(KhachHang model, Integer id) {
         sql = """
               UPDATE KHACHHANG SET  TENKH = ? , SDT = ? , NGAYSINH = ? , GIOITINH = ? , DIACHI = ? , TRANGTHAI = ?
-            
               WHERE ID_KHACHHANG = ?
               """;
         try {
-             conn = DBConnect.getConnection();
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
             ps.setObject(1, model.getTen());
             ps.setObject(2, model.getsDT());
             ps.setObject(3, model.getNgaySinh());
@@ -76,8 +78,8 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
               WHERE ID_KHACHHANG = ?
               """;
         try {
-             conn = DBConnect.getConnection();
-            ps= conn.prepareStatement(sql);
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -88,16 +90,16 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
 
     @Override
     public List<KhachHang> selectAll() {
-        sql ="""
+        sql = """
              SELECT ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI 
              FROM   KHACHHANG
              """;
         List<KhachHang> list = new ArrayList<>();
         try {
             conn = DBConnect.getConnection();
-            ps= conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 KhachHang md = new KhachHang();
                 md.setId_KhachHang(rs.getInt(1));
                 md.setTen(rs.getString(2));
@@ -114,14 +116,10 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
             return null;
         }
     }
-    
-   
-    
-    
 
     @Override
     public KhachHang selectByID(Integer id) {
-        sql ="""
+        sql = """
              SELECT ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI 
              FROM KHACHHANG
              WHERE ID_KHACHHANG = ?
@@ -129,10 +127,10 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
         KhachHang kh = null;
         try {
             conn = DBConnect.getConnection();
-            ps= conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
             ps.setObject(1, id);
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 kh = new KhachHang();
                 kh.setId_KhachHang(rs.getInt(1));
                 kh.setTen(rs.getString(2));
@@ -148,5 +146,5 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer>{
             return null;
         }
     }
-    
+
 }
