@@ -141,6 +141,7 @@ public class ThongKeDoanhSo_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblThongKe.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tblThongKe.setRowHeight(35);
         jScrollPane1.setViewportView(tblThongKe);
 

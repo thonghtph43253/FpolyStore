@@ -180,6 +180,70 @@ public class SanPhamChiTiet_Service implements Inf_Service<SanPhamChiTiet, Integ
             return null;
         }
     }
+    
+    public List<SanPhamChiTiet> selectByName(String ten) {
+        sql = """
+                 SELECT ID_SANPHAMCHITIET, SOLUONG,GIA,SPCT.TRANGTHAI,ID_CHATLIEU,ID_SIZE,ID_MAU, SPCT.ID_SANPHAM, HINHANH
+                 FROM SANPHAMCHITIET AS SPCT JOIN SANPHAM AS SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM 
+                 WHERE SP.TENSANPHAM like ?
+                 """;
+        List<SanPhamChiTiet> list = new ArrayList<>();
+        try {
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setObject(1, "%"+ten+"%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamChiTiet spct = new SanPhamChiTiet();
+                spct.setId_SanPhamChiTiet(rs.getInt(1));
+                spct.setSoLuong(rs.getInt(2));
+                spct.setGia(rs.getDouble(3));
+                spct.setTrangThai(rs.getInt(4));
+                spct.setId_ChatLieu(rs.getInt(5));
+                spct.setId_Size(rs.getInt(6));
+                spct.setId_Mau(rs.getInt(7));
+                spct.setId_SanPham(rs.getInt(8));
+                spct.setHinhAnh(rs.getString(9));
+                list.add(spct);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public List<SanPhamChiTiet> selectByDanhMuc(int id_dm) {
+        sql = """
+                 SELECT ID_SANPHAMCHITIET, SOLUONG,GIA,SPCT.TRANGTHAI,ID_CHATLIEU,ID_SIZE,ID_MAU, SPCT.ID_SANPHAM, HINHANH
+                 FROM SANPHAMCHITIET AS SPCT JOIN SANPHAM AS SP ON SPCT.ID_SANPHAM = SP.ID_SANPHAM 
+                 WHERE SP.ID_DANHMUC  = ?
+                 """;
+        List<SanPhamChiTiet> list = new ArrayList<>();
+        try {
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setObject(1, id_dm);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamChiTiet spct = new SanPhamChiTiet();
+                spct.setId_SanPhamChiTiet(rs.getInt(1));
+                spct.setSoLuong(rs.getInt(2));
+                spct.setGia(rs.getDouble(3));
+                spct.setTrangThai(rs.getInt(4));
+                spct.setId_ChatLieu(rs.getInt(5));
+                spct.setId_Size(rs.getInt(6));
+                spct.setId_Mau(rs.getInt(7));
+                spct.setId_SanPham(rs.getInt(8));
+                spct.setHinhAnh(rs.getString(9));
+                list.add(spct);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public List<SanPhamChiTiet> selectByFilter(String dau, int soLuong, int tt, String sapXepTen, String sapXepGia) {
         sql = "	SELECT ID_SANPHAMCHITIET, SOLUONG, GIA, SPCT.TRANGTHAI, ID_CHATLIEU,\n"

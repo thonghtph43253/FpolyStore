@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package com.raven.form;
 
 import java.awt.CardLayout;
@@ -21,6 +18,7 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
     public QLThuocTinhSanPham() {
         initComponents();
         this.setLayout();
+        cardLayout.show(pnlThuocTinh, "loaisanpham");
     }
     public void setLayout(){
         pnlThuocTinh.setLayout(cardLayout);
@@ -42,8 +40,12 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
         pnlThuocTinh = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("THUỘC TÍNH SẢN PHẨM");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Loại thuộc tính");
 
         cboThuocTinh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Loại Sản Phẩm", "Size", "Màu Sắc", "Chất Liệu", "Nhà Cung Cấp" }));
@@ -53,6 +55,7 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
             }
         });
 
+        pnlThuocTinh.setBackground(new java.awt.Color(255, 255, 255));
         pnlThuocTinh.setPreferredSize(new java.awt.Dimension(990, 510));
 
         javax.swing.GroupLayout pnlThuocTinhLayout = new javax.swing.GroupLayout(pnlThuocTinh);
@@ -61,14 +64,14 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
             pnlThuocTinhLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlThuocTinhLayout.createSequentialGroup()
                 .addComponent(jLabel6)
-                .addGap(0, 1046, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         pnlThuocTinhLayout.setVerticalGroup(
             pnlThuocTinhLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlThuocTinhLayout.createSequentialGroup()
                 .addGap(155, 155, 155)
                 .addComponent(jLabel6)
-                .addContainerGap(420, Short.MAX_VALUE))
+                .addContainerGap(506, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -78,13 +81,16 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 1046, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+                    .addComponent(pnlThuocTinh, javax.swing.GroupLayout.DEFAULT_SIZE, 1083, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(cboThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(cboThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 808, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,10 +99,10 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(cboThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlThuocTinh, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -113,7 +119,7 @@ public class QLThuocTinhSanPham extends javax.swing.JPanel {
         }else if(loaiThuocTinh.equalsIgnoreCase("Nhà cung cấp")){
             cardLayout.show(pnlThuocTinh, "nhacungcap");
         }
-        System.out.println(loaiThuocTinh);
+        
     }//GEN-LAST:event_cboThuocTinhItemStateChanged
 
 

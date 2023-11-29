@@ -23,10 +23,10 @@ public class BieuDoDuong extends javax.swing.JFrame {
     public BieuDoDuong() {
         initComponents();
         chart.setTitle(" Thống Kê Doanh Thu");
-        chart.addLegend("Tổng doanh thu", Color.green, Color.black);
-        chart.addLegend("Tổng nhập", Color.red, Color.black);
-        chart.addLegend("Tổng tiền voucher", Color.yellow, Color.black);
-        chart.addLegend("Lợi nhuận", Color.gray, Color.black);
+        chart.addLegend("Tổng doanh thu", new Color(198, 254, 219), new Color(251, 211, 134));
+        chart.addLegend("Tổng nhập", new Color(26, 190, 233), new Color(222, 95, 160));
+        chart.addLegend("Tổng tiền voucher",new Color(109, 225, 132), new Color(242, 121, 32) );
+        chart.addLegend("Lợi nhuận",new Color(130, 97, 195), new Color(99, 132, 176) );
 
     }
 
@@ -39,14 +39,14 @@ public class BieuDoDuong extends javax.swing.JFrame {
 
         if (this.setBieuDo == 1) {
             chart.setTitle(" THỐNG KÊ DOANH THU");
-            chart.addLegend("Tổng doanh thu", Color.green, Color.black);
-            chart.addLegend("Tổng nhập", Color.red, Color.black);
-            chart.addLegend("Tổng tiền voucher", Color.yellow, Color.black);
-            chart.addLegend("Lợi nhuận", Color.gray, Color.black);
+            chart.addLegend("Tổng doanh thu", new Color(198, 254, 219), new Color(251, 211, 134));
+            chart.addLegend("Tổng nhập", new Color(26, 190, 233), new Color(222, 95, 160) );
+            chart.addLegend("Tổng tiền voucher",new Color(109, 225, 132), new Color(242, 121, 32) );
+            chart.addLegend("Lợi nhuận",new Color(130, 97, 195), new Color(99, 132, 176) );
             setDataDoanhThu();
         }else if(this.setBieuDo ==2){
             chart.setTitle(" THÔNG KÊ DOANH SỐ");
-            chart.addLegend("Số lượng bán", Color.green, Color.yellow);
+            chart.addLegend("Số lượng bán", new Color(198, 254, 219), new Color(251, 211, 134));
             setDataDoanhSo();
         }
     }
