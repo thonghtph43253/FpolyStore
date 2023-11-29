@@ -146,5 +146,91 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
             return null;
         }
     }
-
+    public List<KhachHang> selectByName(String ten) {
+        sql = """
+             SELECT ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI 
+             FROM   KHACHHANG
+             WHERE TENKH LIKE ?
+             """;
+        List<KhachHang> list = new ArrayList<>();
+        try {
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setObject(1, "%"+ten+"%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHang md = new KhachHang();
+                md.setId_KhachHang(rs.getInt(1));
+                md.setTen(rs.getString(2));
+                md.setsDT(rs.getString(3));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setGioiTinh(rs.getBoolean(5));
+                md.setDiaChi(rs.getString(6));
+                md.setTrangThai(rs.getInt(7));
+                list.add(md);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<KhachHang> selectBySDT(String sdt) {
+        sql = """
+             SELECT ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI 
+             FROM   KHACHHANG
+             WHERE SDT LIKE ?
+             """;
+        List<KhachHang> list = new ArrayList<>();
+        try {
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setObject(1, "%"+sdt+"%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHang md = new KhachHang();
+                md.setId_KhachHang(rs.getInt(1));
+                md.setTen(rs.getString(2));
+                md.setsDT(rs.getString(3));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setGioiTinh(rs.getBoolean(5));
+                md.setDiaChi(rs.getString(6));
+                md.setTrangThai(rs.getInt(7));
+                list.add(md);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<KhachHang> selectByTT(int tt) {
+        sql = """
+             SELECT ID_KHACHHANG, TENKH , SDT , NGAYSINH , GIOITINH , DIACHI , TRANGTHAI 
+             FROM   KHACHHANG
+             WHERE TRANGTHAI = ?
+             """;
+        List<KhachHang> list = new ArrayList<>();
+        try {
+            conn = DBConnect.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setObject(1, tt);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHang md = new KhachHang();
+                md.setId_KhachHang(rs.getInt(1));
+                md.setTen(rs.getString(2));
+                md.setsDT(rs.getString(3));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setGioiTinh(rs.getBoolean(5));
+                md.setDiaChi(rs.getString(6));
+                md.setTrangThai(rs.getInt(7));
+                list.add(md);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

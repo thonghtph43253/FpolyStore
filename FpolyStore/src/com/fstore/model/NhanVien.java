@@ -12,12 +12,12 @@ public class NhanVien {
     private String maNV, ten, diaChi,SDT, matKhau,email, hinhAnh;
     private boolean gioiTinh,vaiTro;
     private int trangThai;
-    private Date ngaySinh;
+    private String ngaySinh;
 
     public NhanVien() {
     }
 
-    public NhanVien(String maNV, String ten, String diaChi, String SDT, String matKhau, String email, String hinhAnh, boolean gioiTinh, boolean vaiTro, int trangThai, Date ngaySinh) {
+    public NhanVien(String maNV, String ten, String diaChi, String SDT, String matKhau, String email, String hinhAnh, boolean gioiTinh, boolean vaiTro, int trangThai, String ngaySinh) {
         this.maNV = maNV;
         this.ten = ten;
         this.diaChi = diaChi;
@@ -111,13 +111,15 @@ public class NhanVien {
         this.trangThai = trangThai;
     }
 
-    public Date getNgaySinh() {
+    public String getNgaySinh() {
         return ngaySinh;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
+    public void setNgaySinh(String ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
+
+   
 
    
 
