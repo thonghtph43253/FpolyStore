@@ -2,6 +2,7 @@ package com.raven.form;
 
 import com.fsore.untils.MsgBox;
 import com.fsore.untils.XDate;
+import com.fstore.model.DanhMuc;
 import com.fstore.model.HoaDonNhap;
 import com.fstore.model.HoaDonNhap_ChiTiet;
 import com.fstore.model.NhaCungCap;
@@ -38,7 +39,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
     private List<HoaDonNhap_ChiTiet> list = new ArrayList<>();
     private HoaDonNhap_Service hoaDonNhap_Service = new HoaDonNhap_Service();
     private HoaDonNhapChiTiet_Service hdnct_Service = new  HoaDonNhapChiTiet_Service();
-
+    private int search = 0;
     public NhapHang_Panel() {
         initComponents();
         init();
@@ -47,6 +48,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
     public void init() {
         fillTableSanPham(spct_Service.selectAll());
         fillCboNCC();
+        fillCbbDanhMuc();
         setHiden();
     }
 
@@ -75,7 +77,14 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             });
         }
     }
-
+     public void fillCbbDanhMuc() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) cbbDanhMuc.getModel();
+        model.removeAllElements();
+        model.addElement("Tất cả");
+        for (DanhMuc dm : danhMuc_Service.selectAll()) {
+            model.addElement(dm);
+        }
+    }
     public void fillTableSanPhamNhap(List<HoaDonNhap_ChiTiet> list) {
         DefaultTableModel tblMd = (DefaultTableModel) tblSanPhamNhap.getModel();
         tblMd.setRowCount(0);
@@ -212,6 +221,26 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         fillTableSanPhamNhap(list);
         fillTableSanPham(spct_Service.selectAll());
     }
+    
+     public void search(){
+        List<SanPhamChiTiet> list = new ArrayList<>();
+        if(search == 0){
+            String idT = txtSearch.getText().trim();
+            int id = 0;
+            try {
+                id = Integer.parseInt(idT);
+            } catch (Exception e) {
+            }
+            SanPhamChiTiet sp = spct_Service.selectByID(id);
+            if(sp!= null){
+                list.add(sp);
+            }
+        }else if(search == 1){
+            String ten = txtSearch.getText().trim();
+            list = spct_Service.selectByName(ten);
+        }
+        fillTableSanPham(list);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -219,12 +248,12 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        cboTkSanPham = new javax.swing.JComboBox<>();
-        txtTimKiemSp = new javax.swing.JTextField();
+        cbbTkSanPham = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
         btnTimSP = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSanPham = new javax.swing.JTable();
-        cboDanhMuc = new javax.swing.JComboBox<>();
+        cbbDanhMuc = new javax.swing.JComboBox<>();
         jLabel25 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -260,9 +289,19 @@ public class NhapHang_Panel extends javax.swing.JPanel {
 
         jLabel2.setText("Tìm kiếm theo");
 
-        cboTkSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên" }));
+        cbbTkSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên" }));
+        cbbTkSanPham.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbTkSanPhamItemStateChanged(evt);
+            }
+        });
 
         btnTimSP.setText("Tìm");
+        btnTimSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimSPActionPerformed(evt);
+            }
+        });
 
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -287,7 +326,12 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblSanPham);
 
-        cboDanhMuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbDanhMuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbDanhMuc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbDanhMucItemStateChanged(evt);
+            }
+        });
 
         jLabel25.setText("Danh mục");
 
@@ -299,15 +343,15 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cboTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(txtTimKiemSp, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnTimSP)
                 .addGap(26, 26, 26)
                 .addComponent(jLabel25)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cboDanhMuc, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbbDanhMuc, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -317,10 +361,10 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(cboTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTimKiemSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTimSP)
-                    .addComponent(cboDanhMuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbbDanhMuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel25))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -604,15 +648,34 @@ public class NhapHang_Panel extends javax.swing.JPanel {
        new ChiTietHoaDonNhap_Jdialog(new Main(), true, hoaDonNhap_Service.getID_HoaDonNhap()).setVisible(true);
     }//GEN-LAST:event_btnHoanThanhActionPerformed
 
+    private void cbbDanhMucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbDanhMucItemStateChanged
+        if (cbbDanhMuc.getSelectedIndex() == 0) {
+            fillTableSanPham(spct_Service.selectAll());
+        } else {
+            DanhMuc dm = (DanhMuc) cbbDanhMuc.getSelectedItem();
+            if (dm != null) {
+                fillTableSanPham(spct_Service.selectByDanhMuc(dm.getID_DanhMuc()));
+            }
+        }
+    }//GEN-LAST:event_cbbDanhMucItemStateChanged
+
+    private void cbbTkSanPhamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTkSanPhamItemStateChanged
+       search = cbbTkSanPham.getSelectedIndex();
+    }//GEN-LAST:event_cbbTkSanPhamItemStateChanged
+
+    private void btnTimSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimSPActionPerformed
+       search();
+    }//GEN-LAST:event_btnTimSPActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHoanThanh;
     private javax.swing.JButton btnThemGH;
     private javax.swing.JButton btnTimSP;
     private javax.swing.JButton btnXoaGH;
+    private javax.swing.JComboBox<String> cbbDanhMuc;
     private javax.swing.JComboBox<String> cbbNhaCungCap;
-    private javax.swing.JComboBox<String> cboDanhMuc;
-    private javax.swing.JComboBox<String> cboTkSanPham;
+    private javax.swing.JComboBox<String> cbbTkSanPham;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -636,7 +699,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
     private javax.swing.JTable tblSanPhamNhap;
     private javax.swing.JTextArea txtGhiChu;
     private javax.swing.JTextField txtGiaNhap;
+    private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtSoLuong;
-    private javax.swing.JTextField txtTimKiemSp;
     // End of variables declaration//GEN-END:variables
 }

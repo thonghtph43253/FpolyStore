@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -172,4 +173,108 @@ public class HoaDonNhap_Service implements Inf_Service<HoaDonNhap, Integer>{
             return 0;
         }
     }
+    
+     public List<HoaDonNhap> selectName(String ten) {
+        sql = """
+                SELECT ID_HOADONNHAP,HDN.TENNHACUNGCAP, NGAYTAO, HDN.SDT, TONGTIEN,
+                       HDN.TRANGTHAI, NCC.ID_NHACUNGCAP, NV.MANV
+                FROM HOADONNHAP HDN 
+                JOIN NHANVIEN NV ON HDN.MANV = NV.MANV
+                JOIN NHACUNGCAP NCC ON HDN.ID_NHACUNGCAP = NCC.ID_NHACUNGCAP
+                WHERE HDN.TENNHACUNGCAP LIKE ?
+              """;
+            List<HoaDonNhap> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,"%"+ten+"%");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                HoaDonNhap hdn = new HoaDonNhap();
+                hdn.setId_HoaDonNhap(rs.getInt(1));
+                hdn.setTenNhaCungCap(rs.getString(2));
+                hdn.setNgayTao(rs.getString(3));
+                hdn.setSoDienThoai(rs.getString(4));
+                hdn.setTongTien(rs.getDouble(5));
+                hdn.setTrangThai(rs.getInt(6));
+                hdn.setId_NhaCungCap(rs.getInt(7));
+                hdn.setMaNv(rs.getString(8));
+                list.add(hdn);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+     
+      public List<HoaDonNhap> selectSDT(String sdt) {
+        sql = """
+                SELECT ID_HOADONNHAP,HDN.TENNHACUNGCAP, NGAYTAO, HDN.SDT, TONGTIEN,
+                       HDN.TRANGTHAI, NCC.ID_NHACUNGCAP, NV.MANV
+                FROM HOADONNHAP HDN 
+                JOIN NHANVIEN NV ON HDN.MANV = NV.MANV
+                JOIN NHACUNGCAP NCC ON HDN.ID_NHACUNGCAP = NCC.ID_NHACUNGCAP
+                WHERE HDN.SDT LIKE ?
+              """;
+            List<HoaDonNhap> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,"%"+sdt+"%");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                HoaDonNhap hdn = new HoaDonNhap();
+                hdn.setId_HoaDonNhap(rs.getInt(1));
+                hdn.setTenNhaCungCap(rs.getString(2));
+                hdn.setNgayTao(rs.getString(3));
+                hdn.setSoDienThoai(rs.getString(4));
+                hdn.setTongTien(rs.getDouble(5));
+                hdn.setTrangThai(rs.getInt(6));
+                hdn.setId_NhaCungCap(rs.getInt(7));
+                hdn.setMaNv(rs.getString(8));
+                list.add(hdn);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+      }
+      public List<HoaDonNhap> selectByDay(Date ngayBd, Date ngayKt, int tt) {
+        sql = """
+                SELECT ID_HOADONNHAP,HDN.TENNHACUNGCAP, NGAYTAO, HDN.SDT, TONGTIEN,
+                       HDN.TRANGTHAI, NCC.ID_NHACUNGCAP, NV.MANV
+                FROM HOADONNHAP HDN 
+                JOIN NHANVIEN NV ON HDN.MANV = NV.MANV
+                JOIN NHACUNGCAP NCC ON HDN.ID_NHACUNGCAP = NCC.ID_NHACUNGCAP
+                WHERE NGAYTAO >= ? AND NGAYTAO <= DATEADD(DAY, 1, ?) AND HDN.TRANGTHAI = ?
+              """;
+            List<HoaDonNhap> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,ngayBd);
+            ps.setObject(2,ngayKt);
+            ps.setObject(3,tt);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                HoaDonNhap hdn = new HoaDonNhap();
+                hdn.setId_HoaDonNhap(rs.getInt(1));
+                hdn.setTenNhaCungCap(rs.getString(2));
+                hdn.setNgayTao(rs.getString(3));
+                hdn.setSoDienThoai(rs.getString(4));
+                hdn.setTongTien(rs.getDouble(5));
+                hdn.setTrangThai(rs.getInt(6));
+                hdn.setId_NhaCungCap(rs.getInt(7));
+                hdn.setMaNv(rs.getString(8));
+                list.add(hdn);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+      }
+            
 }

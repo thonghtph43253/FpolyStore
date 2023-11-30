@@ -4,11 +4,14 @@
  */
 package com.raven.form;
 
+import com.fsore.untils.MsgBox;
 import com.fsore.untils.XDate;
+import static com.fsore.untils.convertKey.removeAccent;
 import com.fstore.model.HoaDon;
 import com.fstore.model.HoaDonNhap;
 import com.fstore.model.HoaDonNhap_ChiTiet;
 import com.fstore.model.HoaDon_ChiTiet;
+import com.fstore.model.SanPham;
 import com.fstore.model.SanPhamChiTiet;
 import com.fstore.model.Voucher_ChiTiet;
 import com.fstore.service.ChatLieu_Service;
@@ -21,8 +24,25 @@ import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import com.fstore.service.Voucher_CT_Service;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.color.Color;
+import com.itextpdf.kernel.color.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.border.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.text.BadElementException;
 import com.ui.main.Main;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -67,6 +87,7 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         lblTongTien1.setText(hd.getTongTien()+ " VNĐ");
         lblThanhToan.setText(hd.getTrangThai()==1?"Đã thanh toán":"Chưa thanh tóan");
         lblThoiGian.setText(hd.getNgayTao());
+        lblNhanVien.setText(hd.getMaNv());
         fillTable(hdnct_Service.selectAllByID_HDN(id_HoaDon));
     }
 
@@ -99,7 +120,122 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         }
         return tongTien;
     }
+    public void xuatHoaDon() throws IOException, BadElementException{
+//        String pathName = XDate.toString(new Date(), "hh-mm-ss aa dd-MM-yyyy");
+//        pathName = pathName.replaceAll(" ", "+");
+ //     String path = "J:\\Code_PRO_1041\\HoaDon"+pathName+".pdf";
+//        PdfWriter
+        HoaDonNhap hd1 = hoaDonNhap_Service.selectByID(id_HoaDon);
+        DecimalFormat nf = new DecimalFormat("#,##0");
+       String pathnn = XDate.toString(new Date(), " hh-mm-ss aa dd-MM-yyyy");
+        pathnn = pathnn.replaceAll(" ", "_");
+        System.out.println(pathnn);
+        String path = "J:\\Code_PRO_1041\\HoaDon\\"+pathnn+".pdf";
+        com.itextpdf.kernel.pdf.PdfWriter pdfWriter = new com.itextpdf.kernel.pdf.PdfWriter(path);
+        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdfDocument);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+        Document doc = new Document(pdfDocument);
+        float col = 280f;
+        float columnWidth[] = {col, col};
+        com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(columnWidth);
+        table.setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE);
+        String file = "J:\\Code_PRO_1041\\FpolyStore\\FpolyStore\\src\\com\\raven\\icon\\logo_FStore 1 (1).png";
+        ImageData date = ImageDataFactory.create(file);
+        com.itextpdf.layout.element.Image image = new com.itextpdf.layout.element.Image(date);
+//        doc.add(image);
+        table.addCell(new Cell().add(image).setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
+        table.addCell(new Cell().add("FSTORE").setFontSize(30f).setBorder(Border.NO_BORDER));
 
+        table.addCell(new Cell().add("D401 FPT POLYTECHNIC Kieu Mai \n SDT:0333002864")
+                .setTextAlignment(TextAlignment.RIGHT).setMarginTop(30f).setMarginBottom(30f).setBorder(Border.NO_BORDER).setMarginRight(10f)
+        );
+
+        float colWidth[] = {100, 250, 120, 150};
+
+        com.itextpdf.layout.element.Table customerInfor = new com.itextpdf.layout.element.Table(colWidth);
+        customerInfor.addCell(new Cell(0, 4).add("HOA DON NHAP HANG").setBold().setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+
+        customerInfor.addCell(new Cell(0, 4).add("Thong tin").setBold().setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("Nha Cung Cap: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getTenNhaCungCap())).setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("Ma Hoa Don: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(id_HoaDon+"").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add("SDT: ").setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getSoDienThoai())).setBorder(Border.NO_BORDER)); //
+
+        customerInfor.addCell(new Cell().add("Nhan vien nhap: ").setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add(removeAccent(hd1.getMaNv())).setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add("Date: ").setBorder(Border.NO_BORDER));
+        customerInfor.addCell(new Cell().add(hd1.getNgayTao()).setBorder(Border.NO_BORDER));
+
+        float iteamInforColWidth[] = {140,140, 140, 140, 140};
+        com.itextpdf.layout.element.Table itemInforTable = new com.itextpdf.layout.element.Table(iteamInforColWidth);
+        itemInforTable.addCell(new Cell().add("ID_SPCT").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("San Pham").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("So luong").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add("Gia").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT));
+        itemInforTable.addCell(new Cell().add("Thanh Tien").setBackgroundColor(new DeviceRgb(255, 69, 0)).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT));
+
+        int total = 0;
+        int quantitySum = 0;
+        List<HoaDonNhap_ChiTiet> list = hdnct_Service.selectAllByID_HDN(id_HoaDon);
+        for (HoaDonNhap_ChiTiet hdct : list) {
+            SanPhamChiTiet spct = spct_Service.selectByID(hdct.getId_SanPhamChiTiet());
+            SanPham sp = sp_Service.selectByID(spct.getId_SanPham());
+            HoaDon hd = hoaDon_Service.selectByID(hdct.getId_HoaDonNhap());
+            int id = hdct.getId_HoaDonNhapCT();
+            int id_spct = hdct.getId_SanPhamChiTiet();
+            String nameProduct = sp.getTenSP();
+            String nameCustomer = hd.getTenKH();
+            String Size = size_Service.selectByID(spct.getId_Size()).getTenSize();
+            String Color = mauSac_Service.selectByID(spct.getId_Mau()).getTenMau();
+            String Material = chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu();
+            int quantity = (int)hdct.getSoLuong();
+            double price = (double) hdct.getGiaNhap();
+            itemInforTable.addCell(new Cell().add(id_spct+""));
+            itemInforTable.addCell(new Cell().add(removeAccent(nameProduct)));
+            itemInforTable.addCell(new Cell().add(quantity + ""));
+            itemInforTable.addCell(new Cell().add(nf.format(price) + " VND").setTextAlignment(TextAlignment.RIGHT));
+            itemInforTable.addCell(new Cell().add(nf.format(price * quantity) + " VND").setTextAlignment(TextAlignment.RIGHT));
+            total += price * quantity;
+            quantitySum += quantity;
+        }
+
+        itemInforTable.addCell(new Cell().add("Tong So Luong").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add( "").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add(quantitySum + "").setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER));
+        itemInforTable.addCell(new Cell().add("Tong Tien").setTextAlignment(TextAlignment.RIGHT).setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER).setFontColor(Color.WHITE));
+        itemInforTable.addCell(new Cell().add(nf.format(total) + " VND").setTextAlignment(TextAlignment.RIGHT).setBackgroundColor(new DeviceRgb(255, 69, 0)).setBorder(Border.NO_BORDER).setFontColor(Color.WHITE));
+
+        float colWidthNote[] = {560};
+        
+        HoaDonNhap hd = hoaDonNhap_Service.selectByID(id_HoaDon);
+       
+        com.itextpdf.layout.element.Table customerInforNote = new com.itextpdf.layout.element.Table(colWidthNote);
+        
+        
+       
+             customerInforNote.addCell(new Cell().add("Tong tien: " + nf.format((hd.getTongTien())) + " VND").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+          
+        
+        customerInforNote.addCell(new Cell().add("Thanh toan: " + nf.format((hd.getTongTien())) + " VND").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setBold().setFontSize(20).setFontColor(new DeviceRgb(0, 0, 0)));
+        customerInforNote.addCell(new Cell().add("Luu y: Vui long kiem tra du hang!").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setItalic().setFontColor(Color.RED));
+        customerInforNote.addCell(new Cell().add("Xin cam on!\n").
+                setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).setItalic().setFontColor(Color.BLACK));
+        document.add(table);
+        document.add(new Paragraph("\n"));
+        document.add(customerInfor);
+        document.add(new Paragraph("\n"));
+        document.add(itemInforTable);
+        document.add(new Paragraph("\n"));
+        document.add(customerInforNote);
+        document.close();
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -121,6 +257,8 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         lblThoiGian = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         lblTongTien1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        lblNhanVien = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -153,7 +291,7 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblHoaDon_CT);
 
-        jLabel2.setText("TÊN KHÁCH HÀNG");
+        jLabel2.setText("Tên nhà cung cấp");
 
         lblTenKH.setText("jLabel3");
 
@@ -164,8 +302,18 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         lblThanhToan.setText("0.0");
 
         jButton1.setText("Xuất hóa đơn");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Hủy");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Mã hóa đơn:");
 
@@ -184,6 +332,10 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         lblTongTien1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTongTien1.setForeground(new java.awt.Color(255, 0, 0));
         lblTongTien1.setText("0.0");
+
+        jLabel8.setText("Nhân viên nhập");
+
+        lblNhanVien.setText("jLabel9");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -204,14 +356,19 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblSdt)
-                                    .addComponent(lblTenKH)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblMaHD)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblMaHD)
+                                            .addComponent(lblTenKH))
                                         .addGap(227, 227, 227)
-                                        .addComponent(jLabel6)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lblThoiGian)))))
-                        .addGap(0, 225, Short.MAX_VALUE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblThoiGian)
+                                            .addComponent(lblNhanVien))))))
+                        .addGap(0, 170, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,7 +403,9 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(lblTenKH))
+                    .addComponent(lblTenKH)
+                    .addComponent(jLabel8)
+                    .addComponent(lblNhanVien))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -274,6 +433,21 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
     private void tblHoaDon_CTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDon_CTMouseClicked
       
     }//GEN-LAST:event_tblHoaDon_CTMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            xuatHoaDon();
+            MsgBox.alert(this, "Xuất hóa đơn nhập hàng thành công!");
+        } catch (IOException ex) {
+            Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadElementException ex) {
+            Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -328,8 +502,10 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMaHD;
+    private javax.swing.JLabel lblNhanVien;
     private javax.swing.JLabel lblSdt;
     private javax.swing.JLabel lblTenKH;
     private javax.swing.JLabel lblThanhToan;

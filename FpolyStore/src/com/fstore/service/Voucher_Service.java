@@ -151,7 +151,7 @@ public class Voucher_Service implements Inf_Service<Voucher, Integer>{
               SELECT ID_VOUCHER, TENCHIENDICH, NGAYBD, NGAYKT, HINHTHUCGIAM,
               GIATRIGIAM, SOLUONG, TRANGTHAI 
               FROM VOUCHERS
-              WHERE NGAYBD <= ? AND NGAYKT >= ? 
+              WHERE NGAYBD <= ? AND NGAYKT >= DATEADD(DAY, 1, ?) 
               """;
             List<Voucher> list = new ArrayList<>();
             try {
@@ -159,6 +159,71 @@ public class Voucher_Service implements Inf_Service<Voucher, Integer>{
             ps= conn.prepareStatement(sql);
             ps.setObject(1, d);
             ps.setObject(2, d);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Voucher v = new Voucher();
+                v.setId_Voucher(rs.getInt(1));
+                v.setTenChienDich(rs.getString(2));
+                v.setThoiGianBD(rs.getDate(3));
+                v.setThoiGianKT(rs.getDate(4));
+                v.setHinhThucGiam(rs.getInt(5));
+                v.setGiaTriGiam(rs.getDouble(6));
+                v.setSoLuong(rs.getInt(7));
+                v.setTrangThai(rs.getInt(8));
+                list.add(v);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public List<Voucher> selectByName(String name) {
+         sql = """
+              SELECT ID_VOUCHER, TENCHIENDICH, NGAYBD, NGAYKT, HINHTHUCGIAM,
+              GIATRIGIAM, SOLUONG, TRANGTHAI 
+              FROM VOUCHERS
+              WHERE TENCHIENDICH LIKE ?
+              """;
+            List<Voucher> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, "%"+name+"%");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Voucher v = new Voucher();
+                v.setId_Voucher(rs.getInt(1));
+                v.setTenChienDich(rs.getString(2));
+                v.setThoiGianBD(rs.getDate(3));
+                v.setThoiGianKT(rs.getDate(4));
+                v.setHinhThucGiam(rs.getInt(5));
+                v.setGiaTriGiam(rs.getDouble(6));
+                v.setSoLuong(rs.getInt(7));
+                v.setTrangThai(rs.getInt(8));
+                list.add(v);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Voucher> selectByDateTT( Date bd, Date kt , int tt) {
+         sql = """
+              SELECT ID_VOUCHER, TENCHIENDICH, NGAYBD, NGAYKT, HINHTHUCGIAM,
+              GIATRIGIAM, SOLUONG, TRANGTHAI 
+              FROM VOUCHERS
+              WHERE NGAYBD <= ? AND NGAYKT >= DATEADD(DAY, 1, ?) AND TRANGTHAI = ?
+              """;
+            List<Voucher> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, bd);
+            ps.setObject(2, kt);
+            ps.setObject(3, tt);
             rs = ps.executeQuery();
             while(rs.next()){
                 Voucher v = new Voucher();

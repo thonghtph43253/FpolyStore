@@ -27,6 +27,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private Voucher_Service voucher_Service = new Voucher_Service();
     private int row = -1;
     private int id_Voucher = 0;
+    private int search = 0;
 
     public Voucher_Panel() {
         initComponents();
@@ -209,29 +210,67 @@ public class Voucher_Panel extends javax.swing.JPanel {
         }
         return null; // Trả về null nếu không tìm thấy
     }
-
+    
+     public void search(){
+        List<Voucher> list = new ArrayList<>();
+        if(search == 0){
+            String idT = txtSearch.getText().trim();
+            int id = 0;
+            try {
+                id = Integer.parseInt(idT);
+            } catch (Exception e) {
+            }
+            Voucher hd = voucher_Service.selectByID(id);
+            if(hd!= null){
+                list.add(hd);
+            }
+        }else if(search == 1){
+            String ten = txtSearch.getText().trim();
+            list = voucher_Service.selectByName(ten);
+        }
+        fillTable(list);
+    }
+    
+    public void locHD(){
+        Date ngayBD = XDate.toDate(txtLocBD.getText(), "dd-MM-yyyy");
+        Date ngayKT = XDate.toDate(txtLocKT.getText(), "dd-MM-yyyy");
+        int tt = 1;
+        if(rdoLocHD.isSelected()){
+            tt = 1;
+        }else if(rdoLocKHD.isSelected()){
+            tt = 0;
+        }
+        List<Voucher> list = voucher_Service.selectByDateTT(ngayBD, ngayKT, tt);
+        fillTable(list);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        dateChooserBD = new com.raven.datechooserr.DateChooser();
+        dateChooserKT = new com.raven.datechooserr.DateChooser();
+        dateChooserLBD = new com.raven.datechooserr.DateChooser();
+        dateChooserLKT = new com.raven.datechooserr.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblVoucher = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
-        cboTkSanPham2 = new javax.swing.JComboBox<>();
-        txtTimKiemSp2 = new javax.swing.JTextField();
-        btnTimSP2 = new javax.swing.JButton();
+        cbbTkSanPham = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
+        btnTim = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        txtLocBD = new javax.swing.JTextField();
+        txtLocKT = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        rdoLocHD = new javax.swing.JRadioButton();
+        rdoLocKHD = new javax.swing.JRadioButton();
         jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        btnHuyLoc = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jTextField7 = new javax.swing.JTextField();
@@ -260,8 +299,24 @@ public class Voucher_Panel extends javax.swing.JPanel {
         txtSoLuong = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
+        dateChooserBD.setForeground(new java.awt.Color(0, 255, 51));
+        dateChooserBD.setTextRefernce(txtNgayBD);
+
+        dateChooserKT.setForeground(new java.awt.Color(51, 255, 51));
+        dateChooserKT.setTextRefernce(txtThoiGianKT);
+
+        dateChooserLBD.setForeground(new java.awt.Color(0, 204, 0));
+        dateChooserLBD.setTextRefernce(txtLocBD);
+
+        dateChooserLKT.setForeground(new java.awt.Color(0, 255, 0));
+        dateChooserLKT.setTextRefernce(txtLocKT);
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách VOUCHER", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
+        tblVoucher.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblVoucher.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -281,6 +336,9 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblVoucher.setRowHeight(25);
+        tblVoucher.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblVoucher.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblVoucher.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblVoucherMouseClicked(evt);
@@ -290,20 +348,35 @@ public class Voucher_Panel extends javax.swing.JPanel {
 
         jLabel14.setText("Tìm kiếm theo");
 
-        cboTkSanPham2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên" }));
+        cbbTkSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên" }));
+        cbbTkSanPham.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbTkSanPhamItemStateChanged(evt);
+            }
+        });
 
-        btnTimSP2.setText("Tìm");
+        btnTim.setBackground(new java.awt.Color(153, 255, 153));
+        btnTim.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnTim.setText("Tìm");
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Thời gian BĐ");
 
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Thời gian KT");
 
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel16.setText("Trạng thái");
 
-        jRadioButton3.setText("Hoạt động");
+        buttonGroup2.add(rdoLocHD);
+        rdoLocHD.setSelected(true);
+        rdoLocHD.setText("Hoạt động");
 
-        jRadioButton4.setText("Không hoạt động");
+        buttonGroup2.add(rdoLocKHD);
+        rdoLocKHD.setText("Không hoạt động");
 
+        jButton7.setBackground(new java.awt.Color(102, 255, 102));
+        jButton7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton7.setText("Lọc");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,7 +384,14 @@ public class Voucher_Panel extends javax.swing.JPanel {
             }
         });
 
-        jButton8.setText("Hủy lọc");
+        btnHuyLoc.setBackground(new java.awt.Color(255, 153, 153));
+        btnHuyLoc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnHuyLoc.setText("Hủy lọc");
+        btnHuyLoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHuyLocActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("|<<");
 
@@ -329,35 +409,35 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(cboTkSanPham2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTimKiemSp2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(btnTimSP2))
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addComponent(btnTim))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtLocBD, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel15)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField6)))
+                            .addComponent(txtLocKT)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jRadioButton3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jRadioButton4)
+                                    .addComponent(rdoLocHD)
+                                    .addGap(68, 68, 68)
+                                    .addComponent(rdoLocKHD)
                                     .addGap(6, 6, 6))
                                 .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGap(104, 104, 104)
-                                    .addComponent(jButton8)
+                                    .addGap(78, 78, 78)
+                                    .addComponent(btnHuyLoc)
                                     .addGap(18, 18, 18)
-                                    .addComponent(jButton7))
+                                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel16)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -383,26 +463,26 @@ public class Voucher_Panel extends javax.swing.JPanel {
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cboTkSanPham2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTimKiemSp2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTimSP2))
+                            .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(39, 39, 39)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtLocBD, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtLocKT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton3)
-                            .addComponent(jRadioButton4))
+                            .addComponent(rdoLocHD)
+                            .addComponent(rdoLocKHD))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnHuyLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
@@ -416,10 +496,15 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 .addGap(12, 12, 12))
         );
 
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Mã Voucher");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Tên chương trình");
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Thời gian bắt đầu");
 
         txtNgayBD.addActionListener(new java.awt.event.ActionListener() {
@@ -428,8 +513,10 @@ public class Voucher_Panel extends javax.swing.JPanel {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Thời gian kết thúc");
 
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Hình thức giảm");
 
         cbbHTG.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Theo tiền mặt", "Theo phần trăm" }));
@@ -439,12 +526,14 @@ public class Voucher_Panel extends javax.swing.JPanel {
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Giá trị giảm");
 
         lblDonVi.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblDonVi.setForeground(new java.awt.Color(255, 0, 0));
         lblDonVi.setText("VNĐ");
 
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Trạng thái");
 
         buttonGroup1.add(rdoHD);
@@ -454,7 +543,8 @@ public class Voucher_Panel extends javax.swing.JPanel {
         buttonGroup1.add(rdoKHD);
         rdoKHD.setText("Không hoạt động");
 
-        btnReset.setText("Thêm mới");
+        btnReset.setBackground(new java.awt.Color(153, 255, 204));
+        btnReset.setText("Reset Form");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetActionPerformed(evt);
@@ -469,6 +559,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Số lượng");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -482,7 +573,7 @@ public class Voucher_Panel extends javax.swing.JPanel {
                     .addComponent(lblMaSale)
                     .addComponent(jLabel3)
                     .addComponent(txtTenVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51)
+                .addGap(75, 75, 75)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,15 +598,15 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 .addGap(34, 34, 34)
                 .addComponent(lblDonVi)
                 .addGap(30, 30, 30)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rdoKHD, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rdoHD)
                     .addComponent(jLabel11)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSoLuong)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
@@ -609,12 +700,12 @@ public class Voucher_Panel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -622,12 +713,12 @@ public class Voucher_Panel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        locHD();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void txtNgayBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBDActionPerformed
@@ -664,20 +755,33 @@ public class Voucher_Panel extends javax.swing.JPanel {
         clearForm();
     }//GEN-LAST:event_btnResetActionPerformed
 
+    private void cbbTkSanPhamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTkSanPhamItemStateChanged
+       search = cbbTkSanPham.getSelectedIndex();
+    }//GEN-LAST:event_cbbTkSanPhamItemStateChanged
+
+    private void btnHuyLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyLocActionPerformed
+        fillTable(voucher_Service.selectAll());
+    }//GEN-LAST:event_btnHuyLocActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHuyLoc;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnThem;
-    private javax.swing.JButton btnTimSP2;
+    private javax.swing.JButton btnTim;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cbbHTG;
-    private javax.swing.JComboBox<String> cboTkSanPham2;
+    private javax.swing.JComboBox<String> cbbTkSanPham;
+    private com.raven.datechooserr.DateChooser dateChooserBD;
+    private com.raven.datechooserr.DateChooser dateChooserKT;
+    private com.raven.datechooserr.DateChooser dateChooserLBD;
+    private com.raven.datechooserr.DateChooser dateChooserLKT;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
@@ -694,22 +798,22 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JLabel lblDonVi;
     private javax.swing.JLabel lblMaSale;
     private javax.swing.JRadioButton rdoHD;
     private javax.swing.JRadioButton rdoKHD;
+    private javax.swing.JRadioButton rdoLocHD;
+    private javax.swing.JRadioButton rdoLocKHD;
     private javax.swing.JTable tblVoucher;
     private javax.swing.JTextField txtGiaTriGiam;
+    private javax.swing.JTextField txtLocBD;
+    private javax.swing.JTextField txtLocKT;
     private javax.swing.JTextField txtNgayBD;
+    private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtSoLuong;
     private javax.swing.JTextField txtTenVoucher;
     private javax.swing.JTextField txtThoiGianKT;
-    private javax.swing.JTextField txtTimKiemSp2;
     // End of variables declaration//GEN-END:variables
 }

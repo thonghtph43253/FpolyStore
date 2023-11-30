@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -132,5 +133,61 @@ public class Sale_Service implements Inf_Service<Sale, Integer>{
             return null;
         }
     }
+    public List<Sale> selectByName(String name) {
+         sql = """
+               SELECT ID_SALE,TENCHIENDICH, THOIGIANBD, THOIGIANKT, TRANGTHAI 
+               FROM SALE
+               WHERE TENCHIENDICH LIKE ?
+              """;
+            List<Sale> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, "%"+name+"%");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Sale s = new Sale();
+                s.setId_Sale(rs.getInt(1));
+                s.setTenChienDich(rs.getString(2));
+                s.setThoiGianBD(rs.getDate(3));
+                s.setThoiGianKT(rs.getDate(4));
+                s.setTrangThai(rs.getInt(5));
+                list.add(s);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
+    public List<Sale> selectByDay(Date bd, Date kt , int tt) {
+         sql = """
+               SELECT ID_SALE,TENCHIENDICH, THOIGIANBD, THOIGIANKT, TRANGTHAI 
+               FROM SALE
+               WHERE THOIGIANBD >= ? AND THOIGIANKT <= DATEADD(DAY, 1, ?) AND TRANGTHAI = ?
+              """;
+            List<Sale> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, bd);
+            ps.setObject(2, kt);
+            ps.setObject(3, tt);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                Sale s = new Sale();
+                s.setId_Sale(rs.getInt(1));
+                s.setTenChienDich(rs.getString(2));
+                s.setThoiGianBD(rs.getDate(3));
+                s.setThoiGianKT(rs.getDate(4));
+                s.setTrangThai(rs.getInt(5));
+                list.add(s);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

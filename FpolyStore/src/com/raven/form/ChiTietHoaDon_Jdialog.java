@@ -86,6 +86,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         Voucher_ChiTiet vct = voucher_CT_Service.selectByIDHD(hd.getId_HoaDon());
         lblTenKH.setText(hd.getTenKH());
         lblSdt.setText(hd.getSdt());
+        lblNhanVien.setText(hd.getId_NhanVien());
         if (vct != null) {
             lblTongTien1.setText(hd.getTongTien() + vct.getSoTienGiam() + " VNĐ");
             lblGiamGia.setText(vct.getSoTienGiam() + "VNĐ");
@@ -156,14 +157,14 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         table.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
         table.addCell(new Cell().add("FSTORE").setFontSize(30f).setBorder(Border.NO_BORDER));
 
-        table.addCell(new Cell().add("Kieu Mai \n SDT:0333002864")
+        table.addCell(new Cell().add("D401 FPT POLYTECHNIC Kieu Mai \n SDT:0333002864")
                 .setTextAlignment(TextAlignment.RIGHT).setMarginTop(30f).setMarginBottom(30f).setBorder(Border.NO_BORDER).setMarginRight(10f)
         );
 
         float colWidth[] = {80, 250, 80, 150};
 
         com.itextpdf.layout.element.Table customerInfor = new com.itextpdf.layout.element.Table(colWidth);
-        customerInfor.addCell(new Cell(0, 4).add("Phieu Thanh Toan").setBold().setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+        customerInfor.addCell(new Cell(0, 4).add("HOA DON BAN HANG").setBold().setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
 
         customerInfor.addCell(new Cell(0, 4).add("Thong tin").setBold().setBorder(Border.NO_BORDER));
         customerInfor.addCell(new Cell().add("Khach Hang: ").setBorder(Border.NO_BORDER));
@@ -173,7 +174,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         customerInfor.addCell(new Cell().add("SDT: ").setBorder(Border.NO_BORDER)); //
         customerInfor.addCell(new Cell().add(removeAccent(hd1.getSdt())).setBorder(Border.NO_BORDER)); //
 
-        customerInfor.addCell(new Cell().add("Thu Ngan: ").setBorder(Border.NO_BORDER)); //
+        customerInfor.addCell(new Cell().add("Nhan vien ban: ").setBorder(Border.NO_BORDER)); //
         customerInfor.addCell(new Cell().add(removeAccent(hd1.getId_NhanVien())).setBorder(Border.NO_BORDER)); //
         customerInfor.addCell(new Cell().add("Date: ").setBorder(Border.NO_BORDER));
         customerInfor.addCell(new Cell().add(hd1.getNgayTao()).setBorder(Border.NO_BORDER));
@@ -271,6 +272,8 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         lblTongTien1 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         lblGiamGia = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        lblNhanVien = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -298,7 +301,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tblHoaDon_CT);
 
-        jLabel2.setText("TÊN KHÁCH HÀNG");
+        jLabel2.setText("Tên khách hàng");
 
         lblTenKH.setText("jLabel3");
 
@@ -316,6 +319,11 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         });
 
         jButton2.setText("Hủy");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Mã hóa đơn:");
 
@@ -341,6 +349,10 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         lblGiamGia.setForeground(new java.awt.Color(255, 0, 0));
         lblGiamGia.setText("0.0");
 
+        jLabel9.setText("Nhân viên bán");
+
+        lblNhanVien.setText("jLabel10");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -360,14 +372,19 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblSdt)
-                                    .addComponent(lblTenKH)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblMaHD)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblMaHD)
+                                            .addComponent(lblTenKH))
                                         .addGap(227, 227, 227)
-                                        .addComponent(jLabel6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel6))
                                         .addGap(18, 18, 18)
-                                        .addComponent(lblThoiGian)))))
-                        .addGap(0, 225, Short.MAX_VALUE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblThoiGian)
+                                            .addComponent(lblNhanVien))))))
+                        .addGap(0, 175, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,7 +421,9 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(lblTenKH))
+                    .addComponent(lblTenKH)
+                    .addComponent(jLabel9)
+                    .addComponent(lblNhanVien))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -443,6 +462,10 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
             Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -497,9 +520,11 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblGiamGia;
     private javax.swing.JLabel lblMaHD;
+    private javax.swing.JLabel lblNhanVien;
     private javax.swing.JLabel lblSdt;
     private javax.swing.JLabel lblTenKH;
     private javax.swing.JLabel lblThanhToan;
