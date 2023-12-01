@@ -1,4 +1,3 @@
-
 package com.raven.form;
 
 import com.fsore.untils.Auth;
@@ -21,6 +20,7 @@ import javax.swing.JFileChooser;
 public class ThongTinCaNhan_Panel extends javax.swing.JPanel {
 
     private String srcImg = "";
+
     public ThongTinCaNhan_Panel() {
         initComponents();
         setForm(Auth.nv);
@@ -33,25 +33,22 @@ public class ThongTinCaNhan_Panel extends javax.swing.JPanel {
         txtEmail.setText(nv.getEmail());
         txtNgaySinh.setText(nv.getNgaySinh());
         txtDiaChi.setText(nv.getDiaChi());
-        
-        txtSdt.setText(nv.getSDT());
-        txtChucVu.setText(nv.isVaiTro()?"Chủ cửa hàng":"Nhân viên");
 
-        
+        txtSdt.setText(nv.getSDT());
+        txtChucVu.setText(nv.isVaiTro() ? "Chủ cửa hàng" : "Nhân viên");
+
         if (nv.getHinhAnh() == null) {
             lblHinh.setIcon(null);
             lblHinh.setToolTipText("");
         } else {
-            int w = lblHinh.getWidth();
-            int h = lblHinh.getHeight() - lblHinh.getY();
-            System.out.println("Width: " + w);
-System.out.println("Height: " + h);
-//            ImageIcon icon = XImage.read(nv.getHinhAnh());
-//            Image img = icon.getImage();
-//            srcImg = nv.getHinhAnh();
-//            lblHinh.setIcon(new ImageIcon(img.getScaledInstance(w, h, 0)));
+          
+            ImageIcon icon = XImage.read(nv.getHinhAnh());
+            Image img = icon.getImage();
+            srcImg = nv.getHinhAnh();
+            lblHinh.setIcon(new ImageIcon(img.getScaledInstance(145, 180, 0)));
         }
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -71,10 +68,10 @@ System.out.println("Height: " + h);
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDiaChi = new javax.swing.JTextArea();
         jLabel12 = new javax.swing.JLabel();
-        lblHinh = new javax.swing.JLabel();
         btnSua = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtChucVu = new javax.swing.JTextField();
+        lblHinh = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -115,13 +112,6 @@ System.out.println("Height: " + h);
 
         jLabel12.setText("Hình Ảnh");
 
-        lblHinh.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        lblHinh.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblHinhMouseClicked(evt);
-            }
-        });
-
         btnSua.setBackground(new java.awt.Color(255, 255, 0));
         btnSua.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnSua.setText("Sửa Ảnh");
@@ -134,6 +124,12 @@ System.out.println("Height: " + h);
         jLabel1.setText("Chức vụ");
 
         txtChucVu.setEditable(false);
+
+        lblHinh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblHinhMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -158,9 +154,9 @@ System.out.println("Height: " + h);
                         .addGap(44, 44, 44)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel12)
-                            .addComponent(lblHinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel1)
-                            .addComponent(txtChucVu, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
+                            .addComponent(txtChucVu, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                            .addComponent(lblHinh, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -192,7 +188,8 @@ System.out.println("Height: " + h);
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblHinh, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblHinh, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(txtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -232,6 +229,13 @@ System.out.println("Height: " + h);
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaActionPerformed
 
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        NhanVien_Service nhanVien_Service = new NhanVien_Service();
+        NhanVien nv = Auth.nv;
+        nv.setHinhAnh(srcImg);
+        nhanVien_Service.update(nv, nv.getMaNV());
+    }//GEN-LAST:event_btnSuaActionPerformed
+
     private void lblHinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhMouseClicked
         try {
             JFileChooser jc = new JFileChooser();
@@ -247,7 +251,7 @@ System.out.println("Height: " + h);
                 lblHinh.setIcon(new ImageIcon(img.getScaledInstance(w, h, 0)));
                 lblHinh.setToolTipText(f.getName());
             }
-            if(!srcImg.isEmpty()){
+            if (!srcImg.isEmpty()) {
                 btnSua.setEnabled(true);
             }
 
@@ -255,13 +259,6 @@ System.out.println("Height: " + h);
             Logger.getLogger(ThongTinSanPham_Dialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_lblHinhMouseClicked
-
-    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        NhanVien_Service nhanVien_Service = new NhanVien_Service();
-        NhanVien nv = Auth.nv;
-        nv.setHinhAnh(srcImg);
-        nhanVien_Service.update(nv, nv.getMaNV());
-    }//GEN-LAST:event_btnSuaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

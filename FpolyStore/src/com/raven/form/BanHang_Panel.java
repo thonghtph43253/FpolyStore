@@ -532,7 +532,10 @@ public class BanHang_Panel extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("BÁN HÀNG");
 
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel8.setText("Mã khách hàng:");
 
@@ -587,6 +590,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
                             .addComponent(lblTenKH))))
                 .addGap(31, 31, 31))
         );
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel12.setText("Mã hóa đơn");
 

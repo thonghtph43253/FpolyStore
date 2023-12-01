@@ -9,6 +9,7 @@ import com.fsore.untils.MsgBox;
 import com.raven.form.BanHang_Panel;
 import com.raven.form.ChiTietSanPham_Panel;
 import com.raven.form.DangNhapJdialog;
+import com.raven.form.DoiMatKhauPanel;
 import com.raven.form.HoaDonBanHang_Panel;
 import com.raven.form.HoaDonNhapHang_Panel;
 import com.raven.form.KhachHang_Panel;
@@ -113,6 +114,8 @@ public class Main extends javax.swing.JFrame {
                     } else if (menuIndex == 7) {
                         if (subMenuIndex == 0) {
                             main.showForm(new ThongTinCaNhan_Panel());
+                        }else if(subMenuIndex ==1){
+                            main.showForm(new DoiMatKhauPanel());
                         }
                     } else if (menuIndex == 8) {
                         if (subMenuIndex == 0) {
@@ -156,6 +159,8 @@ public class Main extends javax.swing.JFrame {
                     } else if (menuIndex == 5) {
                         if (subMenuIndex == 0) {
                             main.showForm(new ThongTinCaNhan_Panel());
+                        }else if(subMenuIndex ==1){
+                            main.showForm(new DoiMatKhauPanel());
                         }
                     } else if (menuIndex == 6) {
                         if (MsgBox.confirm(rootPane, "Đằng xuất ứng dụng?")) {
