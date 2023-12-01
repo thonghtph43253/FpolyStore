@@ -4,8 +4,11 @@ import com.UI.component.Header;
 import com.UI.component.Menu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
+import com.fsore.untils.Auth;
+import com.fsore.untils.MsgBox;
 import com.raven.form.BanHang_Panel;
 import com.raven.form.ChiTietSanPham_Panel;
+import com.raven.form.DangNhapJdialog;
 import com.raven.form.HoaDonBanHang_Panel;
 import com.raven.form.HoaDonNhapHang_Panel;
 import com.raven.form.KhachHang_Panel;
@@ -44,70 +47,134 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
+        if (!Auth.isLogin()) {
+            this.openDN();
+            if (Auth.nv != null) {
+                this.setVisible(true);
+            } else {
+                this.setVisible(false);
+            }
+        }
         init();
     }
 
     private void init() {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
-        
+
         bg.setLayout(layout);
         menu = new Menu();
         header = new Header();
         main = new MainForm();
+
         menu.addEvent(new EventMenuSelected() {
             @Override
             public void menuSelected(int menuIndex, int subMenuIndex) {
                 System.out.println("Menu Index : " + menuIndex + " SubMenu Index " + subMenuIndex);
-                if (menuIndex == 0) {
-                    if (subMenuIndex == -1) {
-                        main.showForm(new Form_Home());
-                    } else if (subMenuIndex == 1) {
-                        main.showForm(new Form1());
+                if (Auth.isManager()) {
+                    if (menuIndex == 0) {
+                        if (subMenuIndex == -1) {
+                            main.showForm(new Form_Home());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new Form1());
+                        }
                     }
-                }if(menuIndex ==1){
-                    if(subMenuIndex == 2){
-                        main.showForm(new QLThuocTinhSanPham());
-                    }else if(subMenuIndex == 0){
-                        main.showForm(new SanPham_Panel());
-                    }else if(subMenuIndex == 1){
-                        main.showForm(new ChiTietSanPham_Panel());
+                    if (menuIndex == 1) {
+                        if (subMenuIndex == 2) {
+                            main.showForm(new QLThuocTinhSanPham());
+                        } else if (subMenuIndex == 0) {
+                            main.showForm(new SanPham_Panel());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new ChiTietSanPham_Panel());
+                        }
+                    } else if (menuIndex == 2) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new BanHang_Panel());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new NhapHang_Panel());
+                        }
+
+                    } else if (menuIndex == 3) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new HoaDonBanHang_Panel());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new HoaDonNhapHang_Panel());
+                        }
+                    } else if (menuIndex == 4) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ThongKeDoanhSo_Panel());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new ThongKeDoanhThu_Panel());
+                        }
+                    } else if (menuIndex == 5) {
+                        main.showForm(new NhanVien_Panel());
+                    } else if (menuIndex == 6) {
+                        main.showForm(new KhachHang_Panel());
+                    } else if (menuIndex == 7) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ThongTinCaNhan_Panel());
+                        }
+                    } else if (menuIndex == 8) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new Sale_Panel());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new Voucher_Panel());
+                        }
+                    } else if (menuIndex == 9) {
+                        if (MsgBox.confirm(rootPane, "Đằng xuất ứng dụng?")) {
+                            Auth.clear();
+                            dispose();
+                            openDN();
+                            if (Auth.nv != null) {
+                                new Main().setVisible(true);
+                            } else {
+                               new Main().setVisible(false);
+                            }
+                        } else {
+                            return;
+                        }
                     }
-                }else if(menuIndex == 2){
-                    if(subMenuIndex == 0){
+                } else {
+                    if (menuIndex == 0) {
+                        if (subMenuIndex == -1) {
+                            main.showForm(new Form_Home());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new Form1());
+                        }
+                    }
+                    if (menuIndex == 1) {
                         main.showForm(new BanHang_Panel());
-                    }else if(subMenuIndex == 1){
-                        main.showForm(new NhapHang_Panel());
-                    }
-                    
-                }else if(menuIndex == 3){
-                    if(subMenuIndex == 0){
+                    } else if (menuIndex == 2) {
                         main.showForm(new HoaDonBanHang_Panel());
-                    }else if(subMenuIndex == 1){
-                        main.showForm(new HoaDonNhapHang_Panel());
+
+                    } else if (menuIndex == 3) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ThongKeDoanhThu_Panel());
+                        }
+                    } else if (menuIndex == 4) {
+                        main.showForm(new KhachHang_Panel());
+                    } else if (menuIndex == 5) {
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ThongTinCaNhan_Panel());
+                        }
+                    } else if (menuIndex == 6) {
+                        if (MsgBox.confirm(rootPane, "Đằng xuất ứng dụng?")) {
+                            Auth.clear();
+                            dispose();
+                            openDN();
+                            if (Auth.nv != null) {
+                                new Main().setVisible(true);
+                            } else {
+                               new Main().setVisible(false);
+                            }
+                        } else {
+                            return;
+                        }
                     }
-                }else if(menuIndex == 4){
-                    if(subMenuIndex == 0){
-                        main.showForm(new ThongKeDoanhSo_Panel());
-                    }else if(subMenuIndex == 1){
-                        main.showForm(new ThongKeDoanhThu_Panel());
-                    }
-                }else if(menuIndex == 5){
-                    main.showForm(new NhanVien_Panel());
-                }else if(menuIndex == 6){
-                    main.showForm(new KhachHang_Panel());
-                }else if(menuIndex == 7){
-                    if(subMenuIndex == 0){
-                        main.showForm(new ThongTinCaNhan_Panel());
-                    }
-                }else if(menuIndex == 8){
-                    if(subMenuIndex == 0){
-                        main.showForm(new Sale_Panel());
-                    }else if(subMenuIndex == 1){
-                        main.showForm(new Voucher_Panel());
-                    }
+
                 }
             }
+
         });
         menu.addEventShowPopup(new EventShowPopupMenu() {
             @Override
@@ -164,6 +231,10 @@ public class Main extends javax.swing.JFrame {
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
         //  Start with this form
         main.showForm(new Form_Home());
+    }
+
+    public void openDN() {
+        new DangNhapJdialog(this, true).setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -232,7 +303,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main().setVisible(true);
+                new Main();
             }
         });
     }

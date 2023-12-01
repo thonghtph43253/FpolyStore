@@ -5,6 +5,7 @@
 package com.raven.form;
 
 import com.fsore.untils.MsgBox;
+import com.fsore.untils.XDate;
 import com.fsore.untils.XImage;
 import com.fstore.model.NhanVien;
 import com.fstore.service.NhanVien_Service;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +61,8 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         String matKhau = String.valueOf(txtPass.getPassword());
         String reMatKhau = String.valueOf(txtRePass.getPassword());
         String diaChi = txtDiaChi.getText();
-        String ngaySinh = txtNgaySinh.getText();
+        Date ngaySinhD = XDate.toDate(txtNgaySinh.getText(), "dd-MM-yyyy");
+        String ngaySinh = XDate.toString(ngaySinhD,"dd-MM-yyyy" ) ;
         boolean checkMa = true;
         boolean checkSdt = true;
         boolean checkEmail = true;
@@ -177,6 +180,8 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         } else {
             int w = lblHinhAnh.getWidth();
             int h = lblHinhAnh.getHeight() - lblHinhAnh.getY();
+                        System.out.println("Width: " + w);
+System.out.println("Height: " + h);
             ImageIcon icon = XImage.read(nv.getHinhAnh());
             Image img = icon.getImage();
             srcImg = nv.getHinhAnh();

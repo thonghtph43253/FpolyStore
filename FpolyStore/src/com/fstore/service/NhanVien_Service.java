@@ -66,7 +66,7 @@ public class NhanVien_Service implements Inf_Service<NhanVien, String> {
             ps.setObject(6, model.isGioiTinh());
             ps.setObject(7, model.isVaiTro());
             ps.setObject(8, model.getTrangThai());
-            ps.setObject(9, model.getNgaySinh());
+            ps.setObject(9, XDate.toDate(model.getNgaySinh(), "dd-MM-yyyy"));
             ps.setObject(10, model.getHinhAnh());
             ps.setObject(11, model.getMaNV());
             return ps.executeUpdate();

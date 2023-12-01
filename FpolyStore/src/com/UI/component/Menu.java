@@ -3,6 +3,7 @@ package com.UI.component;
 import com.UI.event.EventMenu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
+import com.fsore.untils.Auth;
 import com.ui.model.ModelMenu;
 import com.ui.swing.MenuAnimation;
 import com.ui.swing.MenuItem;
@@ -54,16 +55,26 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "Trang chủ"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-product-20 (1).png")), "QUẢN LÝ SẢN PHẨM", "SẢN PHẨM", "CHI TIẾT SẢN PHẨM", "THUỘC TÍNH SẢN PHẨM"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "QUẢN LÝ BÁN HÀNG", "BÁN HÀNG", "NHẬP HÀNG"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "QUẢN LÝ HÓA ĐƠN", "HÓA ĐƠN BÁN HÀNG", "HÓA ĐƠN NHẬP HÀNG"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/5.png")), "QUẨN LÝ THÔNG KÊ", "THEO DOANH THU BÁN HÀNG", "THEO DOANH SỐ BÁN HÀNG"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/6.png")), "QUẢN LÝ NHÂN VIÊN"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-client-20 (1).png")),"QUẢN LÝ KHÁCH HÀNG"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/7.png")), "THÔNG TIN CÁ NHÂN", "THÔNG TIN", "ĐỔI MẬT KHẨU"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/8.png")), "KHUYÊN MÃI", "QUẢN LÝ SALE", "QUẢN LÝ VOUCHER"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-exit-20_1.png")), "THOÁT")); 
+        if (Auth.isManager()) {
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "Trang chủ"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-product-20 (1).png")), "QUẢN LÝ SẢN PHẨM", "SẢN PHẨM", "CHI TIẾT SẢN PHẨM", "THUỘC TÍNH SẢN PHẨM"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "QUẢN LÝ BÁN HÀNG", "BÁN HÀNG", "NHẬP HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "QUẢN LÝ HÓA ĐƠN", "HÓA ĐƠN BÁN HÀNG", "HÓA ĐƠN NHẬP HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/5.png")), "QUẨN LÝ THÔNG KÊ", "THEO DOANH THU BÁN HÀNG", "THEO DOANH SỐ BÁN HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/6.png")), "QUẢN LÝ NHÂN VIÊN"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-client-20 (1).png")), "QUẢN LÝ KHÁCH HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/7.png")), "THÔNG TIN CÁ NHÂN", "THÔNG TIN", "ĐỔI MẬT KHẨU"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/8.png")), "KHUYÊN MÃI", "QUẢN LÝ SALE", "QUẢN LÝ VOUCHER"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-exit-20_1.png")), "ĐĂNG XUẤT"));            
+        } else {
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "Trang chủ"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "QUẢN LÝ BÁN HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "QUẢN LÝ HÓA ĐƠN"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/5.png")), "QUẨN LÝ THÔNG KÊ", "THEO DOANH SỐ BÁN HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-client-20 (1).png")), "QUẢN LÝ KHÁCH HÀNG"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/7.png")), "THÔNG TIN CÁ NHÂN", "THÔNG TIN", "ĐỔI MẬT KHẨU"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-exit-20_1.png")), "ĐĂNG XUẤT")); 
+        }
     }
 
     private void addMenu(ModelMenu menu) {
