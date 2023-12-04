@@ -4,8 +4,8 @@
  */
 package com.raven.form;
 
-import com.fsore.untils.MsgBox;
-import com.fsore.untils.XuatExcelFromTbl;
+import com.fstore.untils.MsgBox;
+import com.fstore.untils.XuatExcelFromTbl;
 import com.fstore.model.KhachHang;
 import com.fstore.service.KhachHang_Service;
 import com.ui.main.Main;

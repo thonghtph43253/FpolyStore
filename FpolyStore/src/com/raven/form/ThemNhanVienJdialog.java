@@ -4,9 +4,9 @@
  */
 package com.raven.form;
 
-import com.fsore.untils.MsgBox;
-import com.fsore.untils.XDate;
-import com.fsore.untils.XImage;
+import com.fstore.untils.MsgBox;
+import com.fstore.untils.XDate;
+import com.fstore.untils.XImage;
 import com.fstore.model.NhanVien;
 import com.fstore.service.NhanVien_Service;
 import java.awt.Image;
@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,17 +32,19 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
 
     private NhanVien_Service nhanVien_Service = new NhanVien_Service();
     private String srcImg;
-    private NhanVien_Panel nhanVien_Panel = new NhanVien_Panel();
+    private NhanVien_Panel nhanVien_Panel ;
     private String maNV;
+    private MainForm main = new MainForm();
 
-    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal) {
+
+    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, NhanVien_Panel nhanVien_Panel) {
         super(parent, modal);
         initComponents();
         btnSua.setEnabled(false);
-
+        this.nhanVien_Panel = nhanVien_Panel;
     }
 
-    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, String maNV) {
+    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, String maNV,  NhanVien_Panel nhanVien_Panel) {
         super(parent, modal);
         this.maNV = maNV;
         initComponents();
@@ -49,9 +52,11 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         txtMaNV.setEditable(false);
         NhanVien nv = nhanVien_Service.selectByID(maNV);
         setForm(nv);
-
+        this.nhanVien_Panel = nhanVien_Panel;
     }
 
+   
+    
     public NhanVien getForm(int check) {
         List<NhanVien> list = nhanVien_Service.selectAll();
         String maNVF = txtMaNV.getText();
@@ -129,7 +134,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         if (diaChi.isEmpty()) {
             er.append("Địa chỉ không được bỏ trống!\n");
         }
-        if (srcImg.isEmpty()) {
+        if (srcImg == null) {
             er.append("Vui lòng chọn ảnh nhân viên!\n");
         }
         if (email.isEmpty()) {
@@ -180,8 +185,6 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         } else {
             int w = lblHinhAnh.getWidth();
             int h = lblHinhAnh.getHeight() - lblHinhAnh.getY();
-                        System.out.println("Width: " + w);
-System.out.println("Height: " + h);
             ImageIcon icon = XImage.read(nv.getHinhAnh());
             Image img = icon.getImage();
             srcImg = nv.getHinhAnh();
@@ -196,6 +199,7 @@ System.out.println("Height: " + h);
         }
         if (nhanVien_Service.insert(nv) != 0) {
             MsgBox.alert(this, "Thêm nhân viên thành công!");
+            this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
             this.dispose();
         } else {
             MsgBox.alert(this, "Thêm nhân viên không thành công!");
@@ -219,7 +223,7 @@ System.out.println("Height: " + h);
         }
         if (nhanVien_Service.update(nv, maNV) != 0) {
             MsgBox.alert(this, "Cập nhật nhân viên thành công!");
-            this.dispose();
+            this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
         } else {
             MsgBox.alert(this, "Câp nhât thất bại");
         }
@@ -528,13 +532,14 @@ System.out.println("Height: " + h);
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         insertNhanVien();
-        nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+       
 
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         updateNhanVien();
-        nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+        
+        this.dispose();
 
     }//GEN-LAST:event_btnSuaActionPerformed
 
@@ -568,7 +573,7 @@ System.out.println("Height: " + h);
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ThemNhanVienJdialog dialog = new ThemNhanVienJdialog(new javax.swing.JFrame(), true);
+                ThemNhanVienJdialog dialog = new ThemNhanVienJdialog(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

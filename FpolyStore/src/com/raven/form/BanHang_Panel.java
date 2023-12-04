@@ -1,7 +1,7 @@
 package com.raven.form;
 
-import com.fsore.untils.MsgBox;
-import com.fsore.untils.XDate;
+import com.fstore.untils.MsgBox;
+import com.fstore.untils.XDate;
 import com.fstore.model.DanhMuc;
 import com.fstore.model.HoaDon;
 import com.fstore.model.HoaDon_ChiTiet;
@@ -23,6 +23,7 @@ import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
 import com.fstore.service.Voucher_CT_Service;
 import com.fstore.service.Voucher_Service;
+import com.fstore.untils.Auth;
 import com.ui.main.Main;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -170,7 +171,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     public HoaDon newHoaDon() {
         Calendar calendar = Calendar.getInstance();
         String tenKH = "Vui lòng chọn!";
-        String maNhanVien = "ThongHT";
+        String maNhanVien = Auth.nv.getMaNV();
         String ngayTao = XDate.toString(calendar.getTime(), "hh:mm:ss aa yyyy-MM-dd");
         return new HoaDon(tenKH, 3, 1, maNhanVien, ngayTao);
     }

@@ -1,7 +1,7 @@
 package com.raven.form;
 
-import com.fsore.untils.MsgBox;
-import com.fsore.untils.XDate;
+import com.fstore.untils.MsgBox;
+import com.fstore.untils.XDate;
 import com.fstore.model.Sale;
 import com.fstore.model.Sale_ChiTiet;
 import com.fstore.model.SanPhamChiTiet;

@@ -4,7 +4,7 @@
  */
 package com.raven.form;
 
-import com.fsore.untils.XuatExcelFromTbl;
+import com.fstore.untils.XuatExcelFromTbl;
 import com.fstore.model.NhanVien;
 import com.fstore.service.NhanVien_Service;
 import com.ui.main.Main;
@@ -27,9 +27,12 @@ public class NhanVien_Panel extends javax.swing.JPanel {
     }
 
     public void init(){
+        
         fillTable(nhanVien_Service.selectAll());
         btnSuaNV.setEnabled(false);
     }
+    
+    
     
     public void fillTable(List<NhanVien> list){
         DefaultTableModel tblMd = (DefaultTableModel) tblNhanVien.getModel();
@@ -180,6 +183,7 @@ public class NhanVien_Panel extends javax.swing.JPanel {
             }
         });
 
+        tblNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -196,6 +200,9 @@ public class NhanVien_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblNhanVien.setRowHeight(25);
+        tblNhanVien.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblNhanVien.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblNhanVienMouseClicked(evt);
@@ -319,7 +326,7 @@ public class NhanVien_Panel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        new ThemNhanVienJdialog(new Main(), true).setVisible(true);
+        new ThemNhanVienJdialog(new Main(), true, this).setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void tblNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienMouseClicked
@@ -333,7 +340,7 @@ public class NhanVien_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_tblNhanVienMouseClicked
 
     private void btnSuaNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaNVActionPerformed
-       new ThemNhanVienJdialog(new Main(), true, maNv).setVisible(true);
+       new ThemNhanVienJdialog(new Main(), true, maNv, this).setVisible(true);
     }//GEN-LAST:event_btnSuaNVActionPerformed
 
     private void cbbTkItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTkItemStateChanged

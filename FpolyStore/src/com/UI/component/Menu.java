@@ -3,7 +3,7 @@ package com.UI.component;
 import com.UI.event.EventMenu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
-import com.fsore.untils.Auth;
+import com.fstore.untils.Auth;
 import com.ui.model.ModelMenu;
 import com.ui.swing.MenuAnimation;
 import com.ui.swing.MenuItem;

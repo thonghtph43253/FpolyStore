@@ -1,6 +1,6 @@
 package com.fstore.service;
 
-import com.fsore.untils.XDate;
+import com.fstore.untils.XDate;
 import com.fstore.model.NhanVien;
 import com.fstore.repository.DBConnect;
 import java.sql.Connection;

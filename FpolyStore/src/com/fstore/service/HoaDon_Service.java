@@ -223,6 +223,42 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
             return null;
         }
     }
+     public List<HoaDon> selectByID_NV( String maNv) {
+        sql = """
+               SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
+                      MAGIAMGIA,HINHTHUCTHANHTOAN, HD.TRANGTHAI,
+                      KH.ID_KHACHHANG, NV.MANV
+               FROM HOADON HD 
+               JOIN NHANVIEN NV ON HD.MANV = NV.MANV
+               JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
+               WHERE HD.MANV = ?
+              """;
+            List<HoaDon> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, maNv);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                HoaDon hd = new HoaDon();
+                hd.setId_HoaDon(rs.getInt(1));
+                hd.setTenKH(rs.getString(2));
+                hd.setNgayTao(rs.getString(3));
+                hd.setSdt(rs.getString(4));
+                hd.setTongTien(rs.getDouble(5));
+                hd.setVoucher(rs.getInt(6));
+                hd.setHinhThucThanhToan(rs.getInt(7));
+                hd.setTrangThai(rs.getInt(8));
+                hd.setId_KhachHang(rs.getInt(9));
+                hd.setId_NhanVien(rs.getString(10));
+                list.add(hd);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public List<HoaDon> selectByName(String ten) {
         sql = """
                SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,

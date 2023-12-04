@@ -1,7 +1,7 @@
 package com.UI.component;
 
-import com.fsore.untils.Auth;
-import com.fsore.untils.XImage;
+import com.fstore.untils.Auth;
+import com.fstore.untils.XImage;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;

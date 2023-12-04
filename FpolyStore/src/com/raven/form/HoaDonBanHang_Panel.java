@@ -4,8 +4,8 @@
  */
 package com.raven.form;
 
-import com.fsore.untils.XDate;
-import com.fsore.untils.XuatExcelFromTbl;
+import com.fstore.untils.XDate;
+import com.fstore.untils.XuatExcelFromTbl;
 import com.fstore.model.HoaDon;
 import com.fstore.service.HoaDonChiTiet_Service;
 import com.fstore.service.HoaDon_Service;
@@ -28,6 +28,11 @@ public class HoaDonBanHang_Panel extends javax.swing.JPanel {
         initComponents();
         init();
     }
+    public HoaDonBanHang_Panel(String maNv) {
+        initComponents();
+         fillTable(hoaDon_Service.selectByID_NV(maNv));
+    }
+    
     
     public void init(){
         fillTable(hoaDon_Service.selectAll());

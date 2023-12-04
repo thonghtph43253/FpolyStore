@@ -1,7 +1,7 @@
 package com.raven.form;
 
-import com.fsore.untils.Auth;
-import com.fsore.untils.XImage;
+import com.fstore.untils.Auth;
+import com.fstore.untils.XImage;
 import com.fstore.model.NhanVien;
 import com.fstore.service.NhanVien_Service;
 import java.awt.Image;

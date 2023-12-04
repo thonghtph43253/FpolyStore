@@ -4,7 +4,7 @@
  */
 package com.fstore.service;
 
-import com.fsore.untils.XDate;
+import com.fstore.untils.XDate;
 import com.fstore.model.KhachHang;
 import com.fstore.model.NhaCungCap;
 import com.fstore.repository.DBConnect;

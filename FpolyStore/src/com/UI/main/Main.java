@@ -4,11 +4,11 @@ import com.UI.component.Header;
 import com.UI.component.Menu;
 import com.UI.event.EventMenuSelected;
 import com.UI.event.EventShowPopupMenu;
-import com.fsore.untils.Auth;
-import com.fsore.untils.MsgBox;
+import com.fstore.untils.Auth;
+import com.fstore.untils.MsgBox;
 import com.raven.form.BanHang_Panel;
 import com.raven.form.ChiTietSanPham_Panel;
-import com.raven.form.DangNhapJdialog;
+import com.raven.form.MainLoginJdialog;
 import com.raven.form.DoiMatKhauPanel;
 import com.raven.form.HoaDonBanHang_Panel;
 import com.raven.form.HoaDonNhapHang_Panel;
@@ -148,7 +148,7 @@ public class Main extends javax.swing.JFrame {
                     if (menuIndex == 1) {
                         main.showForm(new BanHang_Panel());
                     } else if (menuIndex == 2) {
-                        main.showForm(new HoaDonBanHang_Panel());
+                        main.showForm(new HoaDonBanHang_Panel(Auth.nv.getMaNV()));
 
                     } else if (menuIndex == 3) {
                         if (subMenuIndex == 0) {
@@ -239,9 +239,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     public void openDN() {
-        new DangNhapJdialog(this, true).setVisible(true);
+        new MainLoginJdialog(this, true).setVisible(true);
     }
-
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

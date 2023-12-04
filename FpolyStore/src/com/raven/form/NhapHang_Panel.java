@@ -1,7 +1,7 @@
 package com.raven.form;
 
-import com.fsore.untils.MsgBox;
-import com.fsore.untils.XDate;
+import com.fstore.untils.MsgBox;
+import com.fstore.untils.XDate;
 import com.fstore.model.DanhMuc;
 import com.fstore.model.HoaDonNhap;
 import com.fstore.model.HoaDonNhap_ChiTiet;
@@ -16,6 +16,7 @@ import com.fstore.service.NhaCungCap_Service;
 import com.fstore.service.SanPhamChiTiet_Service;
 import com.fstore.service.SanPham_Service;
 import com.fstore.service.Size_Service;
+import com.fstore.untils.Auth;
 import com.ui.main.Main;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -196,7 +197,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             return null;
         }
         hdn.setNgayTao(XDate.toString(c.getTime(), "hh:mm:ss aa yyyy-MM-dd"));
-        hdn.setMaNv("ThongHT");
+        hdn.setMaNv(Auth.nv.getMaNV());
         hdn.setId_NhaCungCap(ncc.getID_NCC());
         hdn.setSoDienThoai(ncc.getSDT());
         hdn.setTenNhaCungCap(ncc.getTenNCC());
@@ -256,14 +257,12 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         cbbDanhMuc = new javax.swing.JComboBox<>();
         jLabel25 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         btnThemGH = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblSanPhamNhap = new javax.swing.JTable();
         btnXoaGH = new javax.swing.JButton();
-        lblTenSanPham = new javax.swing.JLabel();
         txtSoLuong = new javax.swing.JTextField();
         txtGiaNhap = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -303,6 +302,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             }
         });
 
+        tblSanPham.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -319,6 +319,9 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblSanPham.setGridColor(new java.awt.Color(255, 255, 255));
+        tblSanPham.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblSanPham.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSanPhamMouseClicked(evt);
@@ -373,12 +376,12 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách mua"));
 
-        jLabel3.setText("Tên sản phẩm");
-
         jLabel4.setText("Số lượng");
 
         jLabel5.setText("Giá nhập");
 
+        btnThemGH.setBackground(new java.awt.Color(0, 204, 0));
+        btnThemGH.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnThemGH.setText("Thêm vào danh sách nhập");
         btnThemGH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -386,6 +389,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             }
         });
 
+        tblSanPhamNhap.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblSanPhamNhap.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -405,6 +409,9 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblSanPhamNhap.setGridColor(new java.awt.Color(255, 255, 255));
+        tblSanPhamNhap.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblSanPhamNhap.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblSanPhamNhap.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSanPhamNhapMouseClicked(evt);
@@ -412,6 +419,9 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tblSanPhamNhap);
 
+        btnXoaGH.setBackground(new java.awt.Color(255, 0, 0));
+        btnXoaGH.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnXoaGH.setForeground(new java.awt.Color(255, 255, 255));
         btnXoaGH.setText("Xóa khỏi danh sách");
         btnXoaGH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,8 +429,9 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             }
         });
 
-        lblTenSanPham.setText("jLabel7");
-
+        jButton1.setBackground(new java.awt.Color(204, 0, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Xóa tất cả");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -433,19 +444,15 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 644, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnXoaGH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3)
-                        .addGap(40, 40, 40)
-                        .addComponent(lblTenSanPham)
-                        .addGap(59, 59, 59)
+                        .addGap(217, 217, 217)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
                         .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -453,7 +460,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtGiaNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnThemGH)))
                 .addContainerGap())
         );
@@ -461,16 +468,12 @@ public class NhapHang_Panel extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(lblTenSanPham))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(btnThemGH)
-                        .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(txtGiaNhap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(btnThemGH)
+                    .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtGiaNhap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -681,7 +684,6 @@ public class NhapHang_Panel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -693,7 +695,6 @@ public class NhapHang_Panel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel lblTenSanPham;
     private javax.swing.JLabel lblTongTien;
     private javax.swing.JTable tblSanPham;
     private javax.swing.JTable tblSanPhamNhap;
