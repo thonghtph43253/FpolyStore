@@ -19,22 +19,26 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
 
     private int id_Kh;
     private KhachHang_Service khachHang_Service = new KhachHang_Service();
-    KhachHang_Panel khPnl = new KhachHang_Panel();
+    KhachHang_Panel khPnl;
 
-    public ThemKhachHangJDialog(java.awt.Frame parent, boolean modal) {
+    public ThemKhachHangJDialog(java.awt.Frame parent, boolean modal, KhachHang_Panel khPnl) {
         super(parent, modal);
         initComponents();
         init();
+        this.khPnl = khPnl;
+        btnSua.setEnabled(false);
+        btnXoa.setEnabled(false);
     }
 
-    public ThemKhachHangJDialog(java.awt.Frame parent, boolean modal, int id_Kh) {
+    public ThemKhachHangJDialog(java.awt.Frame parent, boolean modal, int id_Kh, KhachHang_Panel khPnl) {
         super(parent, modal);
         this.id_Kh = id_Kh;
-
         initComponents();
         init();
         KhachHang kh = khachHang_Service.selectByID(this.id_Kh);
         setForm(kh);
+        this.khPnl = khPnl;
+        btnThem.setEnabled(false);
     }
 
     public void init() {
@@ -111,7 +115,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
         if (MsgBox.confirm(this, "Bạn có chắc chắn muốn thêm khách hàng?")) {
             if (khachHang_Service.insert(kh) != 0) {
                 MsgBox.alert(this, "Thêm khách hàng thành công!");
-
+                khPnl.loadTale(khachHang_Service.selectAll());
                 resetForm();
             } else {
                 MsgBox.alert(this, "Thêm khách hàng thất bại!");
@@ -147,7 +151,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
         if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
             if (khachHang_Service.update(kh, id_Kh) != 0) {
                 MsgBox.alert(this, "Sửa khách hàng thành công!");
-
+                khPnl.loadTale(khachHang_Service.selectAll());
                 resetForm();
 
             } else {
@@ -157,8 +161,11 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
     }
 
     public void resetForm() {
-        KhachHang kh = new KhachHang();
-        setForm(kh);
+        txtDiaChi.setText("");
+        txtSDT.setText("");
+        txtTenKH.setText("");
+        rdoNam.setSelected(true);
+        rdoHD.setSelected(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -221,6 +228,8 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
         buttonGroup2.add(rdoKHD);
         rdoKHD.setText("Không hoạt động");
 
+        btnThem.setBackground(new java.awt.Color(0, 255, 0));
+        btnThem.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -228,6 +237,8 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
             }
         });
 
+        btnSua.setBackground(new java.awt.Color(0, 255, 204));
+        btnSua.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSua.setText("Sửa");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,9 +246,23 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
             }
         });
 
+        btnXoa.setBackground(new java.awt.Color(255, 0, 0));
+        btnXoa.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
+        btnReset.setBackground(new java.awt.Color(255, 255, 0));
+        btnReset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnReset.setText("Tạo mới");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(rdoNam);
         rdoNam.setSelected(true);
@@ -270,9 +295,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
                                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel31)
                                 .addComponent(txtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(lblMaKH)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lblMaKH))
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
@@ -315,7 +338,6 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
                                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(rdoNam)
                                     .addComponent(rdoNu))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel29)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,15 +400,34 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         insertKH();
-        khPnl.loadTale(khachHang_Service.selectAll());
         this.dispose();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         updateKH();
-        khPnl.loadTale(khachHang_Service.selectAll());
         this.dispose();
     }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn xóa khách hàng!")) {
+            if (khachHang_Service.delete(id_Kh) != 0) {
+                MsgBox.alert(this, "Xóa thành công khách hàng!");
+                khPnl.loadTale(khachHang_Service.selectAll());
+            } else {
+                MsgBox.alert(this, "Không thể xóa vì khách hàng đã mua hàng\nĐã chuyển trạng thái về không hoạt động!");
+                KhachHang kh = khachHang_Service.selectByID(id_Kh);
+                if (kh != null) {
+                    kh.setTrangThai(0);
+                    khachHang_Service.update(kh, id_Kh);
+                    khPnl.loadTale(khachHang_Service.selectAll());
+                }
+            }
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btnResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,7 +459,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ThemKhachHangJDialog dialog = new ThemKhachHangJDialog(new javax.swing.JFrame(), true);
+                ThemKhachHangJDialog dialog = new ThemKhachHangJDialog(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
