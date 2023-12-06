@@ -21,113 +21,162 @@ public class MauSac_Panel extends javax.swing.JPanel {
 
     private MauSac_Service service = new MauSac_Service();
     private int search = 0;
+
     public MauSac_Panel() {
         initComponents();
         this.init();
     }
 
-    public void init(){
-        this.loadTale(service.selectAll());
+    public void init() {
+        this.loadTable(service.selectAll());
     }
-    public void loadTale(List<MauSac> list){
+
+    public void loadTable(List<MauSac> list) {
         DefaultTableModel tblMd = (DefaultTableModel) this.tblThuocTinh.getModel();
         tblMd.setRowCount(0);
         for (MauSac md : list) {
             tblMd.addRow(new Object[]{
                 md.getID_MauSac(),
                 md.getTenMau(),
-                md.getTrangThai() == 1?"Hoạt động":"Không hoạt động"
+                md.getTrangThai() == 1 ? "Hoạt động" : "Không hoạt động"
             });
         }
         resetForm();
     }
-    public MauSac getForm(){
+
+    public MauSac getForm() {
         String ten = txtTenTT.getText().trim();
+
         int trangThai = 1;
-        if(rdoHD.isSelected()){
+        if (rdoHD.isSelected()) {
             trangThai = 1;
-        }else{
+        } else {
             trangThai = 0;
         }
-        if(ten.isEmpty()){
+        if (ten.isEmpty()) {
             MsgBox.alert(this, "Tên thuộc tính không được bỏ trống!");
             return null;
         }
+
         return new MauSac(ten, trangThai);
     }
-    public void addThuocTinh(){
+
+    public boolean checkEmpty() {
+        List<MauSac> list_Mau = service.selectAll();
+        String ten = txtTenTT.getText().trim();
+        for (MauSac ms : list_Mau) {
+            if (ms.getTenMau().equalsIgnoreCase(ten)) {
+                MsgBox.alert(this, "Thuộc tính đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addThuocTinh() {
         MauSac md = getForm();
-        if(md == null){
+        if (md == null) {
             return;
         }
-        if(MsgBox.confirm(this,"Chắc chắn muốn thêm")){
-            if(service.insert(md)!= 0){
-                loadTale(service.selectAll());
-                MsgBox.alert(this,"Thành công!");
-            }else{
-                MsgBox.alert(this, "Thất bại!");
+        if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
+            if (checkEmpty()) {
+                if (service.insert(md) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
             }
         }
     }
-    public void updateThuocTinh(){
+
+    public void updateThuocTinh() {
         MauSac md = getForm();
         int row = tblThuocTinh.getSelectedRow();
         int id = Integer.parseInt(tblThuocTinh.getValueAt(row, 0).toString());
-        if(md == null || id <0){
+        if (md == null || id < 0) {
             return;
         }
-        if(MsgBox.confirm(this,"Chắc chắn muốn sửa")){
-            if(service.update(md,id)!= 0){
-                loadTale(service.selectAll());
-                MsgBox.alert(this,"Thành công!");
-            }else{
-                MsgBox.alert(this, "Thất bại!");
+
+        MauSac ms = service.selectByID(id);
+        if (ms.getTenMau().equalsIgnoreCase(md.getTenMau())) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                if (service.update(md, id) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        } else {
+            if (checkEmpty()) {
+                if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                    if (service.update(md, id) != 0) {
+                        loadTable(service.selectAll());
+                        MsgBox.alert(this, "Thành công!");
+                        resetForm();
+                    } else {
+                        MsgBox.alert(this, "Thất bại!");
+                    }
+                }
             }
         }
+
     }
-    public void deleteThuocTinh(){
+
+    public void deleteThuocTinh() {
         int row = tblThuocTinh.getSelectedRow();
         int id = Integer.parseInt(tblThuocTinh.getValueAt(row, 0).toString());
-        if( id <0){
+        if (id < 0) {
             return;
         }
-        if(MsgBox.confirm(this,"Chắc chắn muốn xóa?")){
-            if(service.delete(id)!= 0){
-                loadTale(service.selectAll());
-                MsgBox.alert(this,"Thành công!");
-            }else{
-                MsgBox.alert(this, "Thất bại!");
+        if (MsgBox.confirm(this, "Chắc chắn muốn xóa?")) {
+            if (service.delete(id) != 0) {
+                loadTable(service.selectAll());
+                MsgBox.alert(this, "Thành công!");
+            } else {
+                MsgBox.alert(this, "Không thể xóa!\nĐã chuyển trạng thái về không hoạt động!");
+                MauSac ms = service.selectByID(id);
+                ms.setTrangThai(0);
+                service.update(ms, id);
+                loadTable(service.selectAll());
             }
         }
+        resetForm();
     }
-    public void resetForm(){
+
+    public void resetForm() {
         txtTenTT.setText("");
         rdoHD.setSelected(true);
     }
-    public void setForm(MauSac md ){
+
+    public void setForm(MauSac md) {
         txtTenTT.setText(md.getTenMau());
-        if(md.getTrangThai() == 1){
+        if (md.getTrangThai() == 1) {
             rdoHD.setSelected(true);
-        }else{
+        } else {
             rdoKHD.setSelected(true);
         }
     }
-    
-    public void search(){
-         if(search == 0){
-             try {
-                 int id = Integer.parseInt(txtSearch.getText().trim());
-                 MauSac md = service.selectByID(id);
-                 List<MauSac> list = new ArrayList<>();
-                 list.add(md);
-                 loadTale(list);
-             } catch (NumberFormatException numberFormatException) {
-             }
-      }else{
-          String ten = txtSearch.getText().trim();
-          loadTale(service.selectByName(ten));
-      }
+
+    public void search() {
+        if (search == 0) {
+            try {
+                int id = Integer.parseInt(txtSearch.getText().trim());
+                MauSac md = service.selectByID(id);
+                List<MauSac> list = new ArrayList<>();
+                list.add(md);
+                loadTable(list);
+            } catch (NumberFormatException numberFormatException) {
+            }
+        } else {
+            String ten = txtSearch.getText().trim();
+            loadTable(service.selectByName(ten));
+        }
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -211,6 +260,11 @@ public class MauSac_Panel extends javax.swing.JPanel {
         tblThuocTinh.setRowHeight(25);
         tblThuocTinh.setSelectionBackground(new java.awt.Color(0, 0, 0));
         tblThuocTinh.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tblThuocTinh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblThuocTinhMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblThuocTinh);
 
         jButton6.setText("|<<");
@@ -399,11 +453,11 @@ public class MauSac_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_cboSearchItemStateChanged
 
     private void btnXuatExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatExActionPerformed
-          try {
+        try {
             XuatExcelFromTbl excelFromTbl = new XuatExcelFromTbl();
             excelFromTbl.exportExcel((DefaultTableModel) tblThuocTinh.getModel());
         } catch (Exception e) {
-        }  
+        }
     }//GEN-LAST:event_btnXuatExActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
@@ -423,7 +477,7 @@ public class MauSac_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void txtSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyPressed
-       search();
+        search();
     }//GEN-LAST:event_txtSearchKeyPressed
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
@@ -433,6 +487,13 @@ public class MauSac_Panel extends javax.swing.JPanel {
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
         search();
     }//GEN-LAST:event_txtSearchKeyTyped
+
+    private void tblThuocTinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThuocTinhMouseClicked
+        int row = tblThuocTinh.getSelectedRow();
+        int id = Integer.parseInt(tblThuocTinh.getValueAt(row, 0).toString());
+        MauSac ms = service.selectByID(id);
+        setForm(ms);
+    }//GEN-LAST:event_tblThuocTinhMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

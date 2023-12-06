@@ -9,6 +9,7 @@ import com.fstore.untils.XuatExcelFromTbl;
 import com.fstore.model.HoaDon;
 import com.fstore.service.HoaDonChiTiet_Service;
 import com.fstore.service.HoaDon_Service;
+import com.fstore.untils.Auth;
 import com.ui.main.Main;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,14 +29,16 @@ public class HoaDonBanHang_Panel extends javax.swing.JPanel {
         initComponents();
         init();
     }
-    public HoaDonBanHang_Panel(String maNv) {
-        initComponents();
-         fillTable(hoaDon_Service.selectByID_NV(maNv));
-    }
+   
     
     
     public void init(){
-        fillTable(hoaDon_Service.selectAll());
+        if(Auth.isManager()){
+            fillTable(hoaDon_Service.selectAll());
+        }else{
+             fillTable(hoaDon_Service.selectByID_NV(Auth.nv.getMaNV()));
+        }
+        
     }
     public void fillTable(List<HoaDon> list) {
         DefaultTableModel tblMd = (DefaultTableModel) tblHoaDon.getModel();
@@ -65,23 +68,44 @@ public class HoaDonBanHang_Panel extends javax.swing.JPanel {
     
     public void search(){
         List<HoaDon> list = new ArrayList<>();
-        if(search == 0){
-            String idT = txtSearch.getText().trim();
-            int id = 0;
-            try {
-                id = Integer.parseInt(idT);
-            } catch (Exception e) {
+        if (Auth.isManager()) {
+            if (search == 0) {
+                String idT = txtSearch.getText().trim();
+                int id = 0;
+                try {
+                    id = Integer.parseInt(idT);
+                } catch (Exception e) {
+                }
+                HoaDon hd = hoaDon_Service.selectByID(id);
+                if (hd != null) {
+                    list.add(hd);
+                }
+            } else if (search == 1) {
+                String ten = txtSearch.getText().trim();
+                list = hoaDon_Service.selectByName(ten);
+            } else if (search == 2) {
+                String sdt = txtSearch.getText().trim();
+                list = hoaDon_Service.selectBySDT(sdt);
             }
-            HoaDon hd = hoaDon_Service.selectByID(id);
-            if(hd!= null){
-                list.add(hd);
+        }else{
+            if (search == 0) {
+                String idT = txtSearch.getText().trim();
+                int id = 0;
+                try {
+                    id = Integer.parseInt(idT);
+                } catch (Exception e) {
+                }
+                HoaDon hd = hoaDon_Service.selectByIDIsNV(id, Auth.nv.getMaNV());
+                if (hd != null) {
+                    list.add(hd);
+                }
+            } else if (search == 1) {
+                String ten = txtSearch.getText().trim();
+                list = hoaDon_Service.selectByNameIsNv(ten, Auth.nv.getMaNV());
+            } else if (search == 2) {
+                String sdt = txtSearch.getText().trim();
+                list = hoaDon_Service.selectBySDTIsNv(sdt, Auth.nv.getMaNV());
             }
-        }else if(search == 1){
-            String ten = txtSearch.getText().trim();
-            list = hoaDon_Service.selectByName(ten);
-        }else if(search ==2){
-            String sdt = txtSearch.getText().trim();
-            list = hoaDon_Service.selectBySDT(sdt);
         }
         fillTable(list);
     }
@@ -95,7 +119,12 @@ public class HoaDonBanHang_Panel extends javax.swing.JPanel {
         }else if(rdoHuy.isSelected()){
             tt = 2;
         }
-        List<HoaDon> list = hoaDon_Service.selectByDay(ngayBD, ngayKT, tt);
+        List<HoaDon> list = null;
+        if (Auth.isManager()) {
+            list = hoaDon_Service.selectByDay(ngayBD, ngayKT, tt);
+        }else{
+            list = hoaDon_Service.selectByDayIsNv(ngayBD, ngayKT, tt, Auth.nv.getMaNV());
+        }
         fillTable(list);
     }
     @SuppressWarnings("unchecked")
@@ -374,7 +403,11 @@ public class HoaDonBanHang_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        fillTable(hoaDon_Service.selectAll());
+        if (Auth.isManager()) {
+            fillTable(hoaDon_Service.selectAll());
+        }else{
+            fillTable(hoaDon_Service.selectByID_NV(Auth.nv.getMaNV()));
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

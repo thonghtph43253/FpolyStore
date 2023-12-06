@@ -52,7 +52,7 @@ public class SanPham_Service implements Inf_Service<SanPham, Integer>{
             ps.setObject(5, model.getID_SanPham());
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+          e.printStackTrace();
             return 0;
         }
     }
@@ -68,7 +68,7 @@ public class SanPham_Service implements Inf_Service<SanPham, Integer>{
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return 0;
         }
     }
@@ -159,6 +159,22 @@ public class SanPham_Service implements Inf_Service<SanPham, Integer>{
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+      public int updateTrangThai(SanPham model, Integer id) {
+        sql = """
+             UPDATE SANPHAM SET  TRANGTHAI = ?
+             WHERE ID_SANPHAM = ? 
+             """;
+        try {
+             conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, model.getTrangThai());
+            ps.setObject(2, model.getID_SanPham());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+          e.printStackTrace();
+            return 0;
         }
     }
 }

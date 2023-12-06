@@ -71,7 +71,7 @@ public class Size_Service implements Inf_Service<Size, Integer>{
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return 0;
         }
     }
@@ -152,4 +152,5 @@ public class Size_Service implements Inf_Service<Size, Integer>{
             return null;
         }
     }
+     
 }

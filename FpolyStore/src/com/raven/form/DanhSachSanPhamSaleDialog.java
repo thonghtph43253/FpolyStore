@@ -131,6 +131,7 @@ public class DanhSachSanPhamSaleDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jButton11.setText("Thêm vào danh sách áp dụng");
         jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +140,7 @@ public class DanhSachSanPhamSaleDialog extends javax.swing.JDialog {
             }
         });
 
+        tblSanPham.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -155,6 +157,8 @@ public class DanhSachSanPhamSaleDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tblSanPham.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblSanPham.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPane7.setViewportView(tblSanPham);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách sản phẩm áp dụng"));
@@ -175,6 +179,8 @@ public class DanhSachSanPhamSaleDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tblSanPhamApDung.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblSanPhamApDung.setSelectionForeground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(tblSanPhamApDung);
 
         jButton3.setBackground(new java.awt.Color(255, 0, 0));

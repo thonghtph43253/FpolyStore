@@ -151,6 +151,44 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
             return null;
         }
     }
+    
+    public HoaDon selectByIDIsNV(Integer id, String maNv) {
+         sql = """
+               SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
+                      MAGIAMGIA,HINHTHUCTHANHTOAN, HD.TRANGTHAI,
+                      KH.ID_KHACHHANG, NV.MANV
+               FROM HOADON HD 
+               JOIN NHANVIEN NV ON HD.MANV = NV.MANV
+               JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
+               WHERE ID_HOADON = ? AND HD.MANV = ?
+              """;
+            HoaDon hd = null;
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1, id);
+            ps.setObject(2, maNv);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                hd = new HoaDon();
+                hd.setId_HoaDon(rs.getInt(1));
+                hd.setTenKH(rs.getString(2));
+                hd.setNgayTao(rs.getString(3));
+                hd.setSdt(rs.getString(4));
+                hd.setTongTien(rs.getDouble(5));
+                hd.setVoucher(rs.getInt(6));
+                hd.setHinhThucThanhToan(rs.getInt(7));
+                hd.setTrangThai(rs.getInt(8));
+                hd.setId_KhachHang(rs.getInt(9));
+                hd.setId_NhanVien(rs.getString(10));
+                
+            }
+            return hd;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public List<HoaDon> selectByTrangThai( int tt) {
         sql = """
                SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
@@ -267,7 +305,7 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
                FROM HOADON HD 
                JOIN NHANVIEN NV ON HD.MANV = NV.MANV
                JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
-               WHERE TENKHACHHANG LIKE ?
+               WHERE TENKHACHHANG LIKE ? 
               """;
             List<HoaDon> list = new ArrayList<>();
             try {
@@ -296,6 +334,43 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
         }
     }
     
+    public List<HoaDon> selectByNameIsNv(String ten, String maNv) {
+        sql = """
+               SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
+                      MAGIAMGIA,HINHTHUCTHANHTOAN, HD.TRANGTHAI,
+                      KH.ID_KHACHHANG, NV.MANV
+               FROM HOADON HD 
+               JOIN NHANVIEN NV ON HD.MANV = NV.MANV
+               JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
+               WHERE TENKHACHHANG LIKE ? AND HD.MANV = ?
+              """;
+            List<HoaDon> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,"%"+ten+"%");
+            ps.setObject(2, maNv);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                 HoaDon hd = new HoaDon();
+                hd.setId_HoaDon(rs.getInt(1));
+                hd.setTenKH(rs.getString(2));
+                hd.setNgayTao(rs.getString(3));
+                hd.setSdt(rs.getString(4));
+                hd.setTongTien(rs.getDouble(5));
+                hd.setVoucher(rs.getInt(6));
+                hd.setHinhThucThanhToan(rs.getInt(7));
+                hd.setTrangThai(rs.getInt(8));
+                hd.setId_KhachHang(rs.getInt(9));
+                hd.setId_NhanVien(rs.getString(10));
+                list.add(hd);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public List<HoaDon> selectBySDT(String SDT) {
         sql = """
                SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
@@ -311,6 +386,43 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
             conn = DBConnect.getConnection();
             ps= conn.prepareStatement(sql);
             ps.setObject(1,"%"+SDT+"%");
+            rs = ps.executeQuery();
+            while(rs.next()){
+                 HoaDon hd = new HoaDon();
+                hd.setId_HoaDon(rs.getInt(1));
+                hd.setTenKH(rs.getString(2));
+                hd.setNgayTao(rs.getString(3));
+                hd.setSdt(rs.getString(4));
+                hd.setTongTien(rs.getDouble(5));
+                hd.setVoucher(rs.getInt(6));
+                hd.setHinhThucThanhToan(rs.getInt(7));
+                hd.setTrangThai(rs.getInt(8));
+                hd.setId_KhachHang(rs.getInt(9));
+                hd.setId_NhanVien(rs.getString(10));
+                list.add(hd);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<HoaDon> selectBySDTIsNv(String SDT, String maNv) {
+        sql = """
+               SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
+                      MAGIAMGIA,HINHTHUCTHANHTOAN, HD.TRANGTHAI,
+                      KH.ID_KHACHHANG, NV.MANV
+               FROM HOADON HD 
+               JOIN NHANVIEN NV ON HD.MANV = NV.MANV
+               JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
+               WHERE HD.SDT LIKE ? AND HD.MANV = ?
+              """;
+            List<HoaDon> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,"%"+SDT+"%");
+            ps.setObject(2, maNv);
             rs = ps.executeQuery();
             while(rs.next()){
                  HoaDon hd = new HoaDon();
@@ -349,6 +461,45 @@ public class HoaDon_Service implements Inf_Service<HoaDon,Integer>{
             ps.setObject(1,ngayBD);
             ps.setObject(2,ngayKT);
             ps.setObject(3,tt);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                 HoaDon hd = new HoaDon();
+                hd.setId_HoaDon(rs.getInt(1));
+                hd.setTenKH(rs.getString(2));
+                hd.setNgayTao(rs.getString(3));
+                hd.setSdt(rs.getString(4));
+                hd.setTongTien(rs.getDouble(5));
+                hd.setVoucher(rs.getInt(6));
+                hd.setHinhThucThanhToan(rs.getInt(7));
+                hd.setTrangThai(rs.getInt(8));
+                hd.setId_KhachHang(rs.getInt(9));
+                hd.setId_NhanVien(rs.getString(10));
+                list.add(hd);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<HoaDon> selectByDayIsNv(Date ngayBD, Date ngayKT ,int tt, String maNv) {
+        sql = """
+               SELECT ID_HOADON, TENKHACHHANG, NGAYTAO, HD.SDT, TONGTIEN,
+                      MAGIAMGIA,HINHTHUCTHANHTOAN, HD.TRANGTHAI,
+                      KH.ID_KHACHHANG, NV.MANV
+               FROM HOADON HD 
+               JOIN NHANVIEN NV ON HD.MANV = NV.MANV
+               JOIN KHACHHANG KH ON HD.ID_KHACHHANG = KH.ID_KHACHHANG
+               WHERE NGAYTAO >= ? AND NGAYTAO <= DATEADD(DAY, 1, ?) AND HD.TRANGTHAI = ? AND HD.MANV = ?
+              """;
+            List<HoaDon> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,ngayBD);
+            ps.setObject(2,ngayKT);
+            ps.setObject(3,tt);
+            ps.setObject(4, maNv);
             rs = ps.executeQuery();
             while(rs.next()){
                  HoaDon hd = new HoaDon();

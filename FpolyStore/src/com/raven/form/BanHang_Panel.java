@@ -97,16 +97,18 @@ public class BanHang_Panel extends javax.swing.JPanel {
         DefaultTableModel tblMd = (DefaultTableModel) tblSanPham.getModel();
         tblMd.setRowCount(0);
         for (SanPhamChiTiet spct : list) {
-            tblMd.addRow(new Object[]{
-                spct.getId_SanPhamChiTiet(),
-                sanPham_Service.selectByID(spct.getId_SanPham()).getTenSP(),
-                spct.getGia(),
-                getGiamGia(spct.getId_SanPhamChiTiet(), new Date()),
-                size_Service.selectByID(spct.getId_Size()).getTenSize(),
-                mauSac_Service.selectByID(spct.getId_Mau()).getTenMau(),
-                chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu(),
-                spct.getSoLuong() - spct_Service.getSoLuongSanPhamHDC(3, spct.getId_SanPhamChiTiet())
-            });
+            if (spct.getTrangThai()==1 && spct.getSoLuong()>0) {
+                tblMd.addRow(new Object[]{
+                    spct.getId_SanPhamChiTiet(),
+                    sanPham_Service.selectByID(spct.getId_SanPham()).getTenSP(),
+                    spct.getGia(),
+                    getGiamGia(spct.getId_SanPhamChiTiet(), new Date()),
+                    size_Service.selectByID(spct.getId_Size()).getTenSize(),
+                    mauSac_Service.selectByID(spct.getId_Mau()).getTenMau(),
+                    chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu(),
+                    spct.getSoLuong() - spct_Service.getSoLuongSanPhamHDC(3, spct.getId_SanPhamChiTiet())
+                });
+            }
 
         }
     }
@@ -117,8 +119,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
         for (HoaDon_ChiTiet hdct : list) {
             tblMd.addRow(new Object[]{
                 hdct.getId_SanPhamChiTiet(),
-                //"sp",
-                lblTenSanPham.getText(),
+                spct_Service.selectNameProductByID(hdct.getId_SanPhamChiTiet()),
                 hdct.getGia(),
                 hdct.getSoLuong()
             });
@@ -223,7 +224,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
             if (hdct2 == null) {
                 hdct.setTrangThai(3);
                 hdct_Service.update(hdct, hdct.getId_HoaDonCT());
-                System.out.println("de" + hdct.getId_SanPhamChiTiet());
+                //System.out.println("de" + hdct.getId_SanPhamChiTiet());
             }
         }
 
@@ -278,11 +279,23 @@ public class BanHang_Panel extends javax.swing.JPanel {
             }
         }
     }
-
+    public boolean checkSoLuongMoi(int id_Spct, int soLuongN){
+        int soLuongCu = 0;
+        for (int i = 0; i < tblSanPham.getRowCount(); i++) {
+            if(id_Spct == Integer.parseInt(tblSanPham.getValueAt(i, 0).toString())){
+                soLuongCu = Integer.parseInt(tblSanPham.getValueAt(i, 7).toString());
+                break;
+            }   
+        }
+        if(soLuongN>soLuongCu){
+            return false;
+        }
+        return true;
+    }
     public void updatSoLuong(int soLuongNew) {
         DefaultTableModel model = (DefaultTableModel) tblGioHang.getModel();
         int selectedRow = tblGioHang.getSelectedRow();
-
+        int id_Spct = Integer.parseInt(tblGioHang.getValueAt(selectedRow, 0).toString());
         if (selectedRow >= 0) {
             int productId = (int) tblGioHang.getValueAt(selectedRow, 0);
             int soLuongCu = (int) tblGioHang.getValueAt(selectedRow, 3);
@@ -290,9 +303,14 @@ public class BanHang_Panel extends javax.swing.JPanel {
                 // Kiểm tra điều kiện so sánh giá trị tương ứng trong tblSanPham và tblGioHang
                 if (tblSanPham.getValueAt(i, 0).equals(tblGioHang.getValueAt(selectedRow, 0))) {
                     if (soLuongNew > soLuongCu) {
+                        if(!checkSoLuongMoi(id_Spct, (soLuongNew-soLuongCu))){
+                            MsgBox.alert(this, "Số lương mới vượt quá só lượng trong kho!");
+                            return;
+                        }
                         int soLuong = Integer.parseInt(tblSanPham.getValueAt(i, 7).toString())
                                 - (soLuongNew - soLuongCu);
                         tblSanPham.setValueAt(soLuong, i, 7);
+                        
                     } else {
                         int soLuong = Integer.parseInt(tblSanPham.getValueAt(i, 7).toString())
                                 + (soLuongCu - soLuongNew);
@@ -304,12 +322,14 @@ public class BanHang_Panel extends javax.swing.JPanel {
 
             for (int j = 0; j < listGioHang.size(); j++) {
                 HoaDon_ChiTiet hdct = listGioHang.get(j);
-                hdct.setSoLuong(soLuongNew);
+                
                 if (hdct.getId_SanPhamChiTiet() == productId) {
+                    hdct.setSoLuong(soLuongNew);
                     listGioHang.set(j, hdct);
                     break;
                 }
             }
+            System.out.println(listGioHang.size());
         }
     }
 
@@ -391,6 +411,13 @@ public class BanHang_Panel extends javax.swing.JPanel {
         lblMaHD.setText("");
         txtTenKDua.setText("");
         txtGhiChu.setText("");
+        lblMaKH.setText("1");
+        lblTenKH.setText("Vui lòng chọn!");
+        lblTongTien.setText("0.0");
+        lblTienThanhToan.setText("0.0");
+        lblSoTienGiam.setText("0.0");
+        btnThanhToan.setEnabled(false);
+        btnHuyHD.setEnabled(false);
     }
 
     public void keyNhapTienKhach() {
@@ -985,6 +1012,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblHoaDonCho.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        tblHoaDonCho.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblHoaDonCho.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblHoaDonChoMouseClicked(evt);
@@ -995,6 +1024,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Đơn hàng chờ");
 
+        jButton2.setBackground(new java.awt.Color(0, 255, 204));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton2.setText("Tìm");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1138,6 +1169,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
         insert(id_hoaDon);
         listGioHang.clear();
         fillTableHoaDonCho(hd_Service.selectByTrangThai(3));
+        fillTableGioHang(listGioHang);
+        resetFormHD();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnHuyHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyHDActionPerformed
@@ -1155,6 +1188,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
             listGioHang.clear();
             resetFormHD();
             MsgBox.alert(this, "Thanh toán thành công");
+            fillTableGioHang(listGioHang);
             fillTableHoaDonCho(hd_Service.selectByTrangThai(3));
             new ChiTietHoaDon_Jdialog(new Main(), true, hd.getId_HoaDon()).setVisible(true);
         }
@@ -1199,9 +1233,10 @@ public class BanHang_Panel extends javax.swing.JPanel {
             String soluongT = MsgBox.prompt(this, "Số lượng mới?");
             try {
                 int soluong = Integer.parseInt(soluongT);
+                
                 updatSoLuong(soluong);
                 fillTableGioHang(listGioHang);
-                lblTongTien.setText(String.valueOf(tongTien()) + "  VNĐ");
+                lblTongTien.setText(String.valueOf(tongTien()));
                 lblTienThanhToan.setText(String.valueOf(tongTienTT()));
             } catch (Exception e) {
                 MsgBox.alert(this, "Số lương mới phải là số");
@@ -1236,7 +1271,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
     private void btnXoaGHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaGHActionPerformed
         delete();
         fillTableGioHang(listGioHang);
-        lblTongTien.setText(String.valueOf(tongTien()) + "  VNĐ");
+        lblTongTien.setText(String.valueOf(tongTien()) );
         lblTienThanhToan.setText(String.valueOf(tongTienTT()));
         btnXoaGH.setEnabled(false);
     }//GEN-LAST:event_btnXoaGHActionPerformed

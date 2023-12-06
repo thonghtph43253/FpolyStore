@@ -59,17 +59,32 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
         return new DanhMuc(trangThai, ten);
     }
 
+    public boolean checkEmpty() {
+        List<DanhMuc> list = service.selectAll();
+        String ten = txtTenTT.getText().trim();
+        for (DanhMuc dm : list) {
+            if (dm.getTenDanhMuc().equalsIgnoreCase(ten)) {
+                MsgBox.alert(this, "Thuộc tính đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addThuocTinh() {
         DanhMuc md = getForm();
         if (md == null) {
             return;
         }
         if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
-            if (service.insert(md) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+            if (checkEmpty()) {
+                if (service.insert(md) != 0) {
+                    loadTale(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
             }
         }
     }
@@ -81,14 +96,31 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
         if (md == null || id < 0) {
             return;
         }
-        if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
-            if (service.update(md, id) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+        DanhMuc dm = service.selectByID(id);
+        if (dm.getTenDanhMuc().equalsIgnoreCase(md.getTenDanhMuc())) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                if (service.update(md, id) != 0) {
+                    loadTale(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        } else {
+            if (checkEmpty()) {
+                if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                    if (service.update(md, id) != 0) {
+                        loadTale(service.selectAll());
+                        MsgBox.alert(this, "Thành công!");
+                        resetForm();
+                    } else {
+                        MsgBox.alert(this, "Thất bại!");
+                    }
+                }
             }
         }
+
     }
 
     public void deleteThuocTinh() {
@@ -102,9 +134,14 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
                 loadTale(service.selectAll());
                 MsgBox.alert(this, "Thành công!");
             } else {
-                MsgBox.alert(this, "Thất bại!");
+                MsgBox.alert(this, "Không thê xóa!\nĐã chuyển trạng thái về không hoạt động!");
+                DanhMuc dm = service.selectByID(id);
+                dm.setTrangThai(0);
+                service.update(dm, id);
+                loadTale(service.selectAll());
             }
         }
+        resetForm();
     }
 
     public void resetForm() {
@@ -189,6 +226,11 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
         tblThuocTinh.setRowHeight(25);
         tblThuocTinh.setSelectionBackground(new java.awt.Color(0, 0, 0));
         tblThuocTinh.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tblThuocTinh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblThuocTinhMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblThuocTinh);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -375,27 +417,28 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8)
-                    .addComponent(jButton9))
-                .addGap(15, 15, 15))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(29, 29, 29))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton6)
+                            .addComponent(jButton7)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton8)
+                            .addComponent(jButton9))
+                        .addGap(15, 15, 15))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -437,12 +480,19 @@ public class DanhMuc_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtSearchKeyPressed
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-       search();
+        search();
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
         search();
     }//GEN-LAST:event_txtSearchKeyTyped
+
+    private void tblThuocTinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThuocTinhMouseClicked
+        int row = tblThuocTinh.getSelectedRow();
+        int id = Integer.parseInt(tblThuocTinh.getValueAt(row, 0).toString());
+        DanhMuc dm = service.selectByID(id);
+        setForm(dm);
+    }//GEN-LAST:event_tblThuocTinhMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -274,6 +274,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Thông tin nhân viên", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         jLabel2.setText("Mã nhân viên");
@@ -291,8 +292,6 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         jLabel5.setText("Số điện thoại");
 
         jLabel6.setText("Ngày sinh");
-
-        txtNgaySinh.setEditable(true);
 
         jLabel7.setText("Email");
 

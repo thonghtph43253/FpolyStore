@@ -46,6 +46,7 @@ public class Size_Panel extends javax.swing.JPanel {
 
     public Size getForm() {
         String ten = txtTenTT.getText().trim();
+        List<Size> list_Size = service.selectAll();
         int trangThai = 1;
         if (rdoHD.isSelected()) {
             trangThai = 1;
@@ -56,7 +57,20 @@ public class Size_Panel extends javax.swing.JPanel {
             MsgBox.alert(this, "Tên thuộc tính không được bỏ trống!");
             return null;
         }
+
         return new Size(trangThai, ten);
+    }
+
+    public boolean checkEmpty() {
+        List<Size> list = service.selectAll();
+        String ten = txtTenTT.getText().trim();
+        for (Size s : list) {
+            if (s.getTenSize().equalsIgnoreCase(ten)) {
+                MsgBox.alert(this, "Thuộc tính đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
     }
 
     public void addThuocTinh() {
@@ -65,11 +79,14 @@ public class Size_Panel extends javax.swing.JPanel {
             return;
         }
         if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
-            if (service.insert(md) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+            if (checkEmpty()) {
+                if (service.insert(md) != 0) {
+                    loadTale(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
             }
         }
     }
@@ -81,14 +98,31 @@ public class Size_Panel extends javax.swing.JPanel {
         if (md == null || id < 0) {
             return;
         }
-        if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
-            if (service.update(md, id) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+        Size s = service.selectByID(id);
+        if (s.getTenSize().equalsIgnoreCase(md.getTenSize())) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                if (service.update(md, id) != 0) {
+                    loadTale(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        } else {
+            if (checkEmpty()) {
+                if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                    if (service.update(md, id) != 0) {
+                        loadTale(service.selectAll());
+                        MsgBox.alert(this, "Thành công!");
+                        resetForm();
+                    } else {
+                        MsgBox.alert(this, "Thất bại!");
+                    }
+                }
             }
         }
+
     }
 
     public void deleteThuocTinh() {
@@ -102,9 +136,14 @@ public class Size_Panel extends javax.swing.JPanel {
                 loadTale(service.selectAll());
                 MsgBox.alert(this, "Thành công!");
             } else {
-                MsgBox.alert(this, "Thất bại!");
+                MsgBox.alert(this, "Không thể xóa!\nĐã chuyển trạng thái về không hoạt động!");
+                Size s = service.selectByID(id);
+                s.setTrangThai(0);
+                service.update(s, id);
+                loadTale(service.selectAll());
             }
         }
+        resetForm();
     }
 
     public void resetForm() {
@@ -189,6 +228,11 @@ public class Size_Panel extends javax.swing.JPanel {
         tblThuocTinh.setRowHeight(25);
         tblThuocTinh.setSelectionBackground(new java.awt.Color(0, 0, 0));
         tblThuocTinh.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tblThuocTinh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblThuocTinhMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblThuocTinh);
 
         jButton6.setText("|<<");
@@ -446,6 +490,13 @@ public class Size_Panel extends javax.swing.JPanel {
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
         search();
     }//GEN-LAST:event_txtSearchKeyTyped
+
+    private void tblThuocTinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblThuocTinhMouseClicked
+        int row = tblThuocTinh.getSelectedRow();
+        int id = Integer.parseInt(tblThuocTinh.getValueAt(row, 0).toString());
+        Size s = service.selectByID(id);
+        setForm(s);
+    }//GEN-LAST:event_tblThuocTinhMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

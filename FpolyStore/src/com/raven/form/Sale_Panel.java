@@ -34,15 +34,19 @@ public class Sale_Panel extends javax.swing.JPanel {
 
     public void init() {
         setHidenBtn();
+        autoUpdateSale();
         fillTable(sale_Service.selectAll());
         setBtn();
         txtNgayBD.setEditable(false);
         txtThoiGianKT.setEditable(false);
     }
 
-//    public void show() {
-//        MsgBox.alert(this, "Số lượng sản phẩm trong list " + list.size());
-//    }
+     public void autoUpdateSale(){
+        for (Sale s : sale_Service.selectAll()) {
+            s.setTrangThai(checkDatẹKT(s.getThoiGianKT()));
+            sale_Service.update(s, s.getId_Sale());
+        }
+    }
     public void setBtn() {
         if (list.size() >= 0) {
             btnThem.setEnabled(true);
@@ -92,7 +96,14 @@ public class Sale_Panel extends javax.swing.JPanel {
         
         btnThem.setEnabled(false);
     }
-
+     public int checkDatẹKT(Date ngayKT){
+        Date dateNow = new Date();
+       
+        if(ngayKT.compareTo(dateNow) < 0){
+           return 0;
+        }
+        return 1;
+    }
     public void clearForm() {
         txtTenSale.setText("");
         txtNgayBD.setText("");
@@ -133,6 +144,7 @@ public class Sale_Panel extends javax.swing.JPanel {
         } else if (rdoKHD.isSelected()) {
             tt = 0;
         }
+        tt = checkDatẹKT(ngayKT);
         if(er.length()>0){
             MsgBox.alert(this, er.toString());
             return null;

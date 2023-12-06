@@ -40,7 +40,7 @@ public class MauSac_Service implements Inf_Service<MauSac, Integer>{
     public int update(MauSac model, Integer id) {
          sql = """
               UPDATE MAU SET TENMAU = ?, TRANGTHAI = ?
-              WHERE ID_CHATLIEU = ?
+              WHERE ID_MAU = ?
               """;
         try {
              conn = DBConnect.getConnection();
@@ -67,7 +67,7 @@ public class MauSac_Service implements Inf_Service<MauSac, Integer>{
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return 0;
         }
     }

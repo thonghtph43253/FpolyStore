@@ -58,7 +58,10 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         model.removeAllElements();
         List<NhaCungCap> list = nhaCungCap_Service.selectAll();
         for (NhaCungCap ncc : list) {
-            model.addElement(ncc);
+            if(ncc.getTrangThai() == 1){
+                model.addElement(ncc);
+            }
+            
         }
     }
 

@@ -148,9 +148,9 @@ public class Main extends javax.swing.JFrame {
                     if (menuIndex == 1) {
                         main.showForm(new BanHang_Panel());
                     } else if (menuIndex == 2) {
-                        main.showForm(new HoaDonBanHang_Panel(Auth.nv.getMaNV()));
+                        main.showForm(new HoaDonBanHang_Panel());
 
-                    } else if (menuIndex == 3) {
+                   } else if (menuIndex == 3) {
                         if (subMenuIndex == 0) {
                             main.showForm(new ThongKeDoanhThu_Panel());
                         }

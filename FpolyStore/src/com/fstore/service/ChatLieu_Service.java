@@ -68,7 +68,7 @@ public class ChatLieu_Service implements Inf_Service<ChatLieu, Integer>{
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return 0;
         }
     }

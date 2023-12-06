@@ -35,10 +35,16 @@ public class Voucher_Panel extends javax.swing.JPanel {
     }
 
     public void init() {
+        autoUpdateVoucher();
         fillTable(voucher_Service.selectAll());
 
     }
-
+    public void autoUpdateVoucher(){
+        for (Voucher v : voucher_Service.selectAll()) {
+            v.setTrangThai(checkDatẹKT(v.getThoiGianKT()));
+            voucher_Service.update(v, v.getId_Voucher());
+        }
+    }
 //    public void show() {
 //        MsgBox.alert(this, "Số lượng sản phẩm trong list " + list.size());
 //    }
@@ -140,13 +146,21 @@ public class Voucher_Panel extends javax.swing.JPanel {
         } else if (rdoKHD.isSelected()) {
             tt = 0;
         }
+        tt = checkDatẹKT(ngayKT);
         if (er.length() > 0) {
             MsgBox.alert(this, er.toString());
             return null;
         }
         return new Voucher(ten, hinhThucGiam, giaTriGiam, soLuong, ngayBD, ngayKT, tt);
     }
-
+    public int checkDatẹKT(Date ngayKT){
+        Date dateNow = new Date();
+       
+        if(ngayKT.compareTo(dateNow) < 0){
+           return 0;
+        }
+        return 1;
+    }
     public void clearForm() {
         txtGiaTriGiam.setText("");
         txtNgayBD.setText("");

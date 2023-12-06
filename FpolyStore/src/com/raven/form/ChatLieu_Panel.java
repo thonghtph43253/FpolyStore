@@ -7,6 +7,7 @@ package com.raven.form;
 import com.fstore.untils.MsgBox;
 import com.fstore.untils.XuatExcelFromTbl;
 import com.fstore.model.ChatLieu;
+import com.fstore.model.MauSac;
 import com.fstore.service.ChatLieu_Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class ChatLieu_Panel extends javax.swing.JPanel {
-    
+
     private ChatLieu_Service service = new ChatLieu_Service();
     private int search = 0;
 
@@ -27,10 +28,10 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
     }
 
     public void init() {
-        this.loadTale(service.selectAll());
+        this.loadTable(service.selectAll());
     }
 
-    public void loadTale(List<ChatLieu> list) {
+    public void loadTable(List<ChatLieu> list) {
         DefaultTableModel tblMd = (DefaultTableModel) this.tblThuocTinh.getModel();
         tblMd.setRowCount(0);
         for (ChatLieu cl : list) {
@@ -58,17 +59,32 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
         return new ChatLieu(ten, trangThai);
     }
 
+    public boolean checkEmpty() {
+        List<ChatLieu> list = service.selectAll();
+        String ten = txtTenTT.getText().trim();
+        for (ChatLieu cl : list) {
+            if (cl.getTenChatLieu().equalsIgnoreCase(ten)) {
+                MsgBox.alert(this, "Thuộc tính đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addThuocTinh() {
         ChatLieu cl = getForm();
         if (cl == null) {
             return;
         }
         if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
-            if (service.insert(cl) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+            if (checkEmpty()) {
+                if (service.insert(cl) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
             }
         }
     }
@@ -80,14 +96,31 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
         if (cl == null || id < 0) {
             return;
         }
-        if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
-            if (service.update(cl, id) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+        ChatLieu clcheck = service.selectByID(id);
+        if (cl.getTenChatLieu().equalsIgnoreCase(clcheck.getTenChatLieu())) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                if (service.update(cl, id) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        } else {
+            if (checkEmpty()) {
+                if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                    if (service.update(cl, id) != 0) {
+                        loadTable(service.selectAll());
+                        MsgBox.alert(this, "Thành công!");
+                        resetForm();
+                    } else {
+                        MsgBox.alert(this, "Thất bại!");
+                    }
+                }
             }
         }
+
     }
 
     public void deleteThuocTinh() {
@@ -98,12 +131,17 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
         }
         if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
             if (service.delete(id) != 0) {
-                loadTale(service.selectAll());
+                loadTable(service.selectAll());
                 MsgBox.alert(this, "Thành công!");
             } else {
-                MsgBox.alert(this, "Thất bại!");
+                MsgBox.alert(this, "Không thể xóa!\nĐã chuyển trạng thái về không hoạt động!");
+                ChatLieu cl = service.selectByID(id);
+                cl.setTrangThai(0);
+                service.update(cl, id);
+                loadTable(service.selectAll());
             }
         }
+        resetForm();
     }
 
     public void resetForm() {
@@ -126,12 +164,12 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
                 int id = Integer.parseInt(txtSearch.getText().trim());
                 ChatLieu cl = service.selectByID(id);
                 List<ChatLieu> list = new ArrayList<>();
-                loadTale(list);
+                loadTable(list);
             } catch (NumberFormatException numberFormatException) {
             }
         } else {
             String ten = txtSearch.getText().trim();
-            loadTale(service.selectAllByName(ten));
+            loadTable(service.selectAllByName(ten));
         }
     }
 
@@ -416,11 +454,11 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_cboSearchItemStateChanged
 
     private void btnXuatExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatExActionPerformed
-          try {
+        try {
             XuatExcelFromTbl excelFromTbl = new XuatExcelFromTbl();
             excelFromTbl.exportExcel((DefaultTableModel) tblThuocTinh.getModel());
         } catch (Exception e) {
-        }        
+        }
     }//GEN-LAST:event_btnXuatExActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -440,11 +478,11 @@ public class ChatLieu_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void txtSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyPressed
-       search();
+        search();
     }//GEN-LAST:event_txtSearchKeyPressed
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-       search();
+        search();
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped

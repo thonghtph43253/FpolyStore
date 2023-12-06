@@ -67,7 +67,7 @@ public class DanhMuc_Service implements Inf_Service<DanhMuc, Integer>{
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return 0;
         }
     }
@@ -148,4 +148,5 @@ public class DanhMuc_Service implements Inf_Service<DanhMuc, Integer>{
             return null;
         }
     }
+     
 }

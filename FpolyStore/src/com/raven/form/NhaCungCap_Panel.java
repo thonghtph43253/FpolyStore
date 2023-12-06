@@ -25,10 +25,10 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
     }
 
     public void init() {
-        this.loadTale(service.selectAll());
+        this.loadTable(service.selectAll());
     }
 
-    public void loadTale(List<NhaCungCap> list) {
+    public void loadTable(List<NhaCungCap> list) {
         DefaultTableModel tblMd = (DefaultTableModel) this.tblThuocTinh.getModel();
         tblMd.setRowCount(0);
         for (NhaCungCap md : list) {
@@ -69,17 +69,32 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
         return new NhaCungCap(ten, sDT, diaChi, trangThai);
     }
 
+    public boolean checkEmpty() {
+        List<NhaCungCap> list = service.selectAll();
+        String sdt = txtSDT.getText().trim();
+        for (NhaCungCap ncc : list) {
+            if (ncc.getSDT().equalsIgnoreCase(sdt)) {
+                MsgBox.alert(this, "Nhà cung cấp này đã tồn tại!");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addThuocTinh() {
         NhaCungCap md = getForm();
         if (md == null) {
             return;
         }
-        if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
-            if (service.insert(md) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+        if (checkEmpty()) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn thêm")) {
+                if (service.insert(md) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
             }
         }
     }
@@ -91,14 +106,31 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
         if (md == null || id < 0) {
             return;
         }
-        if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
-            if (service.update(md, id) != 0) {
-                loadTale(service.selectAll());
-                MsgBox.alert(this, "Thành công!");
-            } else {
-                MsgBox.alert(this, "Thất bại!");
+        NhaCungCap ncc = service.selectByID(id);
+        if (ncc.getSDT().equalsIgnoreCase(md.getSDT())) {
+            if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                if (service.update(md, id) != 0) {
+                    loadTable(service.selectAll());
+                    MsgBox.alert(this, "Thành công!");
+                    resetForm();
+                } else {
+                    MsgBox.alert(this, "Thất bại!");
+                }
+            }
+        } else {
+            if (checkEmpty()) {
+                if (MsgBox.confirm(this, "Chắc chắn muốn sửa")) {
+                    if (service.update(md, id) != 0) {
+                        loadTable(service.selectAll());
+                        MsgBox.alert(this, "Thành công!");
+                        resetForm();
+                    } else {
+                        MsgBox.alert(this, "Thất bại!");
+                    }
+                }
             }
         }
+
     }
 
     public void deleteThuocTinh() {
@@ -109,12 +141,17 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
         }
         if (MsgBox.confirm(this, "Chắc chắn muốn xóa?")) {
             if (service.delete(id) != 0) {
-                loadTale(service.selectAll());
+                loadTable(service.selectAll());
                 MsgBox.alert(this, "Thành công!");
             } else {
-                MsgBox.alert(this, "Thất bại!");
+                MsgBox.alert(this, "Không thể xóa!\nĐã chuyển trạng thái về không hoạt động!");
+                NhaCungCap ncc = service.selectByID(id);
+                ncc.setTrangThai(0);
+                service.update(ncc, id);
+                loadTable(service.selectAll());
             }
         }
+        resetForm();
     }
 
     public void resetForm() {
@@ -142,12 +179,15 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
                 NhaCungCap md = service.selectByID(id);
                 List<NhaCungCap> list = new ArrayList<>();
                 list.add(md);
-                loadTale(list);
+                loadTable(list);
             } catch (Exception e) {
             }
         } else if (search == 1) {
             String ten = txtSearch.getText().trim();
-            loadTale(service.selectByName(ten));
+            loadTable(service.selectByName(ten));
+        }else if(search == 2){
+            String sdt = txtSearch.getText().trim();
+            loadTable(service.selectBySdt(sdt));
         }
     }
 
@@ -256,7 +296,7 @@ public class NhaCungCap_Panel extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Tìm kiếm theo");
 
-        cboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên" }));
+        cboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã", "Tên", "Số điện thoại" }));
         cboSearch.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboSearchItemStateChanged(evt);
