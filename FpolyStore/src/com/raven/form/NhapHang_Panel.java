@@ -101,14 +101,15 @@ public class NhapHang_Panel extends javax.swing.JPanel {
                 size_Service.selectByID(spct.getId_Size()).getTenSize(),
                 mauSac_Service.selectByID(spct.getId_Mau()).getTenMau(),
                 chatLieu_Service.selectByID(spct.getId_ChatLieu()).getTenChatLieu(),
-                hdnct.getSoLuong(),
-                hdnct.getGiaNhap()
+                hdnct.getGiaNhap(),
+                hdnct.getSoLuong()
             });
         }
     }
 
     public HoaDonNhap_ChiTiet getHoaDonNhap_CT() {
         int row = tblSanPham.getSelectedRow();
+        double giaBan = Double.parseDouble(tblSanPham.getValueAt(row, 3).toString());
         StringBuilder er = new StringBuilder();
         if (row < 0) {
             er.append("Vui lòng chọn sản phẩm muốn nhập!\n");
@@ -135,12 +136,15 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         } else {
             try {
                 giaNhap = Double.parseDouble(giaNhapT);
-                if (soLuong <= 0) {
+                if (giaNhap <= 0) {
                     er.append("Giá nhập phải lớn hơn 0!\n");
                 }
             } catch (Exception e) {
                 er.append("Giá nhập phải là số!\n");
             }
+        }
+        if(giaNhap>giaBan){
+            er.append("Giá nhập lớn hơn giá bán!");
         }
         if (er.length() > 0) {
             MsgBox.alert(this, er.toString());
@@ -168,7 +172,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
         for (HoaDonNhap_ChiTiet hdnct : list) {
             if (hdnct.getId_SanPhamChiTiet() == id_Spct) {
                 list.remove(hdnct);
-
+                break;
             }
         }
         lblTongTien.setText(getTongTien() + " VNĐ");
@@ -638,6 +642,7 @@ public class NhapHang_Panel extends javax.swing.JPanel {
 
     private void btnXoaGHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaGHActionPerformed
         delete();
+        fillTableSanPhamNhap(list);
         setHiden();
     }//GEN-LAST:event_btnXoaGHActionPerformed
 

@@ -261,6 +261,7 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
         lblNhanVien = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText("HÓA ĐƠN NHẬP CHI TIẾT");
@@ -439,9 +440,9 @@ public class ChiTietHoaDonNhap_Jdialog extends javax.swing.JDialog {
             xuatHoaDon();
             MsgBox.alert(this, "Xuất hóa đơn nhập hàng thành công!");
         } catch (IOException ex) {
-            Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadElementException ex) {
-            Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ChiTietHoaDonNhap_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

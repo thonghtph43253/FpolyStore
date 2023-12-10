@@ -1,10 +1,10 @@
-
 package com.raven.form;
 
 import com.fstore.untils.MsgBox;
 import com.fstore.model.KhachHang;
 import com.fstore.service.KhachHang_Service;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JLabel;
@@ -15,14 +15,16 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
+
     private KhachHang_Service khachHang_Service = new KhachHang_Service();
     private BanHang_Panel banHang_Panel = new BanHang_Panel();
-    private  int id_KhachHang;
-    private  int row = -1;
+    private int id_KhachHang;
+    private int row = -1;
     private JLabel lblId_KH;
     private JLabel lblTenKH;
-   
-    public ThongTinKhachHang_Dialog(java.awt.Frame parent, boolean modal, JLabel lblid_Kh,JLabel lblTenKh) {
+    private int tk = 0;
+
+    public ThongTinKhachHang_Dialog(java.awt.Frame parent, boolean modal, JLabel lblid_Kh, JLabel lblTenKh) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
@@ -30,17 +32,20 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         this.lblTenKH = lblTenKh;
         init();
     }
-     public void init(){
-         hidenThongTinKH();
+
+    public void init() {
+        hidenThongTinKH();
         loadTale(khachHang_Service.selectAll());
     }
-    public KhachHang getKhachHang( int row){
-        
+
+    public KhachHang getKhachHang(int row) {
+
         id_KhachHang = Integer.parseInt(tblKhachHang.getValueAt(row, 0).toString());
         KhachHang kh = khachHang_Service.selectByID(id_KhachHang);
         return kh;
     }
-    public void loadTale(List<KhachHang> list){
+
+    public void loadTale(List<KhachHang> list) {
         DefaultTableModel tblMd = (DefaultTableModel) this.tblKhachHang.getModel();
         tblMd.setRowCount(0);
         for (KhachHang md : list) {
@@ -49,14 +54,62 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                 md.getTen(),
                 md.getsDT(),
                 md.getNgaySinh(),
-                md.getEmail(),
-                md.isGioiTinh() ?"Nam":"Nu", 
-                md.getTrangThai() == 1?"Hoạt động":"Không hoạt động"
+                md.isGioiTinh() ? "Nam" : "Nu",
+                md.getTrangThai() == 1 ? "Hoạt động" : "Không hoạt động"
             });
         }
-        
+
     }
-    public KhachHang getForm(){
+
+//    public KhachHang getForm() {
+//        List<KhachHang> listKH = khachHang_Service.selectAll();
+//        String ten = txtTenKH.getText();
+//        String sdt = txtSDT.getText();
+//        String diaChi = txtDiaChi.getText();
+//        String ngaySinh = txtNgaySinh.getText();
+//        Date d = new Date();
+//        StringBuffer er = new StringBuffer();
+//        boolean gt = true;
+//        int tt = 1;
+//        if (rdoNam.isSelected()) {
+//            gt = true;
+//        } else if (rdoNu.isSelected()) {
+//            gt = false;
+//        }
+//        if (rdoHD.isSelected()) {
+//            tt = 1;
+//        } else if (rdoKHD.isSelected()) {
+//            tt = 0;
+//        }
+//        if (ten.isEmpty()) {
+//            er.append("Tên khách hàng không được bỏ trống!\n");
+//        }
+//        if (sdt.isEmpty()) {
+//            er.append("Số điện thoại không được bỏ trống!\n");
+//        } else if (!sdt.matches("((0\\d{9})|(\\+84|84)\\d{9})")) {
+//            er.append("Số điện thoại phải bắt đầu là 0|+84!\n");
+//        } else {
+//            for (KhachHang kh : listKH) {
+//                if (sdt.equals(kh.getsDT())) {
+//                    er.append("Khách hàng đã tồn tại!\n");
+//                }
+//            }
+//        }
+//
+//        SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM-dd-yyyy");
+//        SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+//        try {
+//            d = dateFormat2.parse(ngaySinh);
+//        } catch (Exception e) {
+//            er.append("Ngày sinh sai định dạng(dd-mm-yyyy)!\n");
+//        }
+//        if (er.length() > 0) {
+//            MsgBox.alert(this, er.toString());
+//            return null;
+//        }
+//        return new KhachHang(ten, sdt, dateFormat1.format(d), diaChi, diaChi, gt, tt);
+//    }
+    public KhachHang getForm(int check) {
         List<KhachHang> listKH = khachHang_Service.selectAll();
         String ten = txtTenKH.getText();
         String sdt = txtSDT.getText();
@@ -66,110 +119,174 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         StringBuffer er = new StringBuffer();
         boolean gt = true;
         int tt = 1;
-        if(rdoNam.isSelected()){
+        if (rdoNam.isSelected()) {
             gt = true;
-        }else if(rdoNu.isSelected()){
+        } else if (rdoNu.isSelected()) {
             gt = false;
         }
-        if(rdoHD.isSelected()){
+        if (rdoHD.isSelected()) {
             tt = 1;
-        }else if(rdoKHD.isSelected()){
+        } else if (rdoHD.isSelected()) {
             tt = 0;
         }
-        if(ten.isEmpty()){
+
+        if (ten.isEmpty()) {
             er.append("Tên khách hàng không được bỏ trống!\n");
         }
-        if(sdt.isEmpty()){
-            er.append("Số điện thoại không được bỏ trống!\n");
-        }else if(!sdt.matches("((0\\d{9})|(\\+84|84)\\d{9})")){
-            er.append("Số điện thoại phải bắt đầu là 0|+84!\n");
-        }else{
-            for (KhachHang kh : listKH) {
-                if(sdt.equals(kh.getsDT())){
-                    er.append("Khách hàng đã tồn tại!\n");
+        if (check == 1) {
+            if (sdt.isEmpty()) {
+                er.append("Số điện thoại không được bỏ trống!\n");
+            } else if (!sdt.matches("((0\\d{9})|(\\+84|84)\\d{9})")) {
+                er.append("Số điện thoại phải bắt đầu là 0|+84!\n");
+            } else {
+                for (KhachHang kh : listKH) {
+                    if (sdt.equals(kh.getsDT())) {
+                        er.append("Khách hàng đã tồn tại!\n");
+                    }
                 }
             }
+        } else if (check == 2) {
+            if (sdt.isEmpty()) {
+                er.append("Số điện thoại không được bỏ trống!\n");
+            } else if (!sdt.matches("((0\\d{9})|(\\+84|84)\\d{9})")) {
+                er.append("Số điện thoại phải bắt đầu là 0|+84!\n");
+            }
         }
-        
+
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("MM-dd-yyyy");
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
         try {
-             d = dateFormat2.parse(ngaySinh);
+            d = dateFormat2.parse(ngaySinh);
         } catch (Exception e) {
             er.append("Ngày sinh sai định dạng(dd-mm-yyyy)!\n");
         }
-        if(er.length()>0){
+        if (er.length() > 0) {
             MsgBox.alert(this, er.toString());
             return null;
         }
         return new KhachHang(ten, sdt, dateFormat1.format(d), diaChi, diaChi, gt, tt);
     }
-    public void setForm(KhachHang kh ){
+
+    public void setForm(KhachHang kh) {
         txtTenKH.setText(kh.getTen());
         txtSDT.setText(kh.getsDT());
         txtNgaySinh.setText(kh.getNgaySinh());
         txtDiaChi.setText(kh.getDiaChi());
         lblMaKH.setText(String.valueOf(kh.getId_KhachHang()));
-        if(kh.isGioiTinh()){
+        if (kh.isGioiTinh()) {
             rdoNam.setSelected(true);
-        }else{
+        } else {
             rdoNu.setSelected(true);
         }
-        
-        if(kh.getTrangThai() ==1){
+
+        if (kh.getTrangThai() == 1) {
             rdoHD.setSelected(true);
-        }else if(kh.getTrangThai() ==0){
+        } else if (kh.getTrangThai() == 0) {
             rdoKHD.setSelected(true);
         }
     }
-    public void hidenThongTinKH(){
+
+    public void hidenThongTinKH() {
         pnlThongTinKH.setVisible(false);
         btnChon.setEnabled(false);
     }
-    public void resetForm(){
+
+    public void resetForm() {
         KhachHang kh = new KhachHang();
         setForm(kh);
     }
-    public void updateKH(){
-        KhachHang kh = getForm();
+
+    public void updateKH() {
+        KhachHang kh = getForm(2);
+       
+        List<KhachHang> listCheck = khachHang_Service.selectAll();
         int id_Kh = Integer.parseInt(tblKhachHang.getValueAt(row, 0).toString());
-        if(kh == null|| row == -1){
+        KhachHang khCheck = khachHang_Service.selectByID(id_Kh);
+        if (kh == null || row == -1) {
             return;
         }
-        if(MsgBox.confirm(this,"Bạn có chắc chắn muốn sửa khách hàng?")){
-            if(khachHang_Service.update(kh, id_Kh)!= 0){
-                MsgBox.alert(this, "Sửa khách hàng thành công!");
-                loadTale(khachHang_Service.selectAll());
-                resetForm();
-            }else{
-                MsgBox.alert(this, "Sủa khách hàng thất bại!");
+        if (kh.getsDT().equalsIgnoreCase(khCheck.getsDT())) {
+            if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
+                if (khachHang_Service.update(kh, id_Kh) != 0) {
+                    MsgBox.alert(this, "Sửa khách hàng thành công!");
+                    loadTale(khachHang_Service.selectAll());
+                    resetForm();
+
+                } else {
+                    MsgBox.alert(this, "Sửa khách hàng thất bại!");
+                }
+            }
+        } else {
+            for (KhachHang khachHang : listCheck) {
+                if (kh.getsDT().equals(khachHang.getsDT())) {
+                    MsgBox.alert(this, "Số điện thoại đã tồn tại!");
+                    return;
+                }
+            }
+            if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
+                if (khachHang_Service.update(kh, id_Kh) != 0) {
+                    MsgBox.alert(this, "Sửa khách hàng thành công!");
+                    loadTale(khachHang_Service.selectAll());
+                    resetForm();
+
+                } else {
+                    MsgBox.alert(this, "Sửa khách hàng thất bại!");
+                }
             }
         }
     }
-     public void insertKH(){
-        KhachHang kh = getForm();
-        if(kh == null){
+
+    public void insertKH() {
+        KhachHang kh = getForm(1);
+        if (kh == null) {
             return;
         }
-        if(MsgBox.confirm(this,"Bạn có chắc chắn muốn thêm khách hàng?")){
-            if(khachHang_Service.insert(kh)!= 0){
+        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn thêm khách hàng?")) {
+            if (khachHang_Service.insert(kh) != 0) {
                 MsgBox.alert(this, "Thêm khách hàng thành công!");
                 loadTale(khachHang_Service.selectAll());
                 resetForm();
-            }else{
+            } else {
                 MsgBox.alert(this, "Thêm khách hàng thất bại!");
             }
         }
     }
+
+    public void search() {
+        List<KhachHang> list = new ArrayList<>();
+        if (tk == 0) {
+            String ten = txtSearch.getText().trim();
+            list = khachHang_Service.selectByName(ten);
+        } else if (tk == 1) {
+            ;
+            String sdt = txtSearch.getText().trim();
+            list = khachHang_Service.selectBySDT(sdt);
+        } else if (tk == 2) {
+            String ma = txtSearch.getText().trim();
+            int id = 0;
+            try {
+                id = Integer.parseInt(ma);
+            } catch (Exception e) {
+            }
+
+            KhachHang kh = khachHang_Service.selectByID(id);
+            if (kh != null) {
+                list.add(kh);
+            }
+        }
+        loadTale(list);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        dateChooser1 = new com.raven.datechooser.DateChooser();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        cbbTk = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
         btnChon = new javax.swing.JButton();
         btnCapNhatKH = new javax.swing.JButton();
         pnlThongTinKH = new javax.swing.JPanel();
@@ -197,12 +314,35 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblKhachHang = new javax.swing.JTable();
 
+        dateChooser1.setForeground(new java.awt.Color(0, 255, 0));
+        dateChooser1.setTextRefernce(txtNgaySinh);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Tìm kiếm theo");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbTk.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tên", "Số điện thoại", "Mã" }));
+        cbbTk.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbTkItemStateChanged(evt);
+            }
+        });
 
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSearchKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSearchKeyTyped(evt);
+            }
+        });
+
+        btnChon.setBackground(new java.awt.Color(0, 255, 0));
+        btnChon.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnChon.setText("Chọn");
         btnChon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,12 +350,16 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             }
         });
 
+        btnCapNhatKH.setBackground(new java.awt.Color(255, 255, 0));
+        btnCapNhatKH.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCapNhatKH.setText("Cập nhật khách hàng");
         btnCapNhatKH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCapNhatKHActionPerformed(evt);
             }
         });
+
+        pnlThongTinKH.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setText("Mã ");
 
@@ -257,6 +401,8 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         buttonGroup1.add(rdoKHD);
         rdoKHD.setText("Không hoạt động");
 
+        btnThem.setBackground(new java.awt.Color(0, 255, 0));
+        btnThem.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,6 +410,8 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             }
         });
 
+        btnSua.setBackground(new java.awt.Color(255, 255, 0));
+        btnSua.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSua.setText("Sửa");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,6 +419,8 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             }
         });
 
+        btnReset.setBackground(new java.awt.Color(0, 255, 255));
+        btnReset.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnReset.setText("Reset");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,7 +496,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                             .addComponent(lblMaKH))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtTenKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTenKH, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlThongTinKHLayout.createSequentialGroup()
@@ -360,7 +510,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                     .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                         .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -370,7 +520,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(txtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                         .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -384,12 +534,13 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                     .addGroup(pnlThongTinKHLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        tblKhachHang.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblKhachHang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -406,7 +557,9 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        tblKhachHang.setSelectionBackground(new java.awt.Color(0, 0, 102));
+        tblKhachHang.setGridColor(new java.awt.Color(255, 255, 255));
+        tblKhachHang.setRowHeight(25);
+        tblKhachHang.setSelectionBackground(new java.awt.Color(0, 0, 0));
         tblKhachHang.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tblKhachHang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -437,23 +590,24 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnChon)
-                        .addGap(26, 26, 26)
-                        .addComponent(btnCapNhatKH))
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnChon)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnCapNhatKH))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbbTk, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtSearch))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -461,15 +615,15 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbbTk, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnChon)
-                    .addComponent(btnCapNhatKH))
+                    .addComponent(btnChon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCapNhatKH, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlThongTinKH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -487,29 +641,29 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rdoNuActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-     updateKH();
+        updateKH();
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnCapNhatKHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatKHActionPerformed
-        if(pnlThongTinKH.isVisible()){
+        if (pnlThongTinKH.isVisible()) {
             pnlThongTinKH.setVisible(false);
-        }else{
+        } else {
             pnlThongTinKH.setVisible(true);
         }
     }//GEN-LAST:event_btnCapNhatKHActionPerformed
 
     private void tblKhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhachHangMouseClicked
-      row = tblKhachHang.getSelectedRow();
-      int id_Kh = Integer.parseInt(tblKhachHang.getValueAt(row, 0).toString());
-      KhachHang kh = khachHang_Service.selectByID(id_Kh);
-      setForm(kh);
-      if(row != -1){
-           
-           btnChon.setEnabled(true);
-      }else{
-          btnChon.setEnabled(false);
-      }
-       
+        row = tblKhachHang.getSelectedRow();
+        int id_Kh = Integer.parseInt(tblKhachHang.getValueAt(row, 0).toString());
+        KhachHang kh = khachHang_Service.selectByID(id_Kh);
+        setForm(kh);
+        if (row != -1) {
+
+            btnChon.setEnabled(true);
+        } else {
+            btnChon.setEnabled(false);
+        }
+
     }//GEN-LAST:event_tblKhachHangMouseClicked
 
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
@@ -524,9 +678,25 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-       resetForm();
-       tblKhachHang.clearSelection();
+        resetForm();
+        tblKhachHang.clearSelection();
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void cbbTkItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTkItemStateChanged
+        tk = cbbTk.getSelectedIndex();
+    }//GEN-LAST:event_cbbTkItemStateChanged
+
+    private void txtSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyPressed
+        search();
+    }//GEN-LAST:event_txtSearchKeyPressed
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+       search();
+    }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void txtSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyTyped
+       search();
+    }//GEN-LAST:event_txtSearchKeyTyped
 
     /**
      * @param args the command line arguments
@@ -558,7 +728,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ThongTinKhachHang_Dialog dialog = new ThongTinKhachHang_Dialog(new javax.swing.JFrame(), true,null, null);
+                ThongTinKhachHang_Dialog dialog = new ThongTinKhachHang_Dialog(new javax.swing.JFrame(), true, null, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -578,7 +748,8 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     private javax.swing.JButton btnThem;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbbTk;
+    private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -590,7 +761,6 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblMaKH;
     private javax.swing.JPanel pnlThongTinKH;
     private javax.swing.JRadioButton rdoHD;
@@ -601,6 +771,7 @@ public class ThongTinKhachHang_Dialog extends javax.swing.JDialog {
     private javax.swing.JTextArea txtDiaChi;
     private javax.swing.JTextField txtNgaySinh;
     private javax.swing.JTextField txtSDT;
+    private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtTenKH;
     // End of variables declaration//GEN-END:variables
 }

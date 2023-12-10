@@ -1,10 +1,12 @@
 package com.fstore.untils;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -29,6 +31,18 @@ public class XuatExcelFromTbl {
         int choose = jfc.showSaveDialog(null);
         if (choose == JFileChooser.APPROVE_OPTION) {
             try {
+                File selectedFile = jfc.getSelectedFile();
+                if (!selectedFile.getName().toLowerCase().endsWith(".xlsx")) {
+                    selectedFile = new File(selectedFile.getAbsolutePath() + ".xlsx");
+                }
+
+                if (selectedFile.exists()) {
+                    int result = JOptionPane.showConfirmDialog(null, "File already exists. Do you want to overwrite it?",
+                            "File Exists", JOptionPane.YES_NO_OPTION);
+                    if (result != JOptionPane.YES_OPTION) {
+                        return; // Thoát khỏi phương thức nếu người dùng không muốn ghi đè lên file
+                    }
+                }
                 fWorkbook = new XSSFWorkbook();
                 XSSFSheet fSheet = fWorkbook.createSheet("sheet");
                 XSSFRow row = fSheet.createRow(0);
@@ -64,11 +78,10 @@ public class XuatExcelFromTbl {
                         fWorkbook.close();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }
     }
 
-    
 }

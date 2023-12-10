@@ -177,4 +177,36 @@ public class SanPham_Service implements Inf_Service<SanPham, Integer>{
             return 0;
         }
     }
+    public List<SanPham> selectByPage(int page) {
+            sql ="""
+                 SELECT ID_SANPHAM, TENSANPHAM, MOTA, SANPHAM.TRANGTHAI,
+                 SANPHAM.ID_DANHMUC, TENDANHMUC
+                 FROM SANPHAM join DANHMUC 
+                 ON SANPHAM.ID_DANHMUC = DANHMUC.ID_DANHMUC 
+                 ORDER BY ID_SANPHAM
+                 OFFSET (? - 1) * 15 ROWS
+                 FETCH NEXT 15 ROWS ONLY;
+                 """;
+            List<SanPham> list = new ArrayList<>();
+            try {
+            conn = DBConnect.getConnection();
+            ps= conn.prepareStatement(sql);
+            ps.setObject(1,page);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                SanPham sp = new SanPham();
+                sp.setID_SanPham(rs.getInt(1));
+                sp.setTenSP(rs.getString(2));
+                sp.setMoTa(rs.getString(3));
+                sp.setTrangThai(rs.getInt(4));
+                sp.setDm(new DanhMuc(rs.getInt(5), rs.getString(6)));
+                list.add(sp);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

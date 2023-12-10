@@ -10,7 +10,7 @@ public class Form1 extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        slide = new com.raven.datechooserr.Slider();
+        slide = new com.raven.datechooser.Slider();
 
         slide.setLayout(new javax.swing.BoxLayout(slide, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -33,6 +33,6 @@ public class Form1 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.raven.datechooserr.Slider slide;
+    private com.raven.datechooser.Slider slide;
     // End of variables declaration//GEN-END:variables
 }

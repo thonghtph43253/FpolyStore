@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
 package com.raven.form;
 
 import com.fstore.untils.MsgBox;
@@ -144,35 +140,63 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
 
     public void updateKH() {
         KhachHang kh = getForm(2);
-
+        KhachHang khCheck = khachHang_Service.selectByID(id_Kh);
+        List<KhachHang> listCheck = khachHang_Service.selectAll();
         if (kh == null) {
             return;
         }
-        if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
-            if (khachHang_Service.update(kh, id_Kh) != 0) {
-                MsgBox.alert(this, "Sửa khách hàng thành công!");
-                khPnl.loadTale(khachHang_Service.selectAll());
-                resetForm();
+        if (kh.getsDT().equalsIgnoreCase(khCheck.getsDT())) {
+            if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
+                if (khachHang_Service.update(kh, id_Kh) != 0) {
+                    MsgBox.alert(this, "Sửa khách hàng thành công!");
+                    khPnl.loadTale(khachHang_Service.selectAll());
+                    resetForm();
+                     this.dispose();
+                } else {
+                    MsgBox.alert(this, "Sửa khách hàng thất bại!");
+                }
+            }
+        } else {
+            for (KhachHang khachHang : listCheck) {
+                if (kh.getsDT().equals(khachHang.getsDT())) {
+                    MsgBox.alert(this, "Số điện thoại đã tồn tại!");
+                    return;
+                }
+            }
+            if (MsgBox.confirm(this, "Bạn có chắc chắn muốn sửa khách hàng?")) {
+                if (khachHang_Service.update(kh, id_Kh) != 0) {
+                    MsgBox.alert(this, "Sửa khách hàng thành công!");
+                   
+                    khPnl.loadTale(khachHang_Service.selectAll());
+                     this.dispose();
+                    resetForm();
 
-            } else {
-                MsgBox.alert(this, "Sửa khách hàng thất bại!");
+                } else {
+                    MsgBox.alert(this, "Sửa khách hàng thất bại!");
+                }
             }
         }
+
     }
 
     public void resetForm() {
         txtDiaChi.setText("");
         txtSDT.setText("");
         txtTenKH.setText("");
+        lblMaKH.setText("");
+        
         rdoNam.setSelected(true);
         rdoHD.setSelected(true);
+        btnSua.setEnabled(false);
+        btnXoa.setEnabled(false);
+        btnThem.setEnabled(true);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dateChooser1 = new com.raven.datechooserr.DateChooser();
+        dateChooser1 = new com.raven.datechooser.DateChooser();
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel7 = new javax.swing.JPanel();
@@ -405,7 +429,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         updateKH();
-        this.dispose();
+        
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -478,7 +502,7 @@ public class ThemKhachHangJDialog extends javax.swing.JDialog {
     private javax.swing.JButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private com.raven.datechooserr.DateChooser dateChooser1;
+    private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;

@@ -156,6 +156,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         table.addCell(new Cell().add(image).setBorder(Border.NO_BORDER));
         table.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
         table.addCell(new Cell().add("FSTORE").setFontSize(30f).setBorder(Border.NO_BORDER));
+        
 
         table.addCell(new Cell().add("D401 FPT POLYTECHNIC Kieu Mai \n SDT:0333002864")
                 .setTextAlignment(TextAlignment.RIGHT).setMarginTop(30f).setMarginBottom(30f).setBorder(Border.NO_BORDER).setMarginRight(10f)
@@ -276,6 +277,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         lblNhanVien = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText("HÓA ĐƠN CHI TIẾT");
@@ -311,6 +313,7 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
         lblThanhToan.setForeground(new java.awt.Color(255, 0, 0));
         lblThanhToan.setText("0.0");
 
+        jButton1.setBackground(new java.awt.Color(51, 204, 0));
         jButton1.setText("Xuất hóa đơn");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -457,9 +460,9 @@ public class ChiTietHoaDon_Jdialog extends javax.swing.JDialog {
             xuatHoaDon();
             MsgBox.alert(this, "Xuất hóa đơn thành công!");
         }  catch (IOException ex) {
-            Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadElementException ex) {
-            Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(ChiTietHoaDon_Jdialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

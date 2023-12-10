@@ -10,6 +10,7 @@ import com.fstore.service.Sale_Service;
 import com.fstore.service.SanPhamChiTiet_Service;
 import com.ui.main.Main;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -41,12 +42,13 @@ public class Sale_Panel extends javax.swing.JPanel {
         txtThoiGianKT.setEditable(false);
     }
 
-     public void autoUpdateSale(){
+    public void autoUpdateSale() {
         for (Sale s : sale_Service.selectAll()) {
             s.setTrangThai(checkDatẹKT(s.getThoiGianKT()));
             sale_Service.update(s, s.getId_Sale());
         }
     }
+
     public void setBtn() {
         if (list.size() >= 0) {
             btnThem.setEnabled(true);
@@ -61,7 +63,15 @@ public class Sale_Panel extends javax.swing.JPanel {
         DefaultTableModel tblMd = (DefaultTableModel) tblSale.getModel();
         tblMd.setRowCount(0);
         for (Sale sale : list) {
-            Sale_ChiTiet sct = sale_CT_Service.selectByIDSale(sale.getId_Sale()).get(0);
+            Sale_ChiTiet sct = null;
+            if(!sale_CT_Service.selectByIDSale(sale.getId_Sale()).isEmpty()){
+                sct = sale_CT_Service.selectByIDSale(sale.getId_Sale()).get(0);
+            }else{
+                sct = new Sale_ChiTiet();
+                sct.setHinhThucGiam(0);
+                sct.setGiaTriGiam(0);
+            }
+            
             tblMd.addRow(new Object[]{
                 sale.getId_Sale(),
                 sale.getTenChienDich(),
@@ -75,7 +85,15 @@ public class Sale_Panel extends javax.swing.JPanel {
     }
 
     public void setForm(Sale s) {
-        Sale_ChiTiet sct = sale_CT_Service.selectByIDSale(s.getId_Sale()).get(0);
+         Sale_ChiTiet sct = null;
+            if(!sale_CT_Service.selectByIDSale(s.getId_Sale()).isEmpty()){
+                sct = sale_CT_Service.selectByIDSale(s.getId_Sale()).get(0);
+            }else{
+                sct = new Sale_ChiTiet();
+                sct.setHinhThucGiam(0);
+                sct.setGiaTriGiam(0);
+            }
+       
         txtTenSale.setText(s.getTenChienDich());
         lblMaSale.setText(String.valueOf(s.getId_Sale()));
         txtNgayBD.setText(XDate.toString(s.getThoiGianBD(), "dd-MM-yyyy"));
@@ -93,17 +111,71 @@ public class Sale_Panel extends javax.swing.JPanel {
     }
 
     public void setHidenBtn() {
-        
+
         btnThem.setEnabled(false);
     }
-     public int checkDatẹKT(Date ngayKT){
-        Date dateNow = new Date();
-       
-        if(ngayKT.compareTo(dateNow) < 0){
-           return 0;
+
+    public int checkDatẹKT(Date ngayKT) {
+//        Date dateNow = new Date();
+//        System.out.println(ngayKT.compareTo(dateNow));
+//        if(ngayKT.compareTo(dateNow) >= 0){
+//           return 1;
+//        }
+//        return 0;
+        // Tạo một đối tượng Calendar cho ngày hiện tại
+        Calendar calendarNow = Calendar.getInstance();
+        calendarNow.setTime(new Date());
+        // Đặt phần giờ, phút, giây của ngày hiện tại là 0 để chỉ so sánh theo ngày
+        calendarNow.set(Calendar.HOUR_OF_DAY, 0);
+        calendarNow.set(Calendar.MINUTE, 0);
+        calendarNow.set(Calendar.SECOND, 0);
+        calendarNow.set(Calendar.MILLISECOND, 0);
+
+        // Tạo một đối tượng Calendar cho ngày kết thúc
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTime(ngayKT);
+        // Trừ đi một ngày từ ngày kết thúc
+        calendarEnd.add(Calendar.DAY_OF_MONTH, -1);
+        // Đặt phần giờ, phút, giây của ngày kết thúc là 0 để chỉ so sánh theo ngày
+        calendarEnd.set(Calendar.HOUR_OF_DAY, 0);
+        calendarEnd.set(Calendar.MINUTE, 0);
+        calendarEnd.set(Calendar.SECOND, 0);
+        calendarEnd.set(Calendar.MILLISECOND, 0);
+
+        // So sánh ngày kết thúc với ngày hiện tại
+        if (calendarEnd.compareTo(calendarNow) >= 0) {
+            return 1;
         }
-        return 1;
+        return 0;
     }
+
+//    public int checkDateKT(Date ngayKT) {
+//        // Tạo một đối tượng Calendar cho ngày hiện tại
+//        Calendar calendarNow = Calendar.getInstance();
+//        calendarNow.setTime(new Date());
+//        // Đặt phần giờ, phút, giây của ngày hiện tại là 0 để chỉ so sánh theo ngày
+//        calendarNow.set(Calendar.HOUR_OF_DAY, 0);
+//        calendarNow.set(Calendar.MINUTE, 0);
+//        calendarNow.set(Calendar.SECOND, 0);
+//        calendarNow.set(Calendar.MILLISECOND, 0);
+//
+//        // Tạo một đối tượng Calendar cho ngày kết thúc
+//        Calendar calendarEnd = Calendar.getInstance();
+//        calendarEnd.setTime(ngayKT);
+//        // Trừ đi một ngày từ ngày kết thúc
+//        calendarEnd.add(Calendar.DAY_OF_MONTH, -1);
+//        // Đặt phần giờ, phút, giây của ngày kết thúc là 0 để chỉ so sánh theo ngày
+//        calendarEnd.set(Calendar.HOUR_OF_DAY, 0);
+//        calendarEnd.set(Calendar.MINUTE, 0);
+//        calendarEnd.set(Calendar.SECOND, 0);
+//        calendarEnd.set(Calendar.MILLISECOND, 0);
+//
+//        // So sánh ngày kết thúc với ngày hiện tại
+//        if (calendarEnd.compareTo(calendarNow) >= 0) {
+//            return 1;
+//        }
+//        return 0;
+//    }
     public void clearForm() {
         txtTenSale.setText("");
         txtNgayBD.setText("");
@@ -122,7 +194,7 @@ public class Sale_Panel extends javax.swing.JPanel {
         StringBuffer er = new StringBuffer();
         Date ngayBD = XDate.toDate(ngayBatDau, "dd-MM-yyyy");
         Date ngayKT = XDate.toDate(ngayKetThuc, "dd-MM-yyyy");
-        if (ngayKT.compareTo(ngayBD) <= 0 ) {
+        if (ngayKT.compareTo(ngayBD) <= 0) {
             er.append("Ngày kết thúc phải lớn hơn này bắt đầu!\n");
         }
         if (ngayBatDau.isEmpty()) {
@@ -145,7 +217,7 @@ public class Sale_Panel extends javax.swing.JPanel {
             tt = 0;
         }
         tt = checkDatẹKT(ngayKT);
-        if(er.length()>0){
+        if (er.length() > 0) {
             MsgBox.alert(this, er.toString());
             return null;
         }
@@ -180,8 +252,10 @@ public class Sale_Panel extends javax.swing.JPanel {
                 return;
             }
         }
-
+        
         sale_Service.insert(s);
+        
+        
         for (int i = 0; i < list.size(); i++) {
             Sale_ChiTiet sct = list.get(i);
             SanPhamChiTiet spct = spct_Service.selectByID(sct.getId_SanPham_CT());
@@ -198,6 +272,7 @@ public class Sale_Panel extends javax.swing.JPanel {
             sale_CT_Service.insert(sct);
 
         }
+        MsgBox.alert(this, "Tạo chương trình sale thành công!");
         clearForm();
         list.clear();
 
@@ -280,6 +355,7 @@ public class Sale_Panel extends javax.swing.JPanel {
                 sale_CT_Service.insert(sct);
             }
         }
+        MsgBox.alert(this, "Cập nhật chương trình sale thành công!");
         clearForm();
         list.clear();
 
@@ -294,10 +370,10 @@ public class Sale_Panel extends javax.swing.JPanel {
         }
         return null; // Trả về null nếu không tìm thấy
     }
-    
-    public void search(){
+
+    public void search() {
         List<Sale> list = new ArrayList<>();
-        if(search == 0){
+        if (search == 0) {
             String idT = txtSearch.getText().trim();
             int id = 0;
             try {
@@ -305,38 +381,39 @@ public class Sale_Panel extends javax.swing.JPanel {
             } catch (Exception e) {
             }
             Sale hd = sale_Service.selectByID(id);
-            if(hd!= null){
+            if (hd != null) {
                 list.add(hd);
             }
-        }else if(search == 1){
+        } else if (search == 1) {
             String ten = txtSearch.getText().trim();
             list = sale_Service.selectByName(ten);
         }
         fillTable(list);
     }
-    
-    public void locHD(){
+
+    public void locHD() {
         Date ngayBD = XDate.toDate(txtLocBD.getText(), "dd-MM-yyyy");
         Date ngayKT = XDate.toDate(txtLocKT.getText(), "dd-MM-yyyy");
         int tt = 1;
-        if(rdoLHD.isSelected()){
+        if (rdoLHD.isSelected()) {
             tt = 1;
-        }else if(rdoLocKHD.isSelected()){
+        } else if (rdoLocKHD.isSelected()) {
             tt = 0;
         }
         List<Sale> list = sale_Service.selectByDay(ngayBD, ngayKT, tt);
         fillTable(list);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        dateChooserKT = new com.raven.datechooserr.DateChooser();
-        dateChooserBD = new com.raven.datechooserr.DateChooser();
+        dateChooserKT = new com.raven.datechooser.DateChooser();
+        dateChooserBD = new com.raven.datechooser.DateChooser();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        dateChooserBDL = new com.raven.datechooserr.DateChooser();
-        dateChooserKTL = new com.raven.datechooserr.DateChooser();
+        dateChooserBDL = new com.raven.datechooser.DateChooser();
+        dateChooserKTL = new com.raven.datechooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -354,11 +431,6 @@ public class Sale_Panel extends javax.swing.JPanel {
         rdoLocKHD = new javax.swing.JRadioButton();
         btnLoc = new javax.swing.JButton();
         btnHuyLoc = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         lblMaSale = new javax.swing.JLabel();
@@ -397,23 +469,22 @@ public class Sale_Panel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách SALE", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
 
         tblSale.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblSale.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Mã sale", "Tên chương trình", "Hình thức giảm", "Mức giảm", "Thời gian BĐ", "Thời gian KT", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true, true
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -481,14 +552,6 @@ public class Sale_Panel extends javax.swing.JPanel {
             }
         });
 
-        jButton6.setText("|<<");
-
-        jButton11.setText("<<");
-
-        jButton12.setText(">>");
-
-        jButton13.setText(">>|");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -527,58 +590,36 @@ public class Sale_Panel extends javax.swing.JPanel {
                                 .addComponent(btnLoc)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 763, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton13)
-                .addGap(239, 239, 239))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel15))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtLocBD, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLocKT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rdoLHD)
-                            .addComponent(rdoLocKHD))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnHuyLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton11)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton12)
-                    .addComponent(jButton13))
-                .addGap(12, 12, 12))
+                    .addComponent(cbbTkSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtLocBD, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtLocKT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rdoLHD)
+                    .addComponent(rdoLocKHD))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnHuyLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -816,7 +857,7 @@ public class Sale_Panel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
-      locHD();
+        locHD();
     }//GEN-LAST:event_btnLocActionPerformed
 
     private void txtNgayBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayBDActionPerformed
@@ -830,10 +871,10 @@ public class Sale_Panel extends javax.swing.JPanel {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         if (id_Sale == -1 || id_Sale == 0) {
             addSale();
-            MsgBox.alert(this, "Tạo chương trình sale thành công!");
+
         } else {
             updateSale();
-            MsgBox.alert(this, "Cập nhật chương trình sale thành công!");
+
         }
         fillTable(sale_Service.selectAll());
 
@@ -863,7 +904,7 @@ public class Sale_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnChonNBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonNBDActionPerformed
-      dateChooserBD.showPopup();
+        dateChooserBD.showPopup();
     }//GEN-LAST:event_btnChonNBDActionPerformed
 
     private void btnChonNKTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonNKTActionPerformed
@@ -871,7 +912,7 @@ public class Sale_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnChonNKTActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-       search();
+        search();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnHuyLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyLocActionPerformed
@@ -879,7 +920,7 @@ public class Sale_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHuyLocActionPerformed
 
     private void cbbTkSanPhamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbTkSanPhamItemStateChanged
-       search = cbbTkSanPham.getSelectedIndex();
+        search = cbbTkSanPham.getSelectedIndex();
     }//GEN-LAST:event_cbbTkSanPhamItemStateChanged
 
 
@@ -895,15 +936,11 @@ public class Sale_Panel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cbbHTG;
     private javax.swing.JComboBox<String> cbbTkSanPham;
-    private com.raven.datechooserr.DateChooser dateChooserBD;
-    private com.raven.datechooserr.DateChooser dateChooserBDL;
-    private com.raven.datechooserr.DateChooser dateChooserKT;
-    private com.raven.datechooserr.DateChooser dateChooserKTL;
+    private com.raven.datechooser.DateChooser dateChooserBD;
+    private com.raven.datechooser.DateChooser dateChooserBDL;
+    private com.raven.datechooser.DateChooser dateChooserKT;
+    private com.raven.datechooser.DateChooser dateChooserKTL;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
@@ -920,7 +957,6 @@ public class Sale_Panel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JLabel lblDonVi;
     private javax.swing.JLabel lblMaSale;
     private javax.swing.JRadioButton rdoHD;

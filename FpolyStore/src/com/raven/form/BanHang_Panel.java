@@ -693,6 +693,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
         lblTongTien.setForeground(new java.awt.Color(255, 0, 0));
         lblTongTien.setText("0.0");
 
+        jPanel7.setBackground(new java.awt.Color(0, 255, 255));
+
         lblMaVoucher.setText("Mã voucher");
 
         cbbVoucher.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -884,10 +886,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
 
         tblGioHang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "ID_SPCT", "Tên sản phẩm", "Đơn giá", "Số lượng"
@@ -910,6 +909,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tblGioHang);
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Tên sản phẩm");
 
         jLabel4.setText("Số lượng");
@@ -932,6 +932,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
                 btnXoaGHActionPerformed(evt);
             }
         });
+
+        lblTenSanPham.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Danh sách sản phẩm mua");
@@ -1109,7 +1111,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
                             .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnThemGH))
-                        .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1177,6 +1179,7 @@ public class BanHang_Panel extends javax.swing.JPanel {
         if (MsgBox.confirm(this, "Bạn có chắc chắn muốn hủy")) {
             huyHoaDon();
             resetFormHD();
+            fillTableSanPham(spct_Service.selectAll());
         }
     }//GEN-LAST:event_btnHuyHDActionPerformed
 

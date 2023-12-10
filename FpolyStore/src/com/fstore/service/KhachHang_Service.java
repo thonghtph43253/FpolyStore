@@ -83,7 +83,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
             ps.setObject(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return 0;
         }
     }
@@ -104,7 +104,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
                 md.setId_KhachHang(rs.getInt(1));
                 md.setTen(rs.getString(2));
                 md.setsDT(rs.getString(3));
-                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "dd-MM-yyyy"));
                 md.setGioiTinh(rs.getBoolean(5));
                 md.setDiaChi(rs.getString(6));
                 md.setTrangThai(rs.getInt(7));
@@ -135,7 +135,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
                 kh.setId_KhachHang(rs.getInt(1));
                 kh.setTen(rs.getString(2));
                 kh.setsDT(rs.getString(3));
-                kh.setNgaySinh(rs.getString(4));
+                kh.setNgaySinh(XDate.toString(rs.getDate(4), "dd-MM-yyyy"));
                 kh.setGioiTinh(rs.getBoolean(5));
                 kh.setDiaChi(rs.getString(6));
                 kh.setTrangThai(rs.getInt(7));
@@ -163,7 +163,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
                 md.setId_KhachHang(rs.getInt(1));
                 md.setTen(rs.getString(2));
                 md.setsDT(rs.getString(3));
-                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "dd-MM-yyyy"));
                 md.setGioiTinh(rs.getBoolean(5));
                 md.setDiaChi(rs.getString(6));
                 md.setTrangThai(rs.getInt(7));
@@ -192,7 +192,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
                 md.setId_KhachHang(rs.getInt(1));
                 md.setTen(rs.getString(2));
                 md.setsDT(rs.getString(3));
-                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "dd-MM-yyyy"));
                 md.setGioiTinh(rs.getBoolean(5));
                 md.setDiaChi(rs.getString(6));
                 md.setTrangThai(rs.getInt(7));
@@ -221,7 +221,7 @@ public class KhachHang_Service implements Inf_Service<KhachHang, Integer> {
                 md.setId_KhachHang(rs.getInt(1));
                 md.setTen(rs.getString(2));
                 md.setsDT(rs.getString(3));
-                md.setNgaySinh(XDate.toString(rs.getDate(4), "MM-dd-yyyy"));
+                md.setNgaySinh(XDate.toString(rs.getDate(4), "dd-MM-yyyy"));
                 md.setGioiTinh(rs.getBoolean(5));
                 md.setDiaChi(rs.getString(6));
                 md.setTrangThai(rs.getInt(7));

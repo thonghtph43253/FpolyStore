@@ -151,14 +151,15 @@ public class Voucher_Service implements Inf_Service<Voucher, Integer>{
               SELECT ID_VOUCHER, TENCHIENDICH, NGAYBD, NGAYKT, HINHTHUCGIAM,
               GIATRIGIAM, SOLUONG, TRANGTHAI 
               FROM VOUCHERS
-              WHERE NGAYBD <= ? AND NGAYKT >= DATEADD(DAY, 1, ?) 
+              WHERE TRANGTHAI = 1
               """;
+              // WHERE NGAYBD <= ? AND NGAYKT >= DATEADD(DAY, 1, ?) 
             List<Voucher> list = new ArrayList<>();
             try {
             conn = DBConnect.getConnection();
             ps= conn.prepareStatement(sql);
-            ps.setObject(1, d);
-            ps.setObject(2, d);
+//            ps.setObject(1, d);
+//            ps.setObject(2, d);
             rs = ps.executeQuery();
             while(rs.next()){
                 Voucher v = new Voucher();

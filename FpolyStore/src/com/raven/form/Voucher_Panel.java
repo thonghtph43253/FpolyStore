@@ -264,10 +264,10 @@ public class Voucher_Panel extends javax.swing.JPanel {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        dateChooserBD = new com.raven.datechooserr.DateChooser();
-        dateChooserKT = new com.raven.datechooserr.DateChooser();
-        dateChooserLBD = new com.raven.datechooserr.DateChooser();
-        dateChooserLKT = new com.raven.datechooserr.DateChooser();
+        dateChooserBD = new com.raven.datechooser.DateChooser();
+        dateChooserKT = new com.raven.datechooser.DateChooser();
+        dateChooserLBD = new com.raven.datechooser.DateChooser();
+        dateChooserLKT = new com.raven.datechooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -372,6 +372,11 @@ public class Voucher_Panel extends javax.swing.JPanel {
         btnTim.setBackground(new java.awt.Color(153, 255, 153));
         btnTim.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnTim.setText("Tìm");
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Thời gian BĐ");
@@ -777,6 +782,10 @@ public class Voucher_Panel extends javax.swing.JPanel {
         fillTable(voucher_Service.selectAll());
     }//GEN-LAST:event_btnHuyLocActionPerformed
 
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        search();
+    }//GEN-LAST:event_btnTimActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHuyLoc;
@@ -787,10 +796,10 @@ public class Voucher_Panel extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> cbbHTG;
     private javax.swing.JComboBox<String> cbbTkSanPham;
-    private com.raven.datechooserr.DateChooser dateChooserBD;
-    private com.raven.datechooserr.DateChooser dateChooserKT;
-    private com.raven.datechooserr.DateChooser dateChooserLBD;
-    private com.raven.datechooserr.DateChooser dateChooserLKT;
+    private com.raven.datechooser.DateChooser dateChooserBD;
+    private com.raven.datechooser.DateChooser dateChooserKT;
+    private com.raven.datechooser.DateChooser dateChooserLBD;
+    private com.raven.datechooser.DateChooser dateChooserLKT;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;

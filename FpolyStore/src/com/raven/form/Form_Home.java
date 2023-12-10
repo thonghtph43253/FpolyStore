@@ -37,12 +37,12 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
     private void initCardData() {
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_BASKET, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card1.setData(new ModelCard("Sản phẩm/Ngày",thongKe_Service.getSoLuongInDay(),0,icon1));
-        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 50, Color.yellow, Color.black);
-        card2.setData(new ModelCard("Doanh Thu/Ngay",thongKe_Service.getDoanhThuInDay(),0,icon2));
-        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 50, Color.yellow, Color.black);
-        card3.setData(new ModelCard("Tổng khách hàng/ngày",thongKe_Service.getKhachHangInDay(),0,icon3));
-        Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PAYMENT, 50, Color.yellow, Color.black);
-        card4.setData(new ModelCard("Đơn hàng/ngày",thongKe_Service.getDonHangInDay(),0,icon4));
+        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 50, Color.green, Color.black);
+        card2.setData(new ModelCard("Doanh Thu/Ngày",thongKe_Service.getDoanhThuInDay(),0,icon2));
+        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 50, Color.green, Color.black);
+        card3.setData(new ModelCard("Tổng khách hàng/Ngày",thongKe_Service.getKhachHangInDay(),0,icon3));
+        Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PAYMENT, 50, Color.green, Color.black);
+        card4.setData(new ModelCard("Đơn hàng/Ngày",thongKe_Service.getDonHangInDay(),0,icon4));
     }
 
 //    private void initNoticeBoard() {
@@ -73,11 +73,11 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
-        jLabel1.setText("Dashboard / Home");
+        jLabel1.setText("TRANG CHỦ");
 
         lblKinhChao.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         lblKinhChao.setForeground(new java.awt.Color(0, 0, 102));
-        lblKinhChao.setText("FSTORE XIN KÍNH CHÀO QUÝ KHÁCH");
+        lblKinhChao.setText("FSTORE XIN  CHÀO");
         lblKinhChao.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 0, 255)));
 
         lblDongHo.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
@@ -118,12 +118,12 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(168, 168, 168)
-                        .addComponent(lblKinhChao))
+                        .addGap(280, 280, 280)
+                        .addComponent(lblDongHo, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(254, 254, 254)
-                        .addComponent(lblDongHo, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(226, Short.MAX_VALUE))
+                        .addGap(348, 348, 348)
+                        .addComponent(lblKinhChao)))
+                .addContainerGap(295, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,11 +136,11 @@ public class Form_Home extends javax.swing.JPanel implements Runnable{
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addComponent(lblKinhChao)
-                .addGap(75, 75, 75)
+                .addGap(63, 63, 63)
                 .addComponent(lblDongHo, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

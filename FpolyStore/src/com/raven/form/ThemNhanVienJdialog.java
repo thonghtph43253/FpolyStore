@@ -32,10 +32,9 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
 
     private NhanVien_Service nhanVien_Service = new NhanVien_Service();
     private String srcImg;
-    private NhanVien_Panel nhanVien_Panel ;
+    private NhanVien_Panel nhanVien_Panel;
     private String maNV;
     private MainForm main = new MainForm();
-
 
     public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, NhanVien_Panel nhanVien_Panel) {
         super(parent, modal);
@@ -44,7 +43,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         this.nhanVien_Panel = nhanVien_Panel;
     }
 
-    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, String maNV,  NhanVien_Panel nhanVien_Panel) {
+    public ThemNhanVienJdialog(java.awt.Frame parent, boolean modal, String maNV, NhanVien_Panel nhanVien_Panel) {
         super(parent, modal);
         this.maNV = maNV;
         initComponents();
@@ -55,8 +54,6 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         this.nhanVien_Panel = nhanVien_Panel;
     }
 
-   
-    
     public NhanVien getForm(int check) {
         List<NhanVien> list = nhanVien_Service.selectAll();
         String maNVF = txtMaNV.getText();
@@ -67,7 +64,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         String reMatKhau = String.valueOf(txtRePass.getPassword());
         String diaChi = txtDiaChi.getText();
         Date ngaySinhD = XDate.toDate(txtNgaySinh.getText(), "dd-MM-yyyy");
-        String ngaySinh = XDate.toString(ngaySinhD,"dd-MM-yyyy" ) ;
+        String ngaySinh = XDate.toString(ngaySinhD, "dd-MM-yyyy");
         boolean checkMa = true;
         boolean checkSdt = true;
         boolean checkEmail = true;
@@ -218,17 +215,71 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
 
     public void updateNhanVien() {
         NhanVien nv = getForm(2);
+        NhanVien nvck = nhanVien_Service.selectByID(maNV);
+        List<NhanVien> listCheck = nhanVien_Service.selectAll();
         if (nv == null) {
             return;
         }
-        if (nhanVien_Service.update(nv, maNV) != 0) {
-            MsgBox.alert(this, "Cập nhật nhân viên thành công!");
-            this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
-        } else {
-            MsgBox.alert(this, "Câp nhât thất bại");
-        }
-    }
 
+        if (nv.getSDT().equalsIgnoreCase(nvck.getSDT()) && nv.getEmail().equalsIgnoreCase(nvck.getEmail())) {
+            if (nhanVien_Service.update(nv, maNV) != 0) {
+                MsgBox.alert(this, "Cập nhật nhân viên thành công!");
+                this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+                 this.dispose();
+            } else {
+                MsgBox.alert(this, "Câp nhât thất bại");
+            }
+        }else if(!nv.getSDT().equalsIgnoreCase(nvck.getSDT()) && nv.getEmail().equalsIgnoreCase(nvck.getEmail())){
+            for (NhanVien nhanVien : listCheck) {
+                if(nv.getSDT().equalsIgnoreCase(nhanVien.getSDT())){
+                    MsgBox.alert(this, "Số điện thoại đã tồn tại!");
+                    return;
+                }
+            }
+            if (nhanVien_Service.update(nv, maNV) != 0) {
+                MsgBox.alert(this, "Cập nhật nhân viên thành công!");
+                this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+                this.dispose();
+            } else {
+                MsgBox.alert(this, "Câp nhât thất bại");
+            }
+        }else if(nv.getSDT().equalsIgnoreCase(nvck.getSDT()) && !nv.getEmail().equalsIgnoreCase(nvck.getEmail())){
+            for (NhanVien nhanVien : listCheck) {
+                if(nv.getEmail().equalsIgnoreCase(nhanVien.getEmail())){
+                    MsgBox.alert(this, "Email đã tồn tại!");
+                    return;
+                }
+            }
+            if (nhanVien_Service.update(nv, maNV) != 0) {
+                MsgBox.alert(this, "Cập nhật nhân viên thành công!");
+                this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+                this.dispose();
+            } else {
+                MsgBox.alert(this, "Câp nhât thất bại");
+            }
+        }else{
+             for (NhanVien nhanVien : listCheck) {
+                if(nv.getEmail().equalsIgnoreCase(nhanVien.getEmail())||nv.getSDT().equalsIgnoreCase(nhanVien.getSDT())){
+                    MsgBox.alert(this, "Email || Số điện thoại đã tồn tại!");
+                    return;
+                }
+            }
+            if (nhanVien_Service.update(nv, maNV) != 0) {
+                MsgBox.alert(this, "Cập nhật nhân viên thành công!");
+                 this.dispose();
+                this.nhanVien_Panel.fillTable(nhanVien_Service.selectAll());
+            } else {
+                MsgBox.alert(this, "Câp nhât thất bại");
+            }
+        }
+
+    }
+    public void resetForm(){
+        NhanVien nv = new NhanVien();
+        setForm(nv);
+        btnThem.setEnabled(true);
+        btnSua.setEnabled(false);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -236,7 +287,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
-        dateChooser1 = new com.raven.datechooserr.DateChooser();
+        dateChooser1 = new com.raven.datechooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtMaNV = new javax.swing.JTextField();
@@ -339,6 +390,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
         });
 
         btnThem.setBackground(new java.awt.Color(51, 255, 0));
+        btnThem.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,6 +398,8 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
             }
         });
 
+        btnSua.setBackground(new java.awt.Color(255, 255, 0));
+        btnSua.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSua.setText("Sửa");
         btnSua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +407,14 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
             }
         });
 
+        btnReset.setBackground(new java.awt.Color(0, 255, 204));
+        btnReset.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnReset.setText("Tạo mới");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Nhập lại mật khẩu");
 
@@ -531,16 +592,20 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         insertNhanVien();
-       
+
 
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         updateNhanVien();
-        
-        this.dispose();
+
+       
 
     }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btnResetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -591,7 +656,7 @@ public class ThemNhanVienJdialog extends javax.swing.JDialog {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
-    private com.raven.datechooserr.DateChooser dateChooser1;
+    private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

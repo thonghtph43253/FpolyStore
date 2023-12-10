@@ -56,7 +56,7 @@ public class Menu extends javax.swing.JPanel {
 
     public void initMenuItem() {
         if (Auth.isManager()) {
-            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "Trang chủ"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "TRANG CHỦ"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-product-20 (1).png")), "QUẢN LÝ SẢN PHẨM", "SẢN PHẨM", "CHI TIẾT SẢN PHẨM", "THUỘC TÍNH SẢN PHẨM"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "QUẢN LÝ BÁN HÀNG", "BÁN HÀNG", "NHẬP HÀNG"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "QUẢN LÝ HÓA ĐƠN", "HÓA ĐƠN BÁN HÀNG", "HÓA ĐƠN NHẬP HÀNG"));
@@ -67,7 +67,7 @@ public class Menu extends javax.swing.JPanel {
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/8.png")), "KHUYÊN MÃI", "QUẢN LÝ SALE", "QUẢN LÝ VOUCHER"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-exit-20_1.png")), "ĐĂNG XUẤT"));            
         } else {
-            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "Trang chủ"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/icons8-home-20.png")), "TRANG CHỦ"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "QUẢN LÝ BÁN HÀNG"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "QUẢN LÝ HÓA ĐƠN"));
             addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/raven/icon/5.png")), "QUẨN LÝ THÔNG KÊ", "THEO DOANH SỐ BÁN HÀNG"));
