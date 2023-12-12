@@ -91,7 +91,12 @@ public class DoiMatKhauPanel extends javax.swing.JPanel {
             btnDoiMk.setEnabled(true);
         }
     }
-
+    public void resetForm(){
+        txtMkC.setText("");
+        txtMkM.setText("");
+        txtReMk.setText("");
+        btnDoiMk.setEnabled(false);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -298,6 +303,7 @@ public class DoiMatKhauPanel extends javax.swing.JPanel {
        nv.setMatKhau(mkM);
        if(service.update(nv, Auth.nv.getMaNV()) != 0){
            MsgBox.alert(this, "Đổi mật khẩu thành công!");
+           resetForm();
        }else{
            MsgBox.alert(this, "Đổi mật khẩu không thành công!");
        }

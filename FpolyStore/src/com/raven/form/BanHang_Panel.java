@@ -1180,6 +1180,8 @@ public class BanHang_Panel extends javax.swing.JPanel {
             huyHoaDon();
             resetFormHD();
             fillTableSanPham(spct_Service.selectAll());
+            listGioHang.clear();
+            fillTableGioHang(listGioHang);
         }
     }//GEN-LAST:event_btnHuyHDActionPerformed
 
@@ -1236,7 +1238,10 @@ public class BanHang_Panel extends javax.swing.JPanel {
             String soluongT = MsgBox.prompt(this, "Số lượng mới?");
             try {
                 int soluong = Integer.parseInt(soluongT);
-                
+                if(soluong<=0){
+                    MsgBox.alert(this, "Số lượng mới phải lớn hơn 0!");
+                    return;
+                }
                 updatSoLuong(soluong);
                 fillTableGioHang(listGioHang);
                 lblTongTien.setText(String.valueOf(tongTien()));
